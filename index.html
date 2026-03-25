@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Policejní Terminál - Perfektní Zarovnání</title>
+    <title>Policejní Terminál - Finální Verze</title>
     <style>
         :root {
             --bg: #0d0d0d;
@@ -16,7 +16,7 @@
             --danger: #ff4444;
             --jail: #4dabf7;
             --fine: #69db7c;
-            --side-padding: 30px; /* Jednotné odsazení pro vše vlevo */
+            --side-padding: 30px;
         }
 
         body { 
@@ -38,10 +38,22 @@
             border-right: 1px solid var(--border); 
         }
 
-        /* VYHLEDÁVÁNÍ - Sladěno s okraji karet */
-        .search-container {
-            padding: 25px var(--side-padding);
+        /* HLAVNÍ NADPIS A VYHLEDÁVÁNÍ */
+        .header-area {
+            padding: 30px var(--side-padding) 10px var(--side-padding);
             background: #0d0d0d;
+        }
+
+        .main-title {
+            color: var(--text);
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+            display: inline-block;
+            padding-bottom: 5px;
         }
 
         #searchInput {
@@ -53,7 +65,7 @@
             border-radius: 4px;
             font-size: 15px;
             outline: none;
-            border-left: 4px solid var(--accent); /* Žlutá linka vyhledávání */
+            border-left: 4px solid var(--accent);
             box-sizing: border-box;
         }
 
@@ -62,7 +74,7 @@
         /* SEZNAM ZÁKONŮ */
         .laws-list {
             flex: 1;
-            padding: 0 var(--side-padding) 30px var(--side-padding);
+            padding: 15px var(--side-padding) 30px var(--side-padding);
             overflow-y: auto;
         }
 
@@ -74,11 +86,9 @@
             overflow: hidden;
         }
 
-        .law-card.hidden { display: none; }
-
         .law-header {
             padding: 15px 20px;
-            border-left: 4px solid var(--accent); /* Žlutá linka karty */
+            border-left: 4px solid var(--accent);
             background: #111;
             cursor: pointer;
             display: flex;
@@ -106,103 +116,36 @@
             font-weight: bold;
             text-transform: uppercase;
             font-size: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         /* VSTUPY A TLAČÍTKA */
         .input-box { 
-            background: #111; 
-            border: 1px solid #333; 
-            color: white; 
-            padding: 8px; 
-            width: 70px; 
-            border-radius: 4px; 
-            text-align: center; 
-            margin-left: 10px;
-            outline: none;
+            background: #111; border: 1px solid #333; color: white; 
+            padding: 8px; width: 70px; border-radius: 4px; text-align: center; margin-left: 10px;
         }
-        .input-box:focus { border-color: var(--accent); }
-
         .btn-add { 
-            background: var(--accent); 
-            color: black; 
-            border: none; 
-            width: 34px; 
-            height: 34px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            margin-left: 12px; 
-            transition: 0.2s;
+            background: var(--accent); color: black; border: none; width: 34px; height: 34px; 
+            border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 12px; 
         }
-        .btn-add:hover { background: #e6b800; transform: scale(1.05); }
 
-        /* SIDEBAR / PROTOKOL */
+        /* SIDEBAR */
         .sidebar { width: 380px; background: #080808; padding: 25px; display: flex; flex-direction: column; }
-        
-        .protocol-title { 
-            color: var(--accent); 
-            text-align: center; 
-            margin: 0 0 20px 0; 
-            letter-spacing: 4px; 
-            text-transform: uppercase;
-            font-size: 24px;
-        }
-
+        .protocol-title { color: var(--accent); text-align: center; margin: 0 0 20px 0; letter-spacing: 4px; text-transform: uppercase; font-size: 24px; }
         .case-entries { flex: 1; overflow-y: auto; }
-        .case-item { 
-            background: #111; 
-            padding: 15px; 
-            border-radius: 4px; 
-            margin-bottom: 12px; 
-            border-left: 3px solid var(--accent); 
-            font-size: 13px; 
-        }
+        .case-item { background: #111; padding: 15px; border-radius: 4px; margin-bottom: 12px; border-left: 3px solid var(--accent); font-size: 13px; }
         
-        /* SOUHRNNÝ BOX DOLE */
-        .summary-box { 
-            background: #0f0f0f; 
-            padding: 20px; 
-            border-radius: 6px; 
-            border: 1px solid #222; 
-            margin-top: 20px;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
-        }
-
-        .summary-alert {
-            display: none; 
-            background: rgba(255, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            color: #fff;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            font-size: 12px;
-            text-align: center;
-        }
-
+        /* SOUHRN */
+        .summary-box { background: #0f0f0f; padding: 20px; border-radius: 6px; border: 1px solid #222; margin-top: 20px; }
+        .summary-alert { display: none; background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger); color: #fff; padding: 12px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; text-align: center; }
         .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: bold; font-size: 15px; text-transform: uppercase; }
-        
-        .btn-reset { 
-            width: 100%; 
-            background: #1a1a1a; 
-            color: var(--danger); 
-            border: 1px solid #333; 
-            padding: 12px; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            font-weight: bold; 
-            margin-top: 10px; 
-            text-transform: uppercase;
-            transition: 0.2s;
-        }
-        .btn-reset:hover { background: #222; border-color: var(--danger); }
+        .btn-reset { width: 100%; background: #1a1a1a; color: var(--danger); border: 1px solid #333; padding: 12px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: 10px; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div class="main-content">
-    <div class="search-container">
+    <div class="header-area">
+        <div class="main-title">Policejní Databáze</div>
         <input type="text" id="searchInput" placeholder="Vyhledat paragraf nebo trestný čin..." onkeyup="filterLaws()">
     </div>
     <div class="laws-list" id="lawsContainer">
