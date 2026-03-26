@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SASP - Penal Code</title>
+    <title>SASP - Penal <Code></Code></title>
     <style>
         :root {
             --bg: #0d0d0d;
@@ -47,15 +47,18 @@
 
         .appendix { margin-top: 8px; padding: 8px 12px; background: rgba(255, 204, 0, 0.05); border-left: 2px solid var(--accent); font-size: 12px; color: #bbb; font-style: italic; }
 
-        /* VSTUPNÍ POLE - Odpovídají tvému screenu */
         .input-wrapper { display: flex; flex-direction: column; align-items: center; margin-left: 15px; }
         .input-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
+        
+        /* Styl pro pole - zvýraznění, pokud je hodnota automaticky předvyplněná */
         .input-box { background: #111; border: 1px solid #333; color: white; padding: 8px; width: 100px; border-radius: 4px; text-align: center; font-size: 13px; }
+        .input-box:focus { border-color: var(--accent); outline: none; }
+        .input-box.auto-filled { border-color: var(--fine); color: var(--fine); font-weight: bold; }
         .input-box::placeholder { color: #555; }
         
         .btn-add { background: var(--accent); color: black; border: none; width: 38px; height: 38px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 15px; align-self: flex-end; }
 
-        /* SIDEBAR S NOVÝM DESIGNEM */
+        /* SIDEBAR */
         .sidebar { width: 380px; background: #080808; padding: 25px; display: flex; flex-direction: column; }
         .protocol-title { color: var(--accent); text-align: center; margin-bottom: 20px; letter-spacing: 4px; text-transform: uppercase; }
         .case-entries { flex: 1; overflow-y: auto; }
@@ -102,24 +105,31 @@
     let jailTotal = 0, fineTotal = 0;
     let docsToRevoke = new Set();
 
-    // Vylepšená funkce pro formátování placeholderů
-    function extractLimits(text, unit) {
-        // Hledá čísla v textu, bere v úvahu tečky v tisících
+    // Funkce pro analýzu textu a detekci pevných částek nebo rozsahů
+    function analyzeLimits(text, unit) {
         const regex = new RegExp(`(\\d+[.\\d]*)\\s*${unit.replace('$', '\\$')}`, 'g');
         const matches = [...text.matchAll(regex)].map(m => m[1]);
         
         const suffix = unit === 'let' ? ' let' : ' $';
 
+        // Pokud je v textu "do X" nebo "od X do Y", je to rozsah
+        const isRange = text.toLowerCase().includes("od ") || text.toLowerCase().includes("do ");
+
         if (matches.length >= 2) {
-            // Formát 1-10 let nebo 500 - 5.000 $
-            return `${matches[0]} - ${matches[1]}${suffix}`;
-        }
+            return { type: 'range', placeholder: `${matches[0]} - ${matches[1]}${suffix}`, value: '' };
+        } 
+        
         if (matches.length === 1) {
-            // Formát max 5 let nebo max 10.000 $
-            return `max ${matches[0]}${suffix}`;
+            if (isRange) {
+                return { type: 'range', placeholder: `max ${matches[0]}${suffix}`, value: '' };
+            } else {
+                // Pokud tam není "od/do", bereme to jako PEVNOU částku
+                const val = matches[0].replace(/\./g, ''); // Odstraníme tečky pro číselnou hodnotu
+                return { type: 'fixed', placeholder: '', value: val };
+            }
         }
         
-        return unit === 'let' ? 'Let' : 'Pokuta';
+        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Částka', value: '' };
     }
 
     function formatTextContent(html) {
@@ -146,16 +156,27 @@
 
             subLines.forEach((line, rIdx) => {
                 const textOnly = line.innerText;
+                const jailInfo = analyzeLimits(textOnly, 'let');
+                const fineInfo = analyzeLimits(textOnly, '$');
+
                 rows += `
                     <div class="sub-row">
                         <div class="sub-text">${formatTextContent(line.innerHTML)}</div>
                         <div class="input-wrapper">
                             <span class="input-label">VĚZENÍ</span>
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" placeholder="${extractLimits(textOnly, 'let')}">
+                            <input type="number" 
+                                class="input-box ${jailInfo.type === 'fixed' ? 'auto-filled' : ''}" 
+                                id="j_${lIdx}_${rIdx}" 
+                                value="${jailInfo.value}"
+                                placeholder="${jailInfo.placeholder}">
                         </div>
                         <div class="input-wrapper">
                             <span class="input-label">POKUTA</span>
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" placeholder="${extractLimits(textOnly, '$')}">
+                            <input type="number" 
+                                class="input-box ${fineInfo.type === 'fixed' ? 'auto-filled' : ''}" 
+                                id="f_${lIdx}_${rIdx}" 
+                                value="${fineInfo.value}"
+                                placeholder="${fineInfo.placeholder}">
                         </div>
                         <button class="btn-add" onclick="addToCase('${title}', '${textOnly.replace(/'/g,"")}', ${lIdx}, ${rIdx})">+</button>
                     </div>`;
