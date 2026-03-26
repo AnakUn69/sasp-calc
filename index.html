@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SASP - Penal <Code></Code></title>
+    <title>SASP - Penal Code</title>
     <style>
         :root {
             --bg: #0d0d0d;
@@ -50,10 +50,18 @@
         .input-wrapper { display: flex; flex-direction: column; align-items: center; margin-left: 15px; }
         .input-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
         
-        /* Styl pro pole - zvýraznění, pokud je hodnota automaticky předvyplněná */
         .input-box { background: #111; border: 1px solid #333; color: white; padding: 8px; width: 100px; border-radius: 4px; text-align: center; font-size: 13px; }
-        .input-box:focus { border-color: var(--accent); outline: none; }
-        .input-box.auto-filled { border-color: var(--fine); color: var(--fine); font-weight: bold; }
+        
+        /* STYL PRO ZAMKNUTÉ POLE */
+        .input-box[readonly] { 
+            border-color: #2b4d2e; 
+            color: var(--fine); 
+            font-weight: bold; 
+            cursor: not-allowed;
+            background: #0f1a10; 
+        }
+        
+        .input-box:focus:not([readonly]) { border-color: var(--accent); outline: none; }
         .input-box::placeholder { color: #555; }
         
         .btn-add { background: var(--accent); color: black; border: none; width: 38px; height: 38px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 15px; align-self: flex-end; }
@@ -64,6 +72,7 @@
         .case-entries { flex: 1; overflow-y: auto; }
         .case-item { background: #111; padding: 15px; border-radius: 4px; margin-bottom: 12px; border-left: 3px solid var(--accent); font-size: 13px; }
 
+        /* DESIGNOVÝ BOX SOUHRNU */
         .summary-box { background: #111; padding: 20px; border-radius: 8px; border: 1px solid var(--accent); margin-top: 20px; }
         .summary-alert-box { display: none; background: rgba(255, 68, 68, 0.15); border: 1px solid var(--danger); border-radius: 6px; padding: 12px; margin-bottom: 15px; text-align: center; }
         .summary-alert-title { color: var(--danger); font-weight: 900; font-size: 13px; text-transform: uppercase; border-bottom: 1px solid rgba(255, 68, 68, 0.3); padding-bottom: 6px; margin-bottom: 6px; }
@@ -105,14 +114,12 @@
     let jailTotal = 0, fineTotal = 0;
     let docsToRevoke = new Set();
 
-    // Funkce pro analýzu textu a detekci pevných částek nebo rozsahů
     function analyzeLimits(text, unit) {
+        // Opravený regex pro lepší detekci částek s tečkami
         const regex = new RegExp(`(\\d+[.\\d]*)\\s*${unit.replace('$', '\\$')}`, 'g');
         const matches = [...text.matchAll(regex)].map(m => m[1]);
         
         const suffix = unit === 'let' ? ' let' : ' $';
-
-        // Pokud je v textu "do X" nebo "od X do Y", je to rozsah
         const isRange = text.toLowerCase().includes("od ") || text.toLowerCase().includes("do ");
 
         if (matches.length >= 2) {
@@ -123,13 +130,13 @@
             if (isRange) {
                 return { type: 'range', placeholder: `max ${matches[0]}${suffix}`, value: '' };
             } else {
-                // Pokud tam není "od/do", bereme to jako PEVNOU částku
-                const val = matches[0].replace(/\./g, ''); // Odstraníme tečky pro číselnou hodnotu
+                // Pokud je to jedna pevná částka, vracíme ji jako fixní
+                const val = matches[0].replace(/\./g, ''); 
                 return { type: 'fixed', placeholder: '', value: val };
             }
         }
         
-        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Částka', value: '' };
+        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Pokuta', value: '' };
     }
 
     function formatTextContent(html) {
@@ -165,18 +172,20 @@
                         <div class="input-wrapper">
                             <span class="input-label">VĚZENÍ</span>
                             <input type="number" 
-                                class="input-box ${jailInfo.type === 'fixed' ? 'auto-filled' : ''}" 
+                                class="input-box" 
                                 id="j_${lIdx}_${rIdx}" 
                                 value="${jailInfo.value}"
-                                placeholder="${jailInfo.placeholder}">
+                                placeholder="${jailInfo.placeholder}"
+                                ${jailInfo.type === 'fixed' ? 'readonly' : ''}>
                         </div>
                         <div class="input-wrapper">
                             <span class="input-label">POKUTA</span>
                             <input type="number" 
-                                class="input-box ${fineInfo.type === 'fixed' ? 'auto-filled' : ''}" 
+                                class="input-box" 
                                 id="f_${lIdx}_${rIdx}" 
                                 value="${fineInfo.value}"
-                                placeholder="${fineInfo.placeholder}">
+                                placeholder="${fineInfo.placeholder}"
+                                ${fineInfo.type === 'fixed' ? 'readonly' : ''}>
                         </div>
                         <button class="btn-add" onclick="addToCase('${title}', '${textOnly.replace(/'/g,"")}', ${lIdx}, ${rIdx})">+</button>
                     </div>`;
