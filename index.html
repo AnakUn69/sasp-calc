@@ -30,19 +30,18 @@
 
         .input-wrapper { display: flex; flex-direction: column; align-items: center; margin-left: 15px; }
         .input-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
-        .input-box { background: #111; border: 1px solid #333; color: white; padding: 8px; width: 105px; border-radius: 4px; text-align: center; font-size: 13px; }
+        .input-box { background: #111; border: 1px solid #333; color: white; padding: 8px; width: 110px; border-radius: 4px; text-align: center; font-size: 13px; }
         
-        /* Styl pro fixní/zamknuté pole */
+        /* Zvýraznění zamknutého pole */
         .input-box[readonly] { border-color: #2b4d2e; color: var(--fine); font-weight: bold; cursor: not-allowed; background: #0f1a10; }
         .input-box:focus:not([readonly]) { border-color: var(--accent); outline: none; }
 
-        .btn-add { background: var(--accent); color: black; border: none; width: 38px; height: 38px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 15px; align-self: flex-end; }
+        .btn-add { background: var(--accent); color: black; border: none; width: 42px; height: 38px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-left: 15px; align-self: flex-end; }
 
-        /* SIDEBAR */
         .sidebar { width: 380px; background: #080808; padding: 25px; display: flex; flex-direction: column; }
         .case-entries { flex: 1; overflow-y: auto; }
         .case-item { position: relative; background: #111; padding: 15px; border-radius: 4px; margin-bottom: 12px; border-left: 3px solid var(--accent); font-size: 13px; }
-        .btn-remove { position: absolute; top: 10px; right: 10px; background: transparent; color: #444; border: none; cursor: pointer; font-size: 16px; }
+        .btn-remove { position: absolute; top: 10px; right: 10px; background: transparent; color: #666; border: none; cursor: pointer; font-size: 18px; }
         .btn-remove:hover { color: var(--danger); }
 
         .summary-box { background: #111; padding: 20px; border-radius: 8px; border: 1px solid var(--accent); margin-top: 20px; }
@@ -62,16 +61,16 @@
 </div>
 
 <div class="sidebar">
-    <h2 style="color:var(--accent); text-align:center; letter-spacing:3px;">PROTOKOL</h2>
+    <h2 style="color:var(--accent); text-align:center; letter-spacing:3px; margin-top:0;">PROTOKOL</h2>
     <div class="case-entries" id="caseEntries"></div>
     <div class="summary-box">
         <div id="licenseAlert" class="summary-alert-box">
             <div style="color:var(--danger); font-weight:900; font-size:12px; margin-bottom:5px;">ODEBRAT Z EVIDENCE:</div>
-            <div id="docsList" style="color:#ffcccc; font-size:12px;"></div>
+            <div id="docsList" style="color:#ffcccc; font-size:12px; font-weight:bold;"></div>
         </div>
         <div class="summary-row"><span>VĚZENÍ:</span> <span id="totalJail" style="color:var(--jail)">0 let</span></div>
         <div class="summary-row"><span>POKUTA:</span> <span id="totalFine" style="color:var(--fine)">0 $</span></div>
-        <button class="btn-reset" onclick="location.reload()">NOVÝ PŘÍPAD</button>
+        <button class="btn-reset" style="margin-top:10px;" onclick="location.reload()">NOVÝ PŘÍPAD</button>
     </div>
 </div>
 
@@ -79,69 +78,74 @@
     let activeCaseItems = [];
 
     function analyzeLimits(text, unit) {
-        // Detekce čísel (včetně těch s tečkou)
-        const regex = new RegExp(`(\\d+[.\\d]*)\\s*${unit.replace('$', '\\$')}`, 'g');
-        const matches = [...text.matchAll(regex)].map(m => m[1]);
+        // Vyčistíme text od teček v číslech (1.000 -> 1000) pro správnou analýzu
+        const cleanText = text.replace(/(\d)\.(\d{3})/g, '$1$2');
+        
+        const regex = new RegExp(`(\\d+)\\s*${unit.replace('$', '\\$')}`, 'g');
+        const matches = [...cleanText.matchAll(regex)].map(m => m[1]);
+        
+        const lowerText = cleanText.toLowerCase();
+        // Detekce, zda jde o rozmezí (od, do, až, pomlčka)
+        const isRange = lowerText.includes("od") || lowerText.includes("do") || 
+                        lowerText.includes("až") || lowerText.includes("-") || 
+                        lowerText.includes("–");
+
         const suffix = unit === 'let' ? ' let' : ' $';
 
-        // Rozšířená detekce rozsahu (pomlčka, slova od, do, až, po)
-        const lowerText = text.toLowerCase();
-        const hasHyphen = text.includes("-");
-        const hasRangeWords = lowerText.includes("od ") || lowerText.includes("do ") || 
-                             lowerText.includes("až ") || lowerText.includes("po ");
-
-        // Pokud najdeme dvě čísla nebo jedno číslo s náznakem rozsahu, je to rozsah
-        if (matches.length >= 2 || (matches.length === 1 && (hasHyphen || hasRangeWords))) {
-            let label = matches.length >= 2 ? `${matches[0]} - ${matches[1]}${suffix}` : `max ${matches[0]}${suffix}`;
-            return { type: 'range', placeholder: label, value: '' };
+        // Pokud je v textu víc čísel nebo slovo naznačující rozmezí, políčko se nezamkne
+        if (matches.length >= 2 || (matches.length === 1 && isRange)) {
+            let placeholder = matches.length >= 2 ? `${matches[0]} - ${matches[1]}${suffix}` : `max ${matches[0]}${suffix}`;
+            return { type: 'range', placeholder: placeholder, value: '' };
         } 
         
-        // Pevná částka (pouze jedno číslo bez náznaku rozsahu)
+        // Pokud je tam přesně jedna částka bez slov "od/do", je fixní a zamkneme ji
         if (matches.length === 1) {
-            return { type: 'fixed', placeholder: '', value: matches[0].replace(/\./g, '') };
+            return { type: 'fixed', placeholder: '', value: matches[0] };
         }
         
-        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Pokuta', value: '' };
+        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Částka', value: '' };
     }
 
     async function loadLaws() {
         const container = document.getElementById('lawsContainer');
-        const response = await fetch('tresty.html?v=' + Date.now());
-        const html = await response.text();
-        const temp = document.createElement('div');
-        temp.innerHTML = html;
-        
-        container.innerHTML = "";
-        temp.querySelectorAll('.law-item').forEach((item, lIdx) => {
-            const title = item.getAttribute('data-title');
-            const subLines = item.querySelectorAll('.sub-line');
-            let rows = "";
+        try {
+            const response = await fetch('tresty.html?v=' + Date.now());
+            const html = await response.text();
+            const temp = document.createElement('div');
+            temp.innerHTML = html;
+            
+            container.innerHTML = "";
+            temp.querySelectorAll('.law-item').forEach((item, lIdx) => {
+                const title = item.getAttribute('data-title');
+                const subLines = item.querySelectorAll('.sub-line');
+                let rows = "";
 
-            subLines.forEach((line, rIdx) => {
-                const textOnly = line.innerText;
-                const jail = analyzeLimits(textOnly, 'let');
-                const fine = analyzeLimits(textOnly, '$');
+                subLines.forEach((line, rIdx) => {
+                    const textOnly = line.innerText;
+                    const jail = analyzeLimits(textOnly, 'let');
+                    const fine = analyzeLimits(textOnly, '$');
 
-                rows += `
-                    <div class="sub-row">
-                        <div class="sub-text">${line.innerHTML}</div>
-                        <div class="input-wrapper">
-                            <span class="input-label">VĚZENÍ</span>
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${jail.value}" placeholder="${jail.placeholder}" ${jail.type === 'fixed' ? 'readonly' : ''}>
-                        </div>
-                        <div class="input-wrapper">
-                            <span class="input-label">POKUTA</span>
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${fine.value}" placeholder="${fine.placeholder}" ${fine.type === 'fixed' ? 'readonly' : ''}>
-                        </div>
-                        <button class="btn-add" onclick="addToCase('${title}', '${textOnly.replace(/'/g,"")}', ${lIdx}, ${rIdx})">+</button>
-                    </div>`;
+                    rows += `
+                        <div class="sub-row">
+                            <div class="sub-text">${line.innerHTML}</div>
+                            <div class="input-wrapper">
+                                <span class="input-label">VĚZENÍ</span>
+                                <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${jail.value}" placeholder="${jail.placeholder}" ${jail.type === 'fixed' ? 'readonly' : ''}>
+                            </div>
+                            <div class="input-wrapper">
+                                <span class="input-label">POKUTA</span>
+                                <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${fine.value}" placeholder="${fine.placeholder}" ${fine.type === 'fixed' ? 'readonly' : ''}>
+                            </div>
+                            <button class="btn-add" onclick="addToCase('${title}', '${textOnly.replace(/'/g,"")}', ${lIdx}, ${rIdx})">+</button>
+                        </div>`;
+                });
+
+                const card = document.createElement('div');
+                card.className = 'law-card';
+                card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div><div>▼</div></div><div class="law-content">${rows}</div>`;
+                container.appendChild(card);
             });
-
-            const card = document.createElement('div');
-            card.className = 'law-card';
-            card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div><div>▼</div></div><div class="law-content">${rows}</div>`;
-            container.appendChild(card);
-        });
+        } catch (e) { console.error("Chyba při načítání tresty.html:", e); }
     }
 
     function addToCase(title, text, lIdx, rIdx) {
@@ -166,7 +170,7 @@
             item.docs.forEach(d => allDocs.add(d));
             const div = document.createElement('div');
             div.className = 'case-item';
-            div.innerHTML = `<button class="btn-remove" onclick="removeEntry(${item.id})">×</button><b>${item.title}</b><br><small>${item.jail} let | ${item.fine.toLocaleString()} $</small>`;
+            div.innerHTML = `<button class="btn-remove" onclick="removeEntry(${item.id})">×</button><b>${item.title}</b><br><small style="color:#aaa">${item.jail} let | ${item.fine.toLocaleString()} $</small>`;
             cont.appendChild(div);
         });
 
