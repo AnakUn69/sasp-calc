@@ -2,6 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SASP - Penal Code</title>
     <style>
         :root {
@@ -9,82 +10,107 @@
             --input-bg: #1a1a1a; --text: #e0e0e0; --border: #222;
             --danger: #ff4444; --jail: #4dabf7; --fine: #69db7c;
         }
+
         body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; margin: 0; height: 100vh; overflow: hidden; }
         .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid var(--border); }
         .header-area { padding: 25px 30px 10px 30px; }
         #searchInput { width: 100%; background: var(--input-bg); border: 1px solid #333; color: white; padding: 12px 20px; border-radius: 4px; outline: none; border-left: 4px solid var(--accent); }
+
         .laws-list { flex: 1; padding: 15px 30px 30px 30px; overflow-y: auto; }
         .law-card { background: var(--card); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 15px; overflow: hidden; }
         .law-header { padding: 15px 20px; border-left: 4px solid var(--accent); background: #111; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-        .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 15px; }
         .law-content { display: none; background: #0c0c0c; }
         .law-card.active .law-content { display: block; }
+        
+        /* ROZLOŽENÍ ŘÁDKU */
         .sub-row { padding: 15px 20px; border-top: 1px solid #1a1a1a; display: flex; flex-direction: column; }
-        .row-main { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .sub-text { flex: 1; font-size: 13px; color: #ccc; padding-right: 20px; line-height: 1.4; }
-        .input-group { display: flex; gap: 12px; align-items: flex-end; flex-shrink: 0; }
+        .row-main { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 15px; }
+        .sub-text { flex: 1; font-size: 13px; color: #ccc; line-height: 1.4; }
+
+        .input-group { display: flex; gap: 10px; align-items: flex-end; flex-shrink: 0; }
         .input-wrapper { display: flex; flex-direction: column; align-items: center; }
         .input-label { font-size: 8px; color: #666; text-transform: uppercase; margin-bottom: 4px; font-weight: bold; }
-        .input-box { background: #111; border: 1px solid #333; color: white; padding: 7px; width: 85px; border-radius: 4px; text-align: center; font-size: 12px; }
+        .input-box { background: #111; border: 1px solid #333; color: white; padding: 7px; width: 75px; border-radius: 4px; text-align: center; font-size: 12px; }
         .input-box[readonly] { border-color: #2b4d2e; color: var(--fine); background: #0f1a10; cursor: not-allowed; font-weight: bold; }
-        .btn-add { background: var(--accent); color: black; border: none; width: 35px; height: 35px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 18px; }
-        .red-alert-bar { background: var(--danger); color: white; text-align: center; font-weight: 900; font-size: 10px; padding: 4px; border-radius: 3px; margin-top: 12px; text-transform: uppercase; letter-spacing: 1px; }
-        .sidebar { width: 350px; background: #080808; padding: 20px; display: flex; flex-direction: column; }
+
+        .btn-add { background: var(--accent); color: black; border: none; width: 35px; height: 35px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 20px; }
+
+        .red-alert-bar { 
+            background: var(--danger); color: white; text-align: center; 
+            font-weight: 900; font-size: 10px; padding: 5px; border-radius: 3px; 
+            margin-top: 12px; text-transform: uppercase; width: 100%;
+        }
+
+        /* PROTOKOL (SIDEBAR) */
+        .sidebar { width: 360px; background: #080808; padding: 20px; display: flex; flex-direction: column; border-left: 1px solid var(--border); }
         .case-entries { flex: 1; overflow-y: auto; }
-        .case-item { position: relative; background: #111; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #222; font-size: 12px; }
-        .btn-remove { position: absolute; top: 8px; right: 8px; background: transparent; color: #444; border: none; cursor: pointer; font-size: 18px; }
-        .item-alert-bar { background: var(--danger); color: white; text-align: center; font-weight: 800; font-size: 10px; padding: 4px; border-radius: 3px; margin: 8px 0; }
-        .summary-box { background: #111; padding: 15px; border-radius: 8px; border: 1px solid var(--accent); margin-top: 15px; }
-        .final-alert { background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger); border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: center; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
+        .case-item { 
+            position: relative; background: #111; padding: 15px; border-radius: 8px; 
+            margin-bottom: 12px; border: 1px solid #222; font-size: 12px;
+            animation: slideIn 0.2s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+        .btn-remove { position: absolute; top: 10px; right: 10px; background: transparent; color: #555; border: none; cursor: pointer; font-size: 22px; line-height: 1; }
+        .btn-remove:hover { color: var(--danger); }
+        
+        .item-title { color: var(--accent); font-weight: bold; display: block; margin-bottom: 5px; text-transform: uppercase; padding-right: 20px; }
+        .item-alert { background: var(--danger); color: white; text-align: center; font-weight: 800; font-size: 10px; padding: 4px; border-radius: 4px; margin: 8px 0; text-transform: uppercase; }
+        .item-vals { font-weight: bold; margin-top: 8px; font-size: 13px; }
+
+        .summary-box { background: #111; padding: 20px; border-radius: 8px; border: 1px solid var(--accent); margin-top: 20px; }
+        .final-alert { background: rgba(255, 68, 68, 0.15); border: 1px solid var(--danger); border-radius: 6px; padding: 12px; margin-bottom: 15px; text-align: center; }
     </style>
 </head>
 <body>
 
 <div class="main-content">
     <div class="header-area">
-        <h2 style="margin:0 0 15px 0; letter-spacing:2px; font-size: 20px;">POLICEJNÍ DATABÁZE - PENAL CODE - GenK</h2>
-        <input type="text" id="searchInput" placeholder="Hledat..." onkeyup="filterLaws()">
+        <h2 style="margin:0 0 15px 0; letter-spacing:2px;">POLICEJNÍ DATABÁZE - PENAL CODE - GenK</h2>
+        <input type="text" id="searchInput" placeholder="Vyhledat v paragrafech..." onkeyup="filterLaws()">
     </div>
     <div class="laws-list" id="lawsContainer"></div>
 </div>
 
 <div class="sidebar">
-    <h2 style="color:var(--accent); text-align:center; margin-bottom:15px; letter-spacing: 3px;">PROTOKOL</h2>
+    <h2 style="color:var(--accent); text-align:center; margin-bottom:20px; letter-spacing: 4px;">PROTOKOL</h2>
     <div class="case-entries" id="caseEntries"></div>
     <div class="summary-box">
         <div id="licenseAlert" class="final-alert" style="display:none;">
-            <div style="color:var(--danger); font-weight:900; font-size:11px; margin-bottom:3px;">ODEBRAT Z EVIDENCE:</div>
-            <div id="docsList" style="color:#ffcccc; font-size:10px;"></div>
+            <div style="color:var(--danger); font-weight:900; font-size:12px; margin-bottom:5px; border-bottom: 1px solid rgba(255,68,68,0.2); padding-bottom:3px;">ODEBRAT Z EVIDENCE:</div>
+            <div id="docsList" style="color:#ffcccc; font-size:11px; font-weight:bold;"></div>
         </div>
-        <div class="summary-row"><span>VĚZENÍ:</span> <span id="totalJail" style="color:var(--jail)">0 let</span></div>
-        <div class="summary-row"><span>POKUTA:</span> <span id="totalFine" style="color:var(--fine)">0 $</span></div>
-        <button style="width:100%; padding:12px; background:#1a1a1a; color:var(--danger); border:1px solid #333; cursor:pointer; font-weight:bold; text-transform:uppercase; margin-top:5px;" onclick="location.reload()">Nový případ</button>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:bold;">
+            <span>VĚZENÍ:</span> <span id="totalJail" style="color:var(--jail)">0 let</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+            <span>POKUTA:</span> <span id="totalFine" style="color:var(--fine)">0 $</span>
+        </div>
+        <button style="width:100%; padding:14px; background:#1a1a1a; color:var(--danger); border:1px solid #333; cursor:pointer; font-weight:bold; text-transform:uppercase;" onclick="location.reload()">Smazat případ</button>
     </div>
 </div>
 
 <script>
     let activeCaseItems = [];
 
-    // Tato funkce nyní agresivněji hledá čísla ve tvém textu
+    // Funkce pro analýzu textu z tresty.html
     function analyzeLimits(text, unit) {
-        // Vyčištění textu pro hledání čísel
-        const clean = text.replace(/\./g, '').replace(/\s+/g, ' ');
-        const regex = new RegExp(`(\\d+)\\s*${unit === 'let' ? '(let|rok|roku|roků)' : '\\$'}`, 'gi');
+        // Vyčistíme text od teček a mezer JEN pro potřeby hledání čísel
+        const clean = text.replace(/\./g, '').replace(/\s/g, '');
+        const regex = new RegExp(`(\\d+)${unit === 'let' ? 'let' : '\\$'}`, 'gi');
         const matches = [...clean.matchAll(regex)].map(m => m[1]);
         
         const low = text.toLowerCase();
-        // Detekce rozmezí ve tvém souboru
+        // Detekce, zda se jedná o rozmezí (od, do, až, sazba)
         const isRange = low.includes("od") || low.includes("do") || low.includes("až") || low.includes("sazba") || text.includes("-");
 
         if (matches.length >= 2 || (matches.length === 1 && isRange)) {
             let label = matches.length >= 2 ? `${matches[0]}-${matches[1]}` : `max ${matches[0]}`;
             return { type: 'range', placeholder: label, value: '' };
         } 
-        if (matches.length === 1) {
-            return { type: 'fixed', placeholder: '', value: matches[0] };
-        }
-        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Pokuta', value: '' };
+        if (matches.length === 1) return { type: 'fixed', placeholder: '', value: matches[0] };
+        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Částka', value: '' };
     }
 
     async function loadLaws() {
@@ -99,14 +125,23 @@
             let rows = "";
 
             item.querySelectorAll('.sub-line').forEach((line, rIdx) => {
+                const inner = line.innerHTML;
                 const txt = line.innerText;
                 const jail = analyzeLimits(txt, 'let');
                 const fine = analyzeLimits(txt, '$');
 
+                // Rozdělení textu a červené lišty
+                let cleanText = inner.split("ODEBRAT")[0];
+                let alertHtml = "";
+                if (inner.includes("ODEBRAT")) {
+                    const alerts = inner.match(/ODEBRAT\s+([^<.]+)/gi);
+                    if (alerts) alertHtml = alerts.map(a => `<div class="red-alert-bar">${a}</div>`).join("");
+                }
+
                 rows += `
                     <div class="sub-row">
                         <div class="row-main">
-                            <div class="sub-text">${line.innerHTML.split("ODEBRAT")[0]}</div>
+                            <div class="sub-text">${cleanText}</div>
                             <div class="input-group">
                                 <div class="input-wrapper">
                                     <span class="input-label">VĚZENÍ</span>
@@ -119,7 +154,7 @@
                                 <button class="btn-add" onclick="addToCase('${title}', '${txt.replace(/'/g,"")}', ${lIdx}, ${rIdx})">+</button>
                             </div>
                         </div>
-                        ${txt.includes("ODEBRAT") ? txt.match(/ODEBRAT\s+([^<.]+)/gi).map(m => `<div class="red-alert-bar">${m}</div>`).join("") : ""}
+                        ${alertHtml}
                     </div>`;
             });
 
@@ -133,11 +168,13 @@
     function addToCase(title, text, lIdx, rIdx) {
         const j = parseInt(document.getElementById(`j_${lIdx}_${rIdx}`).value) || 0;
         const f = parseInt(document.getElementById(`f_${lIdx}_${rIdx}`).value) || 0;
+        if (j === 0 && f === 0) return;
+
         const docs = [];
         if (text.toUpperCase().includes("ŘIDIČ")) docs.push("ODEBRAT ŘIDIČSKÉ OPRÁVNĚNÍ");
         if (text.toUpperCase().includes("ZBROJNÍ")) docs.push("ODEBRAT ZBROJNÍ PRŮKAZ");
 
-        activeCaseItems.push({ id: Date.now(), title, text, jail: j, fine: f, docs });
+        activeCaseItems.push({ id: Date.now(), title, jail: j, fine: f, docs });
         renderCase();
     }
 
@@ -148,17 +185,19 @@
 
         activeCaseItems.forEach(item => {
             jTot += item.jail; fTot += item.fine;
-            const entry = document.createElement('div');
-            entry.className = 'case-item';
-            let alerts = item.docs.map(d => `<div class="item-alert-bar">${d}</div>`).join("");
             item.docs.forEach(d => allDocs.add(d.replace("ODEBRAT ", "")));
-
-            entry.innerHTML = `
+            
+            const div = document.createElement('div');
+            div.className = 'case-item';
+            div.innerHTML = `
                 <button class="btn-remove" onclick="removeEntry(${item.id})">×</button>
-                <b style="color:var(--accent)">${item.title}</b>
-                ${alerts}
-                <div style="font-weight:bold; margin-top:5px;"><span style="color:var(--jail)">${item.jail} let</span> | <span style="color:var(--fine)">${item.fine.toLocaleString()} $</span></div>`;
-            cont.appendChild(entry);
+                <span class="item-title">${item.title}</span>
+                ${item.docs.map(d => `<div class="item-alert">${d}</div>`).join("")}
+                <div class="item-vals">
+                    <span style="color:var(--jail)">${item.jail} let</span> | 
+                    <span style="color:var(--fine)">${item.fine.toLocaleString()} $</span>
+                </div>`;
+            cont.appendChild(div);
         });
 
         document.getElementById('totalJail').innerText = jTot + " let";
