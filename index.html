@@ -2,131 +2,81 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-<<<<<<< HEAD
-    <title>Policejní Databáze - Inteligentní Sazebník</title>
-=======
-    <title>SASP - Penal Code - GenK</title>
->>>>>>> parent of 66ef011 (Update index.html)
+    <title>Policejní Databáze - GenK</title>
     <style>
         :root {
-            --bg: #0a0a0a; --card: #121212; --accent: #ffcc00;
-            --input-bg: #181818; --text: #e0e0e0; --border: #282828;
+            --bg: #0d0d0d; --card: #151515; --accent: #ffcc00;
+            --input-bg: #1a1a1a; --text: #e0e0e0; --border: #222;
             --danger: #ff4444; --jail: #4dabf7; --fine: #69db7c;
-            --warning: #ffcc00; /* Barva pro varování v sazebníku */
+            --warning: #ffcc00;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
-            background: var(--bg); color: var(--text); 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; 
             display: flex; height: 100vh; overflow: hidden; 
         }
 
-        /* SCANNER LINE EFEKT */
-        body::before {
-            content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            z-index: 9999; background-size: 100% 2px, 3px 100%; pointer-events: none;
-        }
-
-        b, strong { color: var(--accent); }
-
-        /* HLAVNÍ STRUKTURA */
-        .main-content { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+        /* HLAVNÍ OBSAH */
+        .main-content { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); position: relative; }
         
-<<<<<<< HEAD
-        .header-area { padding: 20px 25px; border-bottom: 2px solid var(--border); background: #050505; }
+        .header-area { padding: 20px 25px; border-bottom: 2px solid var(--border); background: #0a0a0a; }
         .main-title {
-            color: #ffffff; font-size: 22px; font-weight: 900; letter-spacing: 3px;
+            color: #ffffff; font-size: 22px; font-weight: 900; letter-spacing: 2px;
             text-transform: uppercase; margin-bottom: 15px; text-align: center;
             border-bottom: 3px solid var(--accent); padding-bottom: 12px;
-=======
-        /* HORNÍ LIŠTA S NÁZVEM A HLEDÁNÍM */
-        .header-area { 
-            padding: 20px 25px; 
-            border-bottom: 1px solid var(--border); 
-            background: #0a0a0a;
         }
-        .main-title {
-            color: var(--accent);
-            font-size: 20px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            text-align: center;
-            border-bottom: 2px solid var(--accent);
-            padding-bottom: 10px;
->>>>>>> parent of 66ef011 (Update index.html)
-        }
+
         #searchInput { 
-            width: 100%; background: var(--input-bg); border: 1px solid #444; color: white;
+            width: 100%; background: var(--input-bg); border: 1px solid #333; color: white;
             padding: 12px; border-radius: 4px; outline: none; border-left: 5px solid var(--accent);
         }
 
-<<<<<<< HEAD
-        .laws-list { flex: 1; padding: 20px; overflow-y: auto; }
-=======
         /* SEZNAM ZÁKONŮ */
         .laws-list { flex: 1; padding: 15px 25px; overflow-y: auto; }
->>>>>>> parent of 66ef011 (Update index.html)
-        .law-card { background: var(--card); border: 1px solid var(--border); margin-bottom: 8px; border-radius: 4px; }
+        .law-card { background: var(--card); border: 1px solid var(--border); margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
         
-        .law-header { padding: 12px 15px; border-left: 4px solid var(--accent); cursor: pointer; display: flex; align-items: center; gap: 15px; background: #111; }
-        .law-title { color: var(--accent); font-weight: bold; font-size: 13px; text-transform: uppercase; }
+        .law-header { 
+            padding: 12px 15px; border-left: 4px solid var(--accent); cursor: pointer; 
+            display: flex; align-items: center; gap: 15px; background: #111; 
+        }
+        .law-title { color: var(--accent); font-weight: bold; font-size: 13px; text-transform: uppercase; white-space: nowrap; }
         .law-header-desc { font-size: 11px; color: #666; font-style: italic; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .law-content { display: none; background: #080808; }
+        .law-content { display: none; background: #0c0c0c; padding: 5px 0; }
         .law-card.active .law-content { display: block; }
         
-        /* ŘÁDKY S TRESTY */
         .sub-row { padding: 12px 15px; border-top: 1px solid #1a1a1a; }
-        .row-main { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .row-main { display: flex; justify-content: space-between; align-items: center; gap: 15px; }
         .sub-text { flex: 1; font-size: 12px; color: #ccc; line-height: 1.4; }
         
-        .input-group { display: flex; gap: 10px; align-items: center; }
-        
-        /* INPUTY S VALIDACÍ */
+        /* INPUTY A VALIDACE */
+        .input-group { display: flex; gap: 8px; align-items: center; }
         .input-box { 
             background: #111; border: 1px solid #333; color: white; padding: 8px; 
-            width: 100px; border-radius: 3px; text-align: center; font-size: 12px; outline: none; transition: 0.3s;
+            width: 90px; border-radius: 3px; text-align: center; font-size: 12px; outline: none; transition: 0.2s;
         }
-        /* Třída pro varování, když je trest mimo rozsah */
         .input-box.out-of-range {
             border-color: var(--warning) !important;
-            box-shadow: 0 0 8px rgba(255, 204, 0, 0.4);
             color: var(--warning) !important;
-            background: #1a1600;
+            box-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
         }
-        
         .input-box[readonly] { background: #0a110a !important; border-color: #1b3d20 !important; color: #69db7c !important; cursor: not-allowed; }
 
-<<<<<<< HEAD
         .btn-add { background: var(--accent); color: black; border: none; width: 35px; height: 35px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 20px; }
 
         /* SIDEBAR */
-=======
-        .btn-add { 
-            background: var(--accent); color: black; border: none; width: 35px; height: 35px; 
-            border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 20px; 
-        }
-        .btn-add:hover { background: #e6b800; }
-
-        .red-alert-bar { display: inline-block; background: var(--danger); color: white; font-weight: 900; font-size: 9px; padding: 2px 8px; margin-top: 8px; text-transform: uppercase; border-radius: 2px; }
-
-        /* SIDEBAR / PROTOKOL */
->>>>>>> parent of 66ef011 (Update index.html)
-        .sidebar { width: 380px; background: #080808; padding: 20px; display: flex; flex-direction: column; }
-        .sidebar-title { color: var(--accent); text-align: center; font-size: 16px; letter-spacing: 2px; margin-bottom: 20px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .sidebar { width: 380px; background: #080808; padding: 20px; display: flex; flex-direction: column; border-left: 1px solid var(--border); }
+        .sidebar-title { color: var(--accent); text-align: center; font-size: 16px; margin-bottom: 20px; font-weight: bold; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .case-entries { flex: 1; overflow-y: auto; }
         .case-item { position: relative; background: #111; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #222; border-left: 3px solid var(--accent); }
         .btn-remove { position: absolute; top: 5px; right: 8px; background: transparent; color: #555; border: none; cursor: pointer; font-size: 18px; }
+        
+        .item-title { color: var(--accent); font-weight: bold; display: block; font-size: 11px; margin-bottom: 4px; }
+        .item-vals { font-weight: bold; font-size: 11px; border-top: 1px solid #222; padding-top: 8px; display: flex; justify-content: space-between; }
 
         .summary-box { background: #111; padding: 15px; border-radius: 6px; border: 1px solid var(--accent); margin-top: 15px; }
         .summary-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
-        
-        .btn-clear { width:100%; padding:12px; background:#1a1a1a; color:var(--danger); border:1px solid #333; cursor:pointer; font-weight:bold; font-size:11px; text-transform: uppercase; }
-        .btn-clear:hover { background: #222; }
+        .btn-clear { width:100%; padding:10px; background:#1a1a1a; color:var(--danger); border:1px solid #333; cursor:pointer; font-weight:bold; }
     </style>
 </head>
 <body>
@@ -134,7 +84,7 @@
 <div class="main-content">
     <div class="header-area">
         <div class="main-title">POLICAJNÍ DATABAZE - PENAL CODE - GenK</div>
-        <input type="text" id="searchInput" placeholder="Vyhledat paragraf nebo trestný čin..." onkeyup="filterLaws()">
+        <input type="text" id="searchInput" placeholder="Hledat v zákonech..." onkeyup="filterLaws()">
     </div>
     <div class="laws-list" id="lawsContainer"></div>
 </div>
@@ -152,26 +102,19 @@
 <script>
     let activeCaseItems = [];
 
-    // FUNKCE PRO ZÍSKÁNÍ ROZSAHU Z TEXTU (např. "5-10" -> {min:5, max:10})
     function getRange(text) {
-        let cleanText = text.replace(/(\d)\.(\d{3})/g, '$1$2'); // Odstraní tečky v tisících (1.000 -> 1000)
-        let match = cleanText.match(/(\d+)\s*-\s*(\d+)/);
+        let clean = text.replace(/(\d)\.(\d{3})/g, '$1$2').replace(/<[^>]*>?/gm, '');
+        let match = clean.match(/(\d+)\s*-\s*(\d+)/);
         if (match) return { min: parseInt(match[1]), max: parseInt(match[2]) };
-        
-        let maxMatch = cleanText.match(/(?:do|max)\s*(\d+)/i);
+        let maxMatch = clean.match(/(?:do|max)\s*(\d+)/i);
         if (maxMatch) return { min: 0, max: parseInt(maxMatch[1]) };
-        
         return null;
     }
 
-    // VALIDACE INPUTU
     function validateInput(el, min, max) {
         let val = parseInt(el.value);
-        if (!isNaN(val) && (val < min || val > max)) {
-            el.classList.add('out-of-range');
-        } else {
-            el.classList.remove('out-of-range');
-        }
+        if (!isNaN(val) && (val < min || val > max)) el.classList.add('out-of-range');
+        else el.classList.remove('out-of-range');
     }
 
     async function loadLaws() {
@@ -191,12 +134,8 @@
                 const fixJail = line.getAttribute('data-fix-jail');
                 const innerH = line.innerHTML;
                 
-                // Detekce rozsahů pro validaci
                 const jailRange = getRange(innerH.includes('let') || innerH.includes('rok') ? innerH : "");
                 const fineRange = getRange(innerH.includes('$') ? innerH : "");
-
-                const jPlace = jailRange ? `${jailRange.min}-${jailRange.max}` : "Let";
-                const fPlace = fineRange ? `${fineRange.min}-${fineRange.max}` : "Suma";
 
                 rows += `
                 <div class="sub-row">
@@ -204,13 +143,13 @@
                         <div class="sub-text">${innerH.split("ODEBRAT")[0]}</div>
                         <div class="input-group">
                             <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" 
-                                value="${fixJail || ''}" placeholder="${jPlace}" ${fixJail !== null ? 'readonly' : ''}
+                                value="${fixJail || ''}" placeholder="${jailRange ? jailRange.min+'-'+jailRange.max : 'Let'}" 
+                                ${fixJail !== null ? 'readonly' : ''}
                                 oninput="validateInput(this, ${jailRange?.min || 0}, ${jailRange?.max || 999})">
-                            
                             <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" 
-                                value="${fixFine || ''}" placeholder="${fPlace}" ${fixFine !== null ? 'readonly' : ''}
+                                value="${fixFine || ''}" placeholder="${fineRange ? fineRange.min+'-'+fineRange.max : 'Suma'}" 
+                                ${fixFine !== null ? 'readonly' : ''}
                                 oninput="validateInput(this, ${fineRange?.min || 0}, ${fineRange?.max || 999999})">
-                            
                             <button class="btn-add" onclick="addToCase('${title}', '${line.innerText.replace(/'/g,"\\'")}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>
