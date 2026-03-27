@@ -29,11 +29,9 @@
         .sub-text { flex: 1; font-size: 12px; color: #ccc; line-height: 1.4; white-space: normal; }
 
         .input-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-        
-        /* STYL PRO VSTUPY */
         .input-box { background: #111; border: 1px solid #333; color: white; padding: 5px; width: 75px; border-radius: 3px; text-align: center; font-size: 11px; outline: none; }
         
-        /* ZAMKNUTÉ POLE (Fixní částka) */
+        /* ZAMKNUTÉ POLE */
         .input-box[readonly] { 
             background: #0a110a !important; 
             border-color: #1b3d20 !important; 
@@ -44,6 +42,13 @@
 
         .btn-add { background: var(--accent); color: black; border: none; width: 30px; height: 30px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 18px; }
 
+        /* ČERVENÝ ŠTÍTEK ODEBRAT V SEZNAMU */
+        .red-alert-bar { 
+            display: inline-block; background: var(--danger); color: white; 
+            font-weight: 900; font-size: 9px; padding: 2px 8px; 
+            margin-top: 8px; text-transform: uppercase; border-radius: 2px;
+        }
+
         /* SIDEBAR / PROTOKOL */
         .sidebar { width: 360px; background: #080808; padding: 20px; display: flex; flex-direction: column; }
         .sidebar-title { color: var(--accent); text-align: center; font-size: 16px; letter-spacing: 3px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; }
@@ -52,6 +57,14 @@
         .btn-remove { position: absolute; top: 5px; right: 8px; background: transparent; color: #555; border: none; cursor: pointer; font-size: 20px; }
         .item-title { color: var(--accent); font-weight: bold; display: block; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; }
         .item-desc { color: #888; font-size: 10px; line-height: 1.3; display: block; margin-bottom: 8px; }
+        
+        /* ČERVENÝ ŠTÍTEK V PROTOKOLU */
+        .item-alert { 
+            background: var(--danger); color: white; text-align: center; 
+            font-weight: 800; font-size: 9px; padding: 3px; 
+            border-radius: 3px; margin-bottom: 8px; text-transform: uppercase;
+        }
+        
         .item-vals { font-weight: bold; font-size: 11px; border-top: 1px solid #222; padding-top: 8px; display: flex; justify-content: space-between; }
 
         .summary-box { background: #111; padding: 15px; border-radius: 6px; border: 1px solid var(--accent); margin-top: 15px; }
@@ -82,28 +95,19 @@
     let activeCaseItems = [];
 
     function analyzeLimits(text, unit) {
-        // Vyčištění textu pro detekci čísel (odstraníme tečky v tisících 5.000 -> 5000)
         let cleanText = text.replace(/(\d)\.(\d{3})/g, '$1$2');
-        
-        // Hledání všech čísel s jednotkou
         let regex = new RegExp(`(\\d+)\\s*(${unit === 'let' ? 'let|roků' : '\\$'})`, 'gi');
         let matches = [...cleanText.matchAll(regex)].map(m => m[1]);
-        
         let low = text.toLowerCase();
-        // Detekce slov naznačujících rozmezí (od 500 do 2000, sazba 1-5 let atd.)
         let isRange = low.includes("od") || low.includes("do") || low.includes("až") || low.includes("sazba") || text.includes("-") || text.includes("–");
 
-        // PRAVIDLO 1: Pokud je to ROZMEZÍ (víc čísel nebo slova od/do), pole zůstane VOLNÉ
         if (isRange || matches.length > 1) {
             let placeholderText = matches.length >= 2 ? `${matches[0]}-${matches[1]}` : (matches[0] ? `max ${matches[0]}` : (unit === 'let' ? 'Let' : 'Suma'));
             return { type: 'range', value: '', placeholder: placeholderText };
         } 
-        
-        // PRAVIDLO 2: Pokud je tam přesně JEDNO číslo a není tam slovo pro rozmezí, ZAMKNOUT
         if (matches.length === 1) {
             return { type: 'fixed', value: matches[0], placeholder: '' };
         }
-        
         return { type: 'empty', value: '', placeholder: unit === 'let' ? 'Let' : 'Pokuta' };
     }
 
@@ -123,6 +127,7 @@
                 const fine = analyzeLimits(txt, '$');
                 
                 let cleanText = line.innerHTML.split("ODEBRAT")[0];
+                // OPRAVENO: Detekce ODEBRAT pro seznam vlevo
                 let alerts = line.innerHTML.includes("ODEBRAT") ? line.innerHTML.match(/ODEBRAT\s+([^<.]+)/gi) : null;
 
                 rows += `
@@ -139,6 +144,7 @@
                             <button class="btn-add" onclick="addToCase('${title}', '${txt.replace(/'/g,"\\'")}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>
+                    ${alerts ? alerts.map(a => `<div class="red-alert-bar">${a}</div>`).join("") : ""}
                 </div>`;
             });
             const card = document.createElement('div');
@@ -152,9 +158,12 @@
         const j = parseInt(document.getElementById(`j_${lIdx}_${rIdx}`).value) || 0;
         const f = parseInt(document.getElementById(`f_${lIdx}_${rIdx}`).value) || 0;
         if (j === 0 && f === 0) return;
+
         const docs = [];
+        // OPRAVENO: Přidávání licencí do protokolu
         if (fullText.toUpperCase().includes("ŘIDIČ")) docs.push("ŘIDIČSKÝ PRŮKAZ");
         if (fullText.toUpperCase().includes("ZBROJNÍ")) docs.push("ZBROJNÍ PRŮKAZ");
+
         activeCaseItems.push({ id: Date.now(), title, desc: fullText.split("ODEBRAT")[0].trim(), jail: j, fine: f, docs });
         renderCase();
     }
@@ -169,6 +178,7 @@
             div.className = 'case-item';
             div.innerHTML = `<button class="btn-remove" onclick="removeEntry(${i.id})">×</button>
                 <span class="item-title">${i.title}</span><span class="item-desc">${i.desc}</span>
+                ${i.docs.map(d => `<div class="item-alert">ODEBRAT ${d}</div>`).join("")}
                 <div class="item-vals"><span style="color:var(--jail)">${i.jail} let</span><span style="color:var(--fine)">${i.fine.toLocaleString()} $</span></div>`;
             cont.appendChild(div);
         });
