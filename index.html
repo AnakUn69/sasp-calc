@@ -24,54 +24,44 @@
         .law-content { display: none; background: #0c0c0c; }
         .law-card.active .law-content { display: block; }
         
-        /* OPRAVA USEKNUTÉHO TEXTU */
         .sub-row { padding: 10px 15px; border-top: 1px solid #1a1a1a; }
         .row-main { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; width: 100%; }
+        .sub-text { flex: 1; font-size: 12px; color: #ccc; line-height: 1.4; white-space: normal; }
+
+        .input-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
         
-        /* Text se nyní zalamuje a není useknutý */
-        .sub-text { 
-            flex: 1; 
-            font-size: 12px; 
-            color: #ccc; 
-            line-height: 1.4; 
-            white-space: normal; /* Povolí zalomení textu */
-            overflow: visible; 
+        /* STYL PRO ZAMKNUTÉ POLE */
+        .input-box { background: #111; border: 1px solid #333; color: white; padding: 5px; width: 70px; border-radius: 3px; text-align: center; font-size: 11px; outline: none; }
+        .input-box[readonly] { 
+            background: #0f1a10; /* Jemně zelený nádech pro fixní trest */
+            border-color: #2b4d2e; 
+            color: var(--fine); 
+            cursor: not-allowed; 
+            font-weight: bold; 
         }
 
-        .input-group { display: flex; gap: 8px; align-items: center; flex-shrink: 0; padding-top: 2px; }
-        .input-box { background: #111; border: 1px solid #333; color: white; padding: 5px; width: 65px; border-radius: 3px; text-align: center; font-size: 11px; }
-        .input-box[readonly] { border-color: #2b4d2e; color: var(--fine); background: #0f1a10; font-weight: bold; }
+        .btn-add { background: var(--accent); color: black; border: none; width: 30px; height: 30px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 18px; }
 
-        .btn-add { background: var(--accent); color: black; border: none; width: 30px; height: 30px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 18px; flex-shrink: 0; }
+        .red-alert-bar { display: inline-block; background: var(--danger); color: white; font-weight: 900; font-size: 9px; padding: 2px 8px; margin-top: 8px; text-transform: uppercase; border-radius: 2px; }
 
-        /* ČERVENÝ ŠTÍTEK (ZBROJÁK ATD.) */
-        .red-alert-bar { 
-            display: inline-block; background: var(--danger); color: white; 
-            font-weight: 900; font-size: 9px; padding: 2px 8px; 
-            margin-top: 8px; text-transform: uppercase; border-radius: 2px;
-        }
-
-        /* PROTOKOL */
+        /* SIDEBAR / PROTOKOL */
         .sidebar { width: 360px; background: #080808; padding: 20px; display: flex; flex-direction: column; }
         .sidebar-title { color: var(--accent); text-align: center; font-size: 16px; letter-spacing: 3px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; }
         .case-entries { flex: 1; overflow-y: auto; }
         .case-item { position: relative; background: #111; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #222; }
         .btn-remove { position: absolute; top: 5px; right: 8px; background: transparent; color: #555; border: none; cursor: pointer; font-size: 20px; }
-        
         .item-title { color: var(--accent); font-weight: bold; display: block; font-size: 12px; text-transform: uppercase; margin-bottom: 4px; }
         .item-desc { color: #888; font-size: 10px; line-height: 1.3; display: block; margin-bottom: 8px; }
-        .item-alert { background: var(--danger); color: white; text-align: center; font-weight: 800; font-size: 9px; padding: 3px; border-radius: 3px; margin-bottom: 8px; }
         .item-vals { font-weight: bold; font-size: 12px; border-top: 1px solid #222; padding-top: 8px; display: flex; justify-content: space-between; }
 
         .summary-box { background: #111; padding: 15px; border-radius: 6px; border: 1px solid var(--accent); margin-top: 15px; }
         .summary-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: bold; margin-bottom: 8px; }
-        .final-alert { background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger); padding: 10px; margin-bottom: 12px; text-align: center; font-size: 11px; border-radius: 4px; }
     </style>
 </head>
 <body>
 
 <div class="main-content">
-    <div class="header-area"><input type="text" id="searchInput" placeholder="Vyhledat v paragrafech..." onkeyup="filterLaws()"></div>
+    <div class="header-area"><input type="text" id="searchInput" placeholder="Hledat v paragrafech..." onkeyup="filterLaws()"></div>
     <div class="laws-list" id="lawsContainer"></div>
 </div>
 
@@ -79,7 +69,9 @@
     <div class="sidebar-title">PROTOKOL</div>
     <div class="case-entries" id="caseEntries"></div>
     <div class="summary-box">
-        <div id="licenseAlert" class="final-alert" style="display:none;"><b style="color:var(--danger)">ODEBRAT Z EVIDENCE:</b><br><span id="docsList" style="color:#ffcccc"></span></div>
+        <div id="licenseAlert" style="display:none; background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger); padding: 10px; margin-bottom: 12px; text-align: center; font-size: 11px; border-radius: 4px;">
+            <b style="color:var(--danger)">ODEBRAT Z EVIDENCE:</b><br><span id="docsList" style="color:#ffcccc"></span>
+        </div>
         <div class="summary-row"><span>VĚZENÍ:</span> <span id="totalJail" style="color:var(--jail)">0 let</span></div>
         <div class="summary-row"><span>POKUTA:</span> <span id="totalFine" style="color:var(--fine)">0 $</span></div>
         <button style="width:100%; padding:12px; background:#1a1a1a; color:var(--danger); border:1px solid #333; cursor:pointer; font-weight:bold; font-size:11px; margin-top:5px;" onclick="location.reload()">VYMAZAT PŘÍPAD</button>
@@ -89,15 +81,31 @@
 <script>
     let activeCaseItems = [];
 
+    // Funkce pro chytrou analýzu textu a detekci fixních částek
     function analyzeLimits(text, unit) {
-        const clean = text.replace(/\./g, '').replace(/\s/g, '');
-        const regex = new RegExp(`(\\d+)${unit === 'let' ? 'let' : '\\$'}`, 'gi');
-        const matches = [...clean.matchAll(regex)].map(m => m[1]);
+        // 1. Vyčistíme text od teček u tisíců (1.000 -> 1000) jen pro účely hledání čísel
+        const cleanForNumbers = text.replace(/(\d)\.(\d)/g, '$1$2');
+        
+        // 2. Najdeme všechna čísla následovaná jednotkou (let nebo $)
+        const regex = new RegExp(`(\\d+)\\s*${unit === 'let' ? 'let' : '\\$'}`, 'gi');
+        const matches = [...cleanForNumbers.matchAll(regex)].map(m => m[1]);
+        
         const low = text.toLowerCase();
-        const isRange = low.includes("od") || low.includes("do") || low.includes("až") || text.includes("-");
-        if (matches.length >= 2 || (matches.length === 1 && isRange)) return { type: 'range', placeholder: matches[0] ? `max ${matches[0]}` : unit, value: '' };
-        if (matches.length === 1) return { type: 'fixed', placeholder: '', value: matches[0] };
-        return { type: 'empty', placeholder: unit === 'let' ? 'Let' : 'Suma', value: '' };
+        // 3. Detekujeme, zda text obsahuje slova naznačující rozmezí
+        const isRange = low.includes("od") || low.includes("do") || low.includes("až") || low.includes("sazba") || text.includes("-") || text.includes("–");
+
+        // Logika zamykání:
+        // Pokud je v textu jen jedno číslo a NEJSOU tam slova jako "od/do", je to fixní částka
+        if (matches.length === 1 && !isRange) {
+            return { type: 'fixed', value: matches[0], placeholder: '' };
+        } 
+        // Pokud je čísel víc nebo je tam "od/do", je to rozmezí a necháme pole volné
+        else if (matches.length > 0) {
+            let p = matches.length >= 2 ? `${matches[0]}-${matches[1]}` : `max ${matches[0]}`;
+            return { type: 'range', value: '', placeholder: p };
+        }
+        
+        return { type: 'empty', value: '', placeholder: unit === 'let' ? 'Let' : 'Pokuta' };
     }
 
     async function loadLaws() {
@@ -110,19 +118,35 @@
         temp.querySelectorAll('.law-item').forEach((item, lIdx) => {
             const title = item.getAttribute('data-title');
             let rows = "";
+            
             item.querySelectorAll('.sub-line').forEach((line, rIdx) => {
                 const txt = line.innerText;
                 const jail = analyzeLimits(txt, 'let');
                 const fine = analyzeLimits(txt, '$');
+                
                 let cleanText = line.innerHTML.split("ODEBRAT")[0];
                 let alerts = line.innerHTML.includes("ODEBRAT") ? line.innerHTML.match(/ODEBRAT\s+([^<.]+)/gi) : null;
 
-                rows += `<div class="sub-row"><div class="row-main"><div class="sub-text">${cleanText}</div><div class="input-group">
-                    <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${jail.value}" placeholder="${jail.placeholder}" ${jail.type === 'fixed' ? 'readonly' : ''}>
-                    <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${fine.value}" placeholder="${fine.placeholder}" ${fine.type === 'fixed' ? 'readonly' : ''}>
-                    <button class="btn-add" onclick="addToCase('${title}', '${txt.replace(/'/g,"\\'")}', ${lIdx}, ${rIdx})">+</button></div></div>
-                    ${alerts ? alerts.map(a => `<div class="red-alert-bar">${a}</div>`).join("") : ""}</div>`;
+                rows += `
+                <div class="sub-row">
+                    <div class="row-main">
+                        <div class="sub-text">${cleanText}</div>
+                        <div class="input-group">
+                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" 
+                                value="${jail.value}" placeholder="${jail.placeholder}" 
+                                ${jail.type === 'fixed' ? 'readonly' : ''}>
+                            
+                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" 
+                                value="${fine.value}" placeholder="${fine.placeholder}" 
+                                ${fine.type === 'fixed' ? 'readonly' : ''}>
+                            
+                            <button class="btn-add" onclick="addToCase('${title}', '${txt.replace(/'/g,"\\'")}', ${lIdx}, ${rIdx})">+</button>
+                        </div>
+                    </div>
+                    ${alerts ? alerts.map(a => `<div class="red-alert-bar">${a}</div>`).join("") : ""}
+                </div>`;
             });
+
             const card = document.createElement('div');
             card.className = 'law-card';
             card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div></div><div class="law-content">${rows}</div>`;
@@ -133,9 +157,12 @@
     function addToCase(title, fullText, lIdx, rIdx) {
         const j = parseInt(document.getElementById(`j_${lIdx}_${rIdx}`).value) || 0;
         const f = parseInt(document.getElementById(`f_${lIdx}_${rIdx}`).value) || 0;
+        if (j === 0 && f === 0) return;
+
         const docs = [];
         if (fullText.toUpperCase().includes("ŘIDIČ")) docs.push("ŘIDIČSKÝ PRŮKAZ");
         if (fullText.toUpperCase().includes("ZBROJNÍ")) docs.push("ZBROJNÍ PRŮKAZ");
+
         activeCaseItems.push({ id: Date.now(), title, desc: fullText.split("ODEBRAT")[0].trim(), jail: j, fine: f, docs });
         renderCase();
     }
@@ -144,15 +171,23 @@
         const cont = document.getElementById('caseEntries');
         cont.innerHTML = "";
         let jT = 0, fT = 0, dS = new Set();
+
         activeCaseItems.forEach(i => {
             jT += i.jail; fT += i.fine; i.docs.forEach(d => dS.add(d));
             const div = document.createElement('div');
             div.className = 'case-item';
-            div.innerHTML = `<button class="btn-remove" onclick="removeEntry(${i.id})">×</button><span class="item-title">${i.title}</span><span class="item-desc">${i.desc}</span>
-                ${i.docs.map(d => `<div class="item-alert">ODEBRAT ${d}</div>`).join("")}
-                <div class="item-vals"><span style="color:var(--jail)">${i.jail} let</span><span style="color:var(--fine)">${i.fine.toLocaleString()} $</span></div>`;
+            div.innerHTML = `
+                <button class="btn-remove" onclick="removeEntry(${i.id})">×</button>
+                <span class="item-title">${i.title}</span>
+                <span class="item-desc">${i.desc}</span>
+                ${i.docs.map(d => `<div style="background:var(--danger);color:white;font-size:8px;padding:2px;border-radius:2px;margin-bottom:4px;text-align:center;">ODEBRAT ${d}</div>`).join("")}
+                <div class="item-vals">
+                    <span style="color:var(--jail)">${i.jail} let</span>
+                    <span style="color:var(--fine)">${i.fine.toLocaleString()} $</span>
+                </div>`;
             cont.appendChild(div);
         });
+
         document.getElementById('totalJail').innerText = jT + " let";
         document.getElementById('totalFine').innerText = fT.toLocaleString() + " $";
         document.getElementById('licenseAlert').style.display = dS.size > 0 ? 'block' : 'none';
