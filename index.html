@@ -2,12 +2,12 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP - Penal Code System</title>
+    <title>SASP - MDT Terminal v81</title>
     <style>
         :root {
             --bg-main: #0a0b0d;
             --bg-panel: #14161a;
-            --accent: #ffcc00; /* Žlutá pro tučné texty */
+            --accent: #ffcc00;
             --danger: #ff4444;
             --jail-color: #00aaff;
             --fine-color: #00ff88;
@@ -16,7 +16,6 @@
 
         body { background: var(--bg-main); color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Tučné texty jsou žluté */
         b, strong, .bold-yellow { color: var(--accent); font-weight: bold; }
 
         #mainApp { display: flex; width: 100%; height: 100%; }
@@ -33,19 +32,18 @@
 
         .row { padding: 10px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; }
         .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 85px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; }
+        
+        /* Barvy pro aktivní a blokované */
         .input-jail { border-color: var(--jail-color); }
         .input-fine { border-color: var(--fine-color); }
-        
-        .input-box:disabled { border-color: #333 !important; color: #555 !important; background: transparent; cursor: not-allowed; }
+        .input-box:disabled { border-color: var(--danger) !important; color: #fff !important; background: rgba(255, 68, 68, 0.1); cursor: not-allowed; }
 
         .btn-add { background: var(--accent); border: none; padding: 8px 15px; border-radius: 4px; font-weight: 900; cursor: pointer; }
 
-        /* Protokol */
         .protocol-item { background: #000; padding: 15px; border-radius: 8px; border-left: 4px solid var(--jail-color); margin-bottom: 12px; position: relative; }
         .proto-label { color: var(--accent); font-weight: 900; font-size: 13px; margin-bottom: 5px; }
         .proto-sub { color: #888; font-size: 11px; margin-bottom: 8px; }
 
-        /* Fixní varování nad celkem */
         #licenseWarning { background: var(--danger); color: white; padding: 12px; border-radius: 4px; font-size: 12px; font-weight: 900; text-align: center; margin: 0 25px 15px 25px; display: none; }
 
         .summary-box { padding: 25px; background: #000; border-top: 1px solid var(--border); }
@@ -57,7 +55,7 @@
     <div id="leftPanel">
         <div class="header-bar">
             <h2 style="margin:0; color:var(--accent);">TRESTNÍ ZÁKONÍK</h2>
-            <input type="text" id="searchInput" placeholder="Vyhledat paragraf..." oninput="render()" style="width:100%; margin-top:15px; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:6px;">
+            <input type="text" id="searchInput" placeholder="Vyhledat v zákoníku..." oninput="render()" style="width:100%; margin-top:15px; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:6px;">
         </div>
         <div id="lawsContainer"></div>
     </div>
@@ -73,7 +71,7 @@
                 <span>CELKEM:</span>
                 <span><span id="sumJail" style="color:var(--jail-color)">0</span> let | <span id="sumFine" style="color:var(--fine-color)">0</span> $</span>
             </div>
-            <button onclick="save()" style="width:100%; padding:18px; background:var(--jail-color); color:white; border:none; border-radius:6px; font-weight:900; cursor:pointer;">ULOŽIT A UZAVŘÍT</button>
+            <button onclick="save()" style="width:100%; padding:18px; background:var(--jail-color); color:white; border:none; border-radius:6px; font-weight:900; cursor:pointer;">ULOŽIT PŘÍPAD</button>
         </div>
     </div>
 </div>
@@ -95,13 +93,28 @@
                     const text = line.innerText;
                     const letterMatch = text.match(/^([a-z]\))/i);
                     
-                    // Detekce fixních let (např. "5 let")
-                    const jailMatch = text.match(/(\d+)\s*let/);
-                    const fixedJail = jailMatch ? jailMatch[1] : "";
+                    // Rozlišení fixní hodnoty vs rozmezí u LET
+                    const jailMatch = text.match(/sazba (\d+)-(\d+)|od (\d+) do (\d+)/i);
+                    const singleJail = text.match(/trestá (\d+) lety|sazba (\d+) let/i);
                     
-                    // Detekce fixní pokuty nebo rozmezí
-                    const fineMatch = text.match(/([\d.]+)\s*\$/);
-                    const fixedFine = fineMatch ? fineMatch[1].replace('.', '') : "";
+                    let fixedJail = "";
+                    let isJailLocked = false;
+                    if (singleJail && !jailMatch) {
+                        fixedJail = singleJail[1] || singleJail[2];
+                        isJailLocked = true;
+                    }
+
+                    // Rozlišení fixní POKUTY
+                    const fineRange = text.match(/výši (\d+)-(\d+)|od (\d+) do (\d+)\$/i);
+                    const fineSingle = text.match(/výši ([\d.]+)\$|pokutou ([\d.]+)\$/i);
+                    
+                    let fixedFine = "";
+                    let isFineLocked = false;
+                    if (fineSingle && !fineRange) {
+                        fixedFine = fineSingle[1] || fineSingle[2];
+                        fixedFine = fixedFine.replace('.', '');
+                        isFineLocked = true;
+                    }
 
                     const canFine = text.toLowerCase().includes("pokutou") || text.toLowerCase().includes("peněžitým");
                     
@@ -109,15 +122,17 @@
                         html: line.innerHTML.replace(/<b>/g, '<b class="bold-yellow">').replace(/<strong>/g, '<strong class="bold-yellow">'),
                         fullText: text,
                         letter: letterMatch ? letterMatch[1] : "",
-                        fixedJail: fixedJail,
-                        fixedFine: fixedFine,
+                        valJail: fixedJail,
+                        lockJail: isJailLocked,
+                        valFine: fixedFine,
+                        lockFine: !canFine || isFineLocked,
                         canFine: canFine,
                         lic: text.includes("ODEBRAT")
                     };
                 })
             }));
             render();
-        } catch (e) { console.error("Chyba načítání:", e); }
+        } catch (e) { console.error("Chyba:", e); }
     }
 
     function render() {
@@ -134,10 +149,10 @@
                         <div class="row">
                             <div style="flex:1; font-size:12px;">${sub.html}</div>
                             <input type="text" class="input-box input-jail" id="j_${lIdx}_${sIdx}" 
-                                value="${sub.fixedJail}" placeholder="Let">
+                                value="${sub.valJail}" placeholder="Let" ${sub.lockJail ? 'disabled' : ''}>
                             <input type="text" class="input-box input-fine" id="f_${lIdx}_${sIdx}" 
-                                value="${sub.fixedFine}" placeholder="${sub.canFine ? '$' : ''}" 
-                                ${!sub.canFine ? 'disabled' : ''}>
+                                value="${sub.valFine}" placeholder="${sub.canFine ? '$' : ''}" 
+                                ${sub.lockFine ? 'disabled' : ''}>
                             <button class="btn-add" onclick="add(${lIdx}, ${sIdx})">+</button>
                         </div>
                     `).join('')}
@@ -169,7 +184,7 @@
         list.innerHTML = protocol.map(p => `
             <div class="protocol-item">
                 <div class="proto-label">${p.title} ${p.letter}</div>
-                <div class="proto-sub">${p.desc.substring(0, 75)}...</div>
+                <div class="proto-sub">${p.desc.substring(0, 70)}...</div>
                 <div style="font-weight: 900; font-size: 14px;">
                     <span style="color:var(--jail-color)">${p.jail} let</span> | 
                     <span style="color:var(--fine-color)">$ ${p.fine.toLocaleString()}</span>
@@ -178,7 +193,6 @@
             </div>
         `).join('');
 
-        // Zobrazení varování o průkazu dole nad celkem
         const hasLicenseRemoval = protocol.some(p => p.lic);
         document.getElementById('licenseWarning').style.display = hasLicenseRemoval ? 'block' : 'none';
 
@@ -187,7 +201,7 @@
     }
 
     function remove(id) { protocol = protocol.filter(x => x.id !== id); updateProtocol(); }
-    function save() { alert("Protokol uložen."); protocol = []; updateProtocol(); }
+    function save() { alert("Data odeslána do databáze."); protocol = []; updateProtocol(); }
 
     load();
 </script>
