@@ -6,7 +6,7 @@
     <style>
         :root {
             --bg: #000; --card: #0c0c0c; --accent: #ffcc00; --border: #1a1a1a;
-            --jail: #00aaff; --fine: #00ff88; --danger: #ff4444; --fixed: #00ff88;
+            --jail: #00aaff; --fine: #00ff88; --danger: #ff4444;
         }
         body { background: var(--bg); color: #fff; font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         #leftPanel { flex: 3; padding: 20px; overflow-y: auto; }
@@ -22,12 +22,11 @@
         .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; }
         .license-danger { background: var(--danger); color: #fff; font-weight: bold; text-transform: uppercase; font-size: 10px; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 4px; }
         .input-group { display: flex; gap: 8px; }
-        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; }
-        .input-box[readonly] { border-color: #004400; color: var(--fixed); background: #050505; cursor: not-allowed; }
+        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; outline: none; }
         .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         .case-entry { background: #111; padding: 12px; border-bottom: 1px solid #222; position: relative; margin-bottom: 5px; border-left: 2px solid var(--accent); }
         .case-alert { color: var(--danger); font-weight: bold; font-size: 10px; text-transform: uppercase; display: block; margin-top: 5px; }
-        #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 50px; border-radius: 15px; font-weight: bold; z-index: 99999; display: none; border: 5px solid white; text-transform: uppercase; font-size: 22px; text-align: center; box-shadow: 0 0 100px #000; }
+        #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 40px; border-radius: 10px; font-weight: bold; z-index: 99999; display: none; border: 4px solid white; text-transform: uppercase; font-size: 18px; text-align: center; box-shadow: 0 0 100px #000; max-width: 80%; }
         #globalAlert { background: rgba(255, 68, 68, 0.2); border: 2px solid var(--danger); color: #fff; padding: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; display: none; text-align: center; }
     </style>
 </head>
@@ -58,7 +57,7 @@
     function showNotify(msg) {
         const n = document.getElementById('notification');
         n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => { n.style.display = 'none'; }, 3000);
+        setTimeout(() => { n.style.display = 'none'; }, 4000);
     }
 
     async function loadLaws() {
@@ -74,25 +73,15 @@
             let rows = "";
             item.querySelectorAll('.sub-line').forEach((line, rIdx) => {
                 const text = line.innerHTML;
-                // Formátování pro zobrazení
                 const displayHtml = text.replace(/ODEBRAT Zbrojní Průkaz/g, '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
                                         .replace(/ODEBRAT Řidičský Průkaz/g, '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
-                
-                // Detekce pevného trestu pro UI
-                const isRange = /od|do|až|sazba|rozmezí/i.test(text);
-                const cleanText = text.replace(/(?<=\d)[\s.](?=\d)/g, '').replace(/[.$]/g, '');
-                const jailNums = (cleanText.split(/pokut/i)[0].match(/\d+/g) || []).filter(n => parseInt(n) < 100);
-                const fineNums = (cleanText.includes("pokut") ? cleanText.split(/pokut/i)[1] : cleanText).match(/\d+/g) || [];
-                
-                const isJailFixed = !isRange && jailNums.length === 1;
-                const isFineFixed = !isRange && fineNums.filter(n => parseInt(n) >= 50).length === 1;
 
                 rows += `
                     <div class="sub-row">
                         <div class="sub-text">${displayHtml}</div>
                         <div class="input-group">
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${isJailFixed ? jailNums[0] : ''}" placeholder="Let" ${isJailFixed ? 'readonly' : ''}>
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${isFineFixed ? fineNums.find(n => n >= 50) : ''}" placeholder="Suma" ${isFineFixed ? 'readonly' : ''}>
+                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" placeholder="Let">
+                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" placeholder="Suma">
                             <button class="btn-add" onclick="addItem('${title}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>`;
@@ -114,33 +103,36 @@
         const rawText = rowEl.querySelector('.sub-text').innerText;
         const formattedHtml = rowEl.querySelector('.sub-text').innerHTML;
         
-        // Čištění textu: "2.000 $" -> "2000"
         const cleanText = rawText.replace(/(?<=\d)[\s.](?=\d)/g, '').replace(/[.$]/g, '');
         const isRange = /od|do|až|sazba|rozmezí/i.test(rawText);
 
         // --- VALIDACE VĚZENÍ ---
-        if (userJail > 0 || jEl.readOnly) {
-            const jailPart = cleanText.split(/pokut/i)[0];
-            const nums = (jailPart.match(/\d+/g) || []).map(Number).filter(n => n < 100);
-            if (nums.length > 0) {
-                const max = Math.max(...nums);
-                const min = (isRange && nums.length >= 2) ? Math.min(...nums) : (isRange ? 1 : max);
-                if (!isRange && userJail !== max) { showNotify(`Pevný trest: ${max} let!`); return; }
-                if (isRange && (userJail < min || userJail > max)) { showNotify(`Rozmezí: ${min}-${max} let!`); return; }
+        const jailPart = cleanText.split(/pokut/i)[0];
+        const jailNums = (jailPart.match(/\d+/g) || []).map(Number).filter(n => n < 100);
+        if (jailNums.length > 0) {
+            const max = Math.max(...jailNums);
+            const min = (isRange && jailNums.length >= 2) ? Math.min(...jailNums) : (isRange ? 1 : max);
+            
+            if (userJail < min || userJail > max) {
+                showNotify("CHYBA VEZENÍ UPRAV DÉLKU TRESTU DLE POVOLENÉHO PARAGRAFU");
+                return;
             }
         }
 
         // --- VALIDACE POKUTY ---
-        if (userFine > 0 || fEl.readOnly) {
-            const finePart = cleanText.includes("pokut") ? cleanText.split(/pokut/i)[1] : cleanText;
-            const nums = (finePart.match(/\d+/g) || []).map(Number).filter(n => n >= 50);
-            if (nums.length > 0) {
-                const max = Math.max(...nums);
-                const min = (isRange && nums.length >= 2) ? Math.min(...nums) : (isRange ? 50 : max);
-                if (!isRange && userFine !== max) { showNotify(`Pevná pokuta: ${max}$!`); return; }
-                if (isRange && (userFine < min || userFine > max)) { showNotify(`Rozmezí: ${min}-${max}$!`); return; }
+        const finePart = cleanText.includes("pokut") ? cleanText.split(/pokut/i)[1] : cleanText;
+        const fineNums = (finePart.match(/\d+/g) || []).map(Number).filter(n => n >= 50);
+        if (fineNums.length > 0) {
+            const max = Math.max(...fineNums);
+            const min = (isRange && fineNums.length >= 2) ? Math.min(...fineNums) : (isRange ? 50 : max);
+
+            if (userFine < min || userFine > max) {
+                showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU");
+                return;
             }
         }
+
+        if (userJail === 0 && userFine === 0) return;
 
         let lics = [];
         if (rawText.includes("Zbrojní Průkaz")) lics.push("ZBROJNÍ PRŮKAZ");
