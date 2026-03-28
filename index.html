@@ -10,6 +10,7 @@
         }
         body { background: var(--bg); color: #fff; font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
+        /* UVÍTACÍ OKNO */
         #welcomeOverlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 100000;
@@ -20,34 +21,44 @@
         .welcome-title { font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; }
         .welcome-btn { background: var(--accent); color: #000; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
 
+        /* PANELY */
         #leftPanel { flex: 3; padding: 20px; overflow-y: auto; }
         #rightPanel { flex: 1; min-width: 350px; background: var(--card); border-left: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
         .main-header { font-size: 28px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
-        #searchInput { width: 100%; background: #111; border: 1px solid var(--border); color: var(--accent); padding: 12px; margin-bottom: 20px; outline: none; box-sizing: border-box; }
+        #searchInput { width: 100%; background: #111; border: 1px solid var(--border); color: var(--accent); padding: 12px; margin-bottom: 20px; outline: none; box-sizing: border-box; border-left: 4px solid var(--accent); }
         
+        /* KARTY */
         .law-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); margin-bottom: 10px; border-radius: 4px; }
         .law-header { padding: 15px; cursor: pointer; }
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
         .law-content { display: none; padding: 0 15px 15px 15px; border-top: 1px solid #111; }
         .law-card.active .law-content { display: block; }
+        
         .sub-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; }
-        .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; }
+        .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; line-height: 1.6; }
         
+        /* BARVY TEXTU */
         .sub-text b, .sub-text strong { color: var(--accent) !important; font-weight: bold; }
+        .license-danger { background: var(--danger); color: #fff; font-weight: bold; text-transform: uppercase; font-size: 10px; padding: 3px 6px; border-radius: 3px; display: inline-block; margin-top: 5px; }
         
+        /* VSTUPY */
         .input-group { display: flex; gap: 8px; }
         .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; outline: none; }
+        .input-box:focus { border-color: var(--accent); }
         .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         
-        #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 40px; border-radius: 10px; font-weight: bold; z-index: 99999; display: none; border: 4px solid white; text-transform: uppercase; font-size: 18px; text-align: center; }
+        /* NOTIFIKACE */
+        #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 40px; border-radius: 10px; font-weight: bold; z-index: 99999; display: none; border: 4px solid white; text-transform: uppercase; font-size: 18px; text-align: center; box-shadow: 0 0 100px #000; }
+        #globalAlert { background: rgba(255, 68, 68, 0.2); border: 2px solid var(--danger); color: #fff; padding: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; display: none; text-align: center; }
     </style>
 </head>
 <body>
 
 <div id="welcomeOverlay">
     <div class="welcome-card">
+        <div style="font-size:50px; margin-bottom:10px;">🚔</div>
         <div class="welcome-title">San Andreas State Police</div>
-        <div style="margin-bottom:20px;">Vítej v databázi trestního zákoníku.</div>
+        <div style="margin-bottom:20px; color:#aaa;">Operační systém pro evidenci trestných činů</div>
         <button class="welcome-btn" onclick="document.getElementById('welcomeOverlay').style.display='none'">Vstoupit do systému</button>
     </div>
 </div>
@@ -61,16 +72,19 @@
 </div>
 
 <div id="rightPanel">
-    <div style="color:var(--accent); font-weight:bold; margin-bottom:15px;">AKTIVNÍ PROTOKOL</div>
+    <div style="color:var(--accent); font-weight:bold; border-bottom:1px solid var(--accent); padding-bottom:10px; margin-bottom:15px;">AKTIVNÍ PROTOKOL</div>
+    <div id="globalAlert">⚠ ZABAVIT: <span id="alertList"></span></div>
     <div id="caseEntries" style="flex-grow:1; overflow-y:auto;"></div>
-    <div style="border-top:2px solid var(--accent); padding-top:15px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">Vězení: <span id="sumJail" style="color:var(--jail)">0 let</span></div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">Pokuta: <span id="sumFine" style="color:var(--fine)">0 $</span></div>
-        <button style="width:100%; border:1px solid var(--danger); color:var(--danger); background:none; padding:10px; cursor:pointer;" onclick="clearAll()">VYMAZAT PŘÍPAD</button>
+    <div style="border-top:2px solid var(--accent); padding-top:15px; margin-top:10px;">
+        <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:8px;">Vězení: <span id="sumJail" style="color:var(--jail)">0 let</span></div>
+        <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:15px;">Pokuta: <span id="sumFine" style="color:var(--fine)">0 $</span></div>
+        <button style="width:100%; border:1px solid var(--danger); color:var(--danger); background:none; padding:10px; cursor:pointer; font-weight:bold;" onclick="clearAll()">VYMAZAT PŘÍPAD</button>
     </div>
 </div>
 
 <script>
+    let protocolData = [];
+
     async function loadLaws() {
         const res = await fetch('tresty.html?v=' + Date.now());
         const html = await res.text();
@@ -83,9 +97,14 @@
             const title = item.getAttribute('data-title');
             let rows = "";
             item.querySelectorAll('.sub-line').forEach((line, rIdx) => {
+                // Přidání červeného barvení pro ODEBRAT
+                let text = line.innerHTML
+                    .replace(/ODEBRAT Zbrojní Průkaz/g, '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
+                    .replace(/ODEBRAT Řidičský Průkaz/g, '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
+
                 rows += `
                     <div class="sub-row">
-                        <div class="sub-text">${line.innerHTML}</div>
+                        <div class="sub-text">${text}</div>
                         <div class="input-group">
                             <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" placeholder="Let">
                             <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" placeholder="Suma">
@@ -113,27 +132,31 @@
         const userFine = parseInt(fEl.value) || 0;
         
         const rowEl = jEl.closest('.sub-row');
+        const formattedHtml = rowEl.querySelector('.sub-text').innerHTML;
+
+        // --- MIN/MAX VALIDACE Z TUČNÉHO TEXTU ---
         let boldText = "";
         rowEl.querySelectorAll('b, strong').forEach(el => boldText += " " + el.innerText);
         const cleanBoldText = boldText.replace(/(?<=\d)\.(?=\d)/g, '');
         const boldNumbers = (cleanBoldText.match(/\d+/g) || []).map(Number);
 
-        // --- VALIDACE ROZMEZÍ (MIN i MAX) ---
+        // Validace Pokuty
         if (userFine > 0) {
             const fineLimits = boldNumbers.filter(n => n >= 100);
             if (fineLimits.length >= 2) {
                 const minF = Math.min(...fineLimits);
                 const maxF = Math.max(...fineLimits);
                 if (userFine < minF || userFine > maxF) {
-                    showNotify(`POKUTA MIMO ROZMEZÍ! POVOLENO: ${minF.toLocaleString()} $ - ${maxF.toLocaleString()} $`);
+                    showNotify(`POKUTA MIMO ROZMEZÍ! POVOLENO: ${minF.toLocaleString()}$ - ${maxF.toLocaleString()}$`);
                     return;
                 }
             } else if (fineLimits.length === 1 && userFine > fineLimits[0]) {
-                showNotify(`MAXIMÁLNÍ POKUTA JE ${fineLimits[0].toLocaleString()} $`);
+                showNotify(`MAXIMÁLNÍ POKUTA JE ${fineLimits[0].toLocaleString()}$`);
                 return;
             }
         }
 
+        // Validace Vězení
         if (userJail > 0) {
             const jailLimits = boldNumbers.filter(n => n > 0 && n < 100);
             if (jailLimits.length >= 2) {
@@ -149,7 +172,9 @@
             }
         }
 
-        protocolData.push({ title, jail: userJail, fine: userFine, html: rowEl.querySelector('.sub-text').innerHTML });
+        if (userJail === 0 && userFine === 0) return;
+
+        protocolData.push({ title, jail: userJail, fine: userFine, html: formattedHtml });
         render();
     }
 
@@ -157,19 +182,32 @@
         const cont = document.getElementById('caseEntries');
         cont.innerHTML = "";
         let tj = 0, tf = 0;
+        let allLics = new Set();
+
         protocolData.forEach((i, idx) => {
             tj += i.jail; tf += i.fine;
-            cont.innerHTML += `<div class="case-entry" style="background:#111; padding:10px; margin-bottom:5px; border-left:2px solid var(--accent);">
-                <div style="font-size:12px; color:var(--accent); font-weight:bold;">${i.title}</div>
-                <div style="font-size:11px;">${i.jail} let | ${i.fine.toLocaleString()} $</div>
-                <button onclick="removeItem(${idx})" style="color:red; background:none; border:none; float:right; cursor:pointer;">×</button>
+            const lowHtml = i.html.toLowerCase();
+            if (lowHtml.includes("zbrojní průkaz")) allLics.add("ZBROJNÍ PRŮKAZ");
+            if (lowHtml.includes("řidičský průkaz")) allLics.add("ŘIDIČSKÝ PRŮKAZ");
+
+            cont.innerHTML += `<div class="case-entry" style="background:#111; padding:12px; border-bottom:1px solid #222; position:relative; margin-bottom:5px; border-left:2px solid var(--accent);">
+                <button style="position:absolute; right:8px; top:8px; color:red; background:none; border:none; cursor:pointer;" onclick="removeItem(${idx})">×</button>
+                <div style="color:var(--accent); font-weight:bold; font-size:12px;">${i.title}</div>
+                <div style="font-size:11px; color:#aaa;">${i.html}</div>
+                <div style="margin-top:5px; font-weight:bold; font-size:12px;">${i.jail} let | ${i.fine.toLocaleString()} $</div>
             </div>`;
         });
+
         document.getElementById('sumJail').innerText = tj + " let";
         document.getElementById('sumFine').innerText = tf.toLocaleString() + " $";
+        
+        const ga = document.getElementById('globalAlert');
+        if (allLics.size > 0) {
+            ga.style.display = "block";
+            document.getElementById('alertList').innerText = Array.from(allLics).join(" + ");
+        } else { ga.style.display = "none"; }
     }
 
-    let protocolData = [];
     function removeItem(idx) { protocolData.splice(idx, 1); render(); }
     function clearAll() { protocolData = []; render(); }
     function doSearch() {
