@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>SASP - Penal Code</title>
-    <style>
+<style>
         :root {
             --bg: #000000;
             --card: #0c0c0c;
@@ -23,20 +23,21 @@
             height: 100vh;
         }
 
-        /* LEVÝ PANEL */
+        /* LEVÝ PANEL - ŠIROKÝ */
         #leftPanel {
-            flex: 2;
+            flex: 3; /* Poměr 3:1 pro šířku */
             padding: 20px;
             overflow-y: auto;
         }
 
+        /* Bílý nadpis se žlutou čarou */
         .main-header {
-            color: var(--accent);
-            font-size: 24px;
+            color: #ffffff;
+            font-size: 28px;
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 20px;
-            border-bottom: 2px solid var(--accent);
+            border-bottom: 3px solid var(--accent);
             padding-bottom: 10px;
         }
 
@@ -49,6 +50,7 @@
             margin-bottom: 20px;
             border-left: 4px solid var(--accent);
             outline: none;
+            box-sizing: border-box;
         }
 
         .law-card {
@@ -62,61 +64,43 @@
         .law-header {
             padding: 15px;
             cursor: pointer;
-            user-select: none;
         }
 
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
         .law-desc { color: #555; font-size: 11px; margin-top: 5px; }
 
-        .law-content { 
-            display: none; 
-            padding: 0 15px 15px 15px; 
-            border-top: 1px solid #111;
-        }
-        
+        .law-content { display: none; padding: 0 15px 15px 15px; border-top: 1px solid #111; }
         .law-card.active .law-content { display: block; }
 
-        /* ŘÁDKY S POLÍČKY NA BOKU */
+        /* ŘÁDKY - POLÍČKA NA BOKU */
         .sub-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #111;
         }
 
-        .sub-text {
-            flex: 1;
-            font-size: 14px;
-            color: #ccc;
-            padding-right: 20px;
-        }
-
-        /* Žlutý tučný text uvnitř popisu */
+        .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; line-height: 1.4; }
         .sub-text b { color: var(--accent); font-weight: bold; }
 
-        /* Červený text pro odebrání průkazu */
+        /* Červené varování */
         .license-danger {
             color: var(--danger);
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 12px;
-            margin-top: 5px;
+            font-size: 11px;
+            margin-top: 4px;
             display: block;
         }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
+        .input-group { display: flex; gap: 8px; align-items: center; }
         .input-box {
             background: #000;
             border: 1px solid #333;
             color: #fff;
             padding: 8px;
-            width: 70px;
+            width: 65px;
             text-align: center;
             border-radius: 4px;
         }
@@ -125,44 +109,37 @@
             background: var(--accent);
             border: none;
             color: #000;
-            padding: 8px 15px;
+            padding: 8px 12px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
         }
 
-        /* PRAVÝ PANEL */
+        /* PRAVÝ PANEL - ZÚŽENÝ PROTOKOL */
         #rightPanel {
-            flex: 1;
+            flex: 1; /* Zúžení protokolu */
+            min-width: 300px;
             background: var(--card);
-            border-left: 1px solid var(--border);
+            border-left: 2px solid var(--border);
             padding: 20px;
             display: flex;
             flex-direction: column;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
         }
 
-        .protocol-title {
+        .protocol-header {
             color: var(--accent);
             font-weight: bold;
             border-bottom: 1px solid var(--accent);
             padding-bottom: 10px;
             margin-bottom: 15px;
+            text-transform: uppercase;
         }
 
         #caseEntries { flex-grow: 1; overflow-y: auto; }
 
-        .summary-box {
-            border-top: 2px solid var(--accent);
-            padding-top: 15px;
-        }
-
-        .summary-line {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
+        .summary-box { border-top: 2px solid var(--accent); padding-top: 15px; }
+        .summary-line { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 8px; }
 
         .btn-clear {
             width: 100%;
@@ -172,19 +149,22 @@
             padding: 10px;
             cursor: pointer;
             font-weight: bold;
+            margin-top: 10px;
+            transition: 0.2s;
         }
+        .btn-clear:hover { background: var(--danger); color: #000; }
     </style>
 </head>
 <body>
 
 <div id="leftPanel">
-    <div class="main-header">Trestní zákoník - San Andreas</div>
+    <div class="main-header">POLICAJNÍ DATABAZE - PENAL CODE - GenK</div>
     <input type="text" id="searchInput" placeholder="Vyhledat paragraf..." oninput="doSearch()">
     <div id="lawsContainer"></div>
 </div>
 
 <div id="rightPanel">
-    <div class="protocol-title">AKTIVNÍ PROTOKOL</div>
+    <div class="protocol-title">PROTOKOL</div>
     <div id="caseEntries"></div>
     <div class="summary-box">
         <div class="summary-line">Vězení: <span id="sumJail" style="color:var(--jail)">0 let</span></div>
