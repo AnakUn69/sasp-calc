@@ -2,12 +2,12 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP - MDT Terminal v79</title>
+    <title>SASP - Penal Code System</title>
     <style>
         :root {
             --bg-main: #0a0b0d;
             --bg-panel: #14161a;
-            --accent: #ffcc00;
+            --accent: #ffcc00; /* Žlutá pro tučné texty */
             --danger: #ff4444;
             --jail-color: #00aaff;
             --fine-color: #00ff88;
@@ -16,6 +16,9 @@
 
         body { background: var(--bg-main); color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
+        /* Tučné texty jsou žluté */
+        b, strong, .bold-yellow { color: var(--accent); font-weight: bold; }
+
         #mainApp { display: flex; width: 100%; height: 100%; }
         #leftPanel { flex: 3; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
         #rightPanel { flex: 1.2; min-width: 420px; background: var(--bg-panel); display: flex; flex-direction: column; }
@@ -29,18 +32,21 @@
         .law-card.active .law-content { display: block; }
 
         .row { padding: 10px 0; border-bottom: 1px solid #222; display: flex; align-items: center; gap: 10px; }
-        .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; }
+        .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 85px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; }
         .input-jail { border-color: var(--jail-color); }
         .input-fine { border-color: var(--fine-color); }
         
-        .input-box:disabled { border-color: var(--danger) !important; color: #555 !important; background: rgba(255, 68, 68, 0.05); cursor: not-allowed; }
+        .input-box:disabled { border-color: #333 !important; color: #555 !important; background: transparent; cursor: not-allowed; }
 
         .btn-add { background: var(--accent); border: none; padding: 8px 15px; border-radius: 4px; font-weight: 900; cursor: pointer; }
 
+        /* Protokol */
         .protocol-item { background: #000; padding: 15px; border-radius: 8px; border-left: 4px solid var(--jail-color); margin-bottom: 12px; position: relative; }
         .proto-label { color: var(--accent); font-weight: 900; font-size: 13px; margin-bottom: 5px; }
         .proto-sub { color: #888; font-size: 11px; margin-bottom: 8px; }
-        .license-tag { background: var(--danger); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 900; display: inline-block; margin-top: 5px; }
+
+        /* Fixní varování nad celkem */
+        #licenseWarning { background: var(--danger); color: white; padding: 12px; border-radius: 4px; font-size: 12px; font-weight: 900; text-align: center; margin: 0 25px 15px 25px; display: none; }
 
         .summary-box { padding: 25px; background: #000; border-top: 1px solid var(--border); }
     </style>
@@ -51,7 +57,7 @@
     <div id="leftPanel">
         <div class="header-bar">
             <h2 style="margin:0; color:var(--accent);">TRESTNÍ ZÁKONÍK</h2>
-            <input type="text" id="searchInput" placeholder="Hledat paragraf..." oninput="render()" style="width:100%; margin-top:15px; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:6px;">
+            <input type="text" id="searchInput" placeholder="Vyhledat paragraf..." oninput="render()" style="width:100%; margin-top:15px; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:6px;">
         </div>
         <div id="lawsContainer"></div>
     </div>
@@ -59,6 +65,9 @@
     <div id="rightPanel">
         <div style="padding:20px; border-bottom:1px solid var(--border); font-weight:800; color:var(--accent);">AKTIVNÍ PROTOKOL PŘÍPADU</div>
         <div id="caseEntries" style="flex-grow:1; overflow-y:auto; padding:15px;"></div>
+        
+        <div id="licenseWarning">⚠ ODEBRAT ZBROJNÍ PRŮKAZ</div>
+        
         <div class="summary-box">
             <div style="display:flex; justify-content:space-between; font-weight:900; margin-bottom:15px; font-size:18px;">
                 <span>CELKEM:</span>
@@ -84,15 +93,24 @@
                 title: item.getAttribute('data-title'),
                 subs: Array.from(item.querySelectorAll('.sub-line')).map(line => {
                     const text = line.innerText;
-                    // Detekce odstavce (např. "a)")
                     const letterMatch = text.match(/^([a-z]\))/i);
-                    // Detekce možnosti pokuty
+                    
+                    // Detekce fixních let (např. "5 let")
+                    const jailMatch = text.match(/(\d+)\s*let/);
+                    const fixedJail = jailMatch ? jailMatch[1] : "";
+                    
+                    // Detekce fixní pokuty nebo rozmezí
+                    const fineMatch = text.match(/([\d.]+)\s*\$/);
+                    const fixedFine = fineMatch ? fineMatch[1].replace('.', '') : "";
+
                     const canFine = text.toLowerCase().includes("pokutou") || text.toLowerCase().includes("peněžitým");
                     
                     return {
-                        html: line.innerHTML,
+                        html: line.innerHTML.replace(/<b>/g, '<b class="bold-yellow">').replace(/<strong>/g, '<strong class="bold-yellow">'),
                         fullText: text,
                         letter: letterMatch ? letterMatch[1] : "",
+                        fixedJail: fixedJail,
+                        fixedFine: fixedFine,
                         canFine: canFine,
                         lic: text.includes("ODEBRAT")
                     };
@@ -115,9 +133,10 @@
                     ${law.subs.map((sub, sIdx) => `
                         <div class="row">
                             <div style="flex:1; font-size:12px;">${sub.html}</div>
-                            <input type="number" class="input-box input-jail" id="j_${lIdx}_${sIdx}" placeholder="Let">
-                            <input type="number" class="input-box input-fine" id="f_${lIdx}_${sIdx}" 
-                                placeholder="${sub.canFine ? '$' : 'Blokováno'}" 
+                            <input type="text" class="input-box input-jail" id="j_${lIdx}_${sIdx}" 
+                                value="${sub.fixedJail}" placeholder="Let">
+                            <input type="text" class="input-box input-fine" id="f_${lIdx}_${sIdx}" 
+                                value="${sub.fixedFine}" placeholder="${sub.canFine ? '$' : ''}" 
                                 ${!sub.canFine ? 'disabled' : ''}>
                             <button class="btn-add" onclick="add(${lIdx}, ${sIdx})">+</button>
                         </div>
@@ -150,22 +169,25 @@
         list.innerHTML = protocol.map(p => `
             <div class="protocol-item">
                 <div class="proto-label">${p.title} ${p.letter}</div>
-                <div class="proto-sub">${p.desc.substring(0, 80)}...</div>
+                <div class="proto-sub">${p.desc.substring(0, 75)}...</div>
                 <div style="font-weight: 900; font-size: 14px;">
                     <span style="color:var(--jail-color)">${p.jail} let</span> | 
                     <span style="color:var(--fine-color)">$ ${p.fine.toLocaleString()}</span>
                 </div>
-                ${p.lic ? `<div class="license-tag">⚠ ODEBRAT ZBROJNÍ PRŮKAZ</div>` : ''}
                 <button onclick="remove(${p.id})" style="position:absolute; right:10px; top:15px; background:none; border:none; color:var(--danger); cursor:pointer;">✕</button>
             </div>
         `).join('');
+
+        // Zobrazení varování o průkazu dole nad celkem
+        const hasLicenseRemoval = protocol.some(p => p.lic);
+        document.getElementById('licenseWarning').style.display = hasLicenseRemoval ? 'block' : 'none';
 
         document.getElementById('sumJail').innerText = protocol.reduce((a, b) => a + b.jail, 0);
         document.getElementById('sumFine').innerText = protocol.reduce((a, b) => a + b.fine, 0).toLocaleString();
     }
 
     function remove(id) { protocol = protocol.filter(x => x.id !== id); updateProtocol(); }
-    function save() { alert("Protokol uložen do databáze."); protocol = []; updateProtocol(); }
+    function save() { alert("Protokol uložen."); protocol = []; updateProtocol(); }
 
     load();
 </script>
