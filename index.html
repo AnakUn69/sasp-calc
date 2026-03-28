@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP - MDT Terminal v53</title>
+    <title>SASP - MDT Terminal v54</title>
     <style>
         :root {
             --bg-main: #0a0b0d;
@@ -40,7 +40,7 @@
             font-weight: 900; text-transform: uppercase; display: inline-block; margin: 5px 0;
         }
 
-        /* INPUTY */
+        /* INPUTY - SEZNAM */
         .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 70px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; }
         .jail-input { border-color: var(--jail-color); color: var(--jail-color); }
         .fine-input { border-color: var(--fine-color); color: var(--fine-color); }
@@ -50,10 +50,12 @@
         .protocol-law-title { color: var(--accent); font-weight: 900; font-size: 14px; margin-bottom: 8px; text-transform: uppercase; }
         .protocol-law-text { font-size: 12px; color: #ccc; line-height: 1.4; margin-bottom: 12px; }
         
-        .edit-row { display: flex; gap: 20px; margin-top: 10px; border-top: 1px solid #1a1a1a; padding-top: 12px; }
-        .protocol-edit-input { background: transparent; border: none; border-bottom: 2px solid #333; color: #fff; width: 65px; text-align: center; font-weight: 900; font-size: 15px; outline: none; }
+        /* OPRAVA BAREV V PROTOKOLU */
+        .protocol-edit-input { background: transparent; border: none; border-bottom: 2px solid #333; width: 65px; text-align: center; font-weight: 900; font-size: 18px; outline: none; }
+        .p-jail { color: var(--jail-color) !important; }
+        .p-fine { color: var(--fine-color) !important; }
 
-        /* HISTORIE MODAL */
+        /* MODAL */
         #historyModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; padding: 40px; }
         .history-box { background: var(--bg-panel); max-width: 700px; margin: 0 auto; height: 80vh; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid var(--border); }
 
@@ -118,13 +120,12 @@
             .replace(/ODEBRAT (Zbrojní|Řidičský) Průkaz/gi, '<span class="license-danger">ODEBRAT $1 PRŮKAZ</span>');
     }
 
-    // Funkce pro extrakci limitů z textu (např. "1-5 let" -> min: 1, max: 5)
     function extractLimits(text) {
-        const jailMatch = text.match(/(\d+)\s*-\s*(\d+)\s*let/);
+        // Oprava regexu pro detekci let i dolarů
+        const jailMatch = text.match(/(\d+)\s*-\s*(\d+)\s*let/) || text.match(/do\s*(\d+)\s*let/);
         const fineMatch = text.match(/do\s*výše\s*([\d.]+)\s*\$/);
         return {
-            maxJail: jailMatch ? parseInt(jailMatch[2]) : 999,
-            minJail: jailMatch ? parseInt(jailMatch[1]) : 0,
+            maxJail: jailMatch ? (jailMatch[2] ? parseInt(jailMatch[2]) : parseInt(jailMatch[1])) : 999,
             maxFine: fineMatch ? parseInt(fineMatch[1].replace('.', '')) : 999999
         };
     }
@@ -154,20 +155,16 @@
     function renderLaws() {
         const container = document.getElementById('lawsContainer');
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const sortBy = document.getElementById('sortSelect').value;
         
-        let filtered = allLaws.filter(l => l.title.toLowerCase().includes(searchTerm));
-        if (sortBy === 'usage') filtered.sort((a, b) => (lawStats[b.title] || 0) - (lawStats[a.title] || 0));
-
-        container.innerHTML = filtered.map(law => {
+        container.innerHTML = allLaws.filter(l => l.title.toLowerCase().includes(searchTerm)).map(law => {
             const rows = law.subs.map((sub, idx) => `
                 <div style="padding:12px 0; border-bottom:1px solid #222; display:flex; align-items:center; gap:10px;">
                     <div style="flex:1; font-size:12px; color:#ccc;">${formatLawText(sub.html)}</div>
                     <input type="number" class="input-box jail-input" id="j_${law.title}_${idx}" 
-                           min="0" max="${sub.maxJail}" value="${sub.fixJail || ''}" ${sub.fixJail ? 'readonly' : ''} placeholder="Let">
+                           min="0" oninput="if(this.value>${sub.maxJail})this.value=${sub.maxJail}" value="${sub.fixJail || ''}" ${sub.fixJail ? 'readonly' : ''} placeholder="Let">
                     <input type="number" class="input-box fine-input" id="f_${law.title}_${idx}" 
-                           min="0" max="${sub.maxFine}" value="${sub.fixFine || ''}" ${sub.fixFine ? 'readonly' : ''} placeholder="$">
-                    <button class="btn-add" onclick="addItem('${law.title}', ${idx})">+</button>
+                           min="0" oninput="if(this.value>${sub.maxFine})this.value=${sub.maxFine}" value="${sub.fixFine || ''}" ${sub.fixFine ? 'readonly' : ''} placeholder="$">
+                    <button style="background:var(--accent); border:none; padding:8px 15px; border-radius:4px; font-weight:900; cursor:pointer;" onclick="addItem('${law.title}', ${idx})">+</button>
                 </div>`).join('');
             return `<div class="law-card"><div class="law-header" onclick="this.parentElement.classList.toggle('active')"><span class="law-title">${law.title}</span><span>▼</span></div><div class="law-content">${rows}</div></div>`;
         }).join('');
@@ -178,15 +175,8 @@
         const jIn = document.getElementById(`j_${title}_${idx}`);
         const fIn = document.getElementById(`f_${title}_${idx}`);
         
-        let jVal = parseInt(jIn.value) || 0;
-        let fVal = parseInt(fIn.value) || 0;
-
-        // VALIDACE LIMITŮ
-        if (jVal > sub.maxJail) { alert(`Maximální trest pro tento paragraf je ${sub.maxJail} let!`); jVal = sub.maxJail; jIn.value = jVal; }
-        if (fVal > sub.maxFine) { alert(`Maximální pokuta je ${sub.maxFine.toLocaleString()} $!`); fVal = sub.maxFine; fIn.value = fVal; }
-
-        lawStats[title] = (lawStats[title] || 0) + 1;
-        localStorage.setItem('sasp_stats', JSON.stringify(lawStats));
+        let jVal = Math.min(sub.maxJail, Math.max(0, parseInt(jIn.value) || 0));
+        let fVal = Math.min(sub.maxFine, Math.max(0, parseInt(fIn.value) || 0));
 
         protocolData.push({ id: Date.now(), lawTitle: title, fullText: sub.html, jail: jVal, fine: fVal, maxJail: sub.maxJail, maxFine: sub.maxFine });
         renderProtocol();
@@ -199,9 +189,9 @@
                 <button onclick="removeItem(${i.id})" style="position:absolute; right:10px; top:10px; background:none; border:none; color:var(--danger); cursor:pointer;">✕</button>
                 <div class="protocol-law-title">${i.lawTitle}</div>
                 <div class="protocol-law-text">${formatLawText(i.fullText)}</div>
-                <div class="edit-row">
-                    <div style="font-size:11px;">LET: <input type="number" class="protocol-edit-input" value="${i.jail}" oninput="updateVal(${i.id}, 'jail', this.value)"></div>
-                    <div style="font-size:11px;">POKUTA $: <input type="number" class="protocol-edit-input" style="width:80px" value="${i.fine}" oninput="updateVal(${i.id}, 'fine', this.value)"></div>
+                <div style="display:flex; gap:25px;">
+                    <div style="font-size:11px; font-weight:900; color:#444;">LET: <input type="number" class="protocol-edit-input p-jail" value="${i.jail}" oninput="updateVal(${i.id}, 'jail', this.value)"></div>
+                    <div style="font-size:11px; font-weight:900; color:#444;">POKUTA $: <input type="number" class="protocol-edit-input p-fine" style="width:100px" value="${i.fine}" oninput="updateVal(${i.id}, 'fine', this.value)"></div>
                 </div>
             </div>`).join('');
         calculateSum();
@@ -210,11 +200,14 @@
     function updateVal(id, key, val) {
         const item = protocolData.find(i => i.id === id);
         if (item) {
-            let v = Math.max(0, parseInt(val) || 0);
-            if (key === 'jail' && v > item.maxJail) v = item.maxJail;
-            if (key === 'fine' && v > item.maxFine) v = item.maxFine;
+            let v = parseInt(val) || 0;
+            // STRIKTNÍ BLOKACE LIMITU
+            const max = (key === 'jail') ? item.maxJail : item.maxFine;
+            if (v > max) v = max;
+            if (v < 0) v = 0;
+            
             item[key] = v;
-            calculateSum();
+            renderProtocol(); // Překreslíme pro vynucení hodnoty v inputu
         }
     }
 
@@ -232,7 +225,7 @@
         caseHistory.unshift({ date: new Date().toLocaleString(), data: [...protocolData] });
         localStorage.setItem('sasp_history', JSON.stringify(caseHistory));
         protocolData = []; renderProtocol();
-        alert("Případ uložen do historie.");
+        alert("Případ uložen.");
     }
 
     function toggleHistory() {
