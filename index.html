@@ -17,7 +17,7 @@
             display: flex; align-items: center; justify-content: center;
             flex-direction: column; text-align: center;
         }
-        .welcome-card { background: #0c0c0c; border: 2px solid var(--accent); padding: 50px; border-radius: 8px; }
+        .welcome-card { background: #0c0c0c; border: 2px solid var(--accent); padding: 50px; border-radius: 8px; box-shadow: 0 0 30px rgba(255,204,0,0.1); }
         .welcome-title { font-size: 32px; font-weight: bold; color: var(--accent); margin-bottom: 10px; text-transform: uppercase; }
         .welcome-btn { background: var(--accent); color: #000; border: none; padding: 15px 40px; font-weight: bold; cursor: pointer; border-radius: 4px; text-transform: uppercase; }
 
@@ -45,6 +45,10 @@
         .input-group { display: flex; gap: 8px; }
         .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; outline: none; }
         .input-box:focus { border-color: var(--accent); }
+        
+        /* STYL PRO BLOKOVANÉ (FIXNÍ) TRESTY */
+        .input-box[readonly] { border-color: var(--fixed) !important; color: var(--fixed) !important; background: #051a05; cursor: not-allowed; font-weight: bold; }
+        
         .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
         
         /* NOTIFIKACE */
@@ -58,8 +62,8 @@
     <div class="welcome-card">
         <div style="font-size:50px; margin-bottom:10px;">🚔</div>
         <div class="welcome-title">San Andreas State Police</div>
-        <div style="margin-bottom:20px; color:#aaa;">Operační systém pro evidenci trestných činů</div>
-        <button class="welcome-btn" onclick="document.getElementById('welcomeOverlay').style.display='none'">Vstoupit do systému</button>
+        <div style="margin-bottom:20px; color:#aaa;">PŘIHLÁŠENÍ DO SYSTÉMU ÚSPĚŠNÉ</div>
+        <button class="welcome-btn" onclick="document.getElementById('welcomeOverlay').style.display='none'">Vstoupit do databáze</button>
     </div>
 </div>
 
@@ -97,7 +101,10 @@
             const title = item.getAttribute('data-title');
             let rows = "";
             item.querySelectorAll('.sub-line').forEach((line, rIdx) => {
-                // Přidání červeného barvení pro ODEBRAT
+                // Detekce fixních trestů z atributů v HTML
+                const fixJail = line.getAttribute('data-fix-jail');
+                const fixFine = line.getAttribute('data-fix-fine');
+
                 let text = line.innerHTML
                     .replace(/ODEBRAT Zbrojní Průkaz/g, '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
                     .replace(/ODEBRAT Řidičský Průkaz/g, '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
@@ -106,8 +113,14 @@
                     <div class="sub-row">
                         <div class="sub-text">${text}</div>
                         <div class="input-group">
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" placeholder="Let">
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" placeholder="Suma">
+                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" 
+                                value="${fixJail !== null ? fixJail : ''}" 
+                                placeholder="${fixJail !== null ? '' : 'Let'}" 
+                                ${fixJail !== null ? 'readonly' : ''}>
+                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" 
+                                value="${fixFine !== null ? fixFine : ''}" 
+                                placeholder="${fixFine !== null ? '' : 'Suma'}" 
+                                ${fixFine !== null ? 'readonly' : ''}>
                             <button class="btn-add" onclick="addItem('${title}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>`;
@@ -134,14 +147,13 @@
         const rowEl = jEl.closest('.sub-row');
         const formattedHtml = rowEl.querySelector('.sub-text').innerHTML;
 
-        // --- MIN/MAX VALIDACE Z TUČNÉHO TEXTU ---
+        // VALIDACE ROZMEZÍ (jen pro pole, která nejsou readonly)
         let boldText = "";
         rowEl.querySelectorAll('b, strong').forEach(el => boldText += " " + el.innerText);
         const cleanBoldText = boldText.replace(/(?<=\d)\.(?=\d)/g, '');
         const boldNumbers = (cleanBoldText.match(/\d+/g) || []).map(Number);
 
-        // Validace Pokuty
-        if (userFine > 0) {
+        if (!fEl.readOnly && userFine > 0) {
             const fineLimits = boldNumbers.filter(n => n >= 100);
             if (fineLimits.length >= 2) {
                 const minF = Math.min(...fineLimits);
@@ -150,14 +162,10 @@
                     showNotify(`POKUTA MIMO ROZMEZÍ! POVOLENO: ${minF.toLocaleString()}$ - ${maxF.toLocaleString()}$`);
                     return;
                 }
-            } else if (fineLimits.length === 1 && userFine > fineLimits[0]) {
-                showNotify(`MAXIMÁLNÍ POKUTA JE ${fineLimits[0].toLocaleString()}$`);
-                return;
             }
         }
 
-        // Validace Vězení
-        if (userJail > 0) {
+        if (!jEl.readOnly && userJail > 0) {
             const jailLimits = boldNumbers.filter(n => n > 0 && n < 100);
             if (jailLimits.length >= 2) {
                 const minJ = Math.min(...jailLimits);
@@ -166,13 +174,10 @@
                     showNotify(`TREST MIMO ROZMEZÍ! POVOLENO: ${minJ} - ${maxJ} LET`);
                     return;
                 }
-            } else if (jailLimits.length === 1 && userJail > jailLimits[0]) {
-                showNotify(`MAXIMÁLNÍ TREST JE ${jailLimits[0]} LET`);
-                return;
             }
         }
 
-        if (userJail === 0 && userFine === 0) return;
+        if (userJail === 0 && userFine === 0 && !jEl.readOnly && !fEl.readOnly) return;
 
         protocolData.push({ title, jail: userJail, fine: userFine, html: formattedHtml });
         render();
