@@ -52,6 +52,9 @@
 </div>
 
 <script>
+    // Uvítací okno při zapnutí [cite: 2026-03-25]
+    alert("Vítej Trooper !");
+
     let protocolData = [];
 
     function showNotify(msg) {
@@ -76,6 +79,7 @@
                 const displayHtml = text.replace(/ODEBRAT Zbrojní Průkaz/g, '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
                                         .replace(/ODEBRAT Řidičský Průkaz/g, '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
 
+                // Čtení fixních hodnot z tvého HTML [cite: 2026-03-25]
                 const fixJail = line.getAttribute('data-fix-jail');
                 const fixFine = line.getAttribute('data-fix-fine');
 
@@ -113,11 +117,9 @@
         const formattedHtml = rowEl.querySelector('.sub-text').innerHTML;
         const rawText = rowEl.querySelector('.sub-text').innerText;
 
-        // --- NO-LOGIC VALIDATION: Používá se jen u polí, která NEJSOU readonly ---
-        
+        // VALIDACE: Spustí se pouze pokud pole NENÍ uzamčené přes data-fix [cite: 2026-03-25]
         if (!jEl.readOnly) {
-            // Hledáme čistě jen čísla v rozmezí "X-Y let" nebo "od X do Y"
-            const rangeMatch = rawText.match(/(\d+)\s*-\s*(\d+)\s*let/i) || rawText.match(/od\s+(\d+)\s+.*do\s+(\d+)\s+let/i);
+            const rangeMatch = rawText.match(/od\s+(\d+)\s+.*na\s+(\d+)\s+let/i) || rawText.match(/sazba\s+(\d+)-(\d+)\s+let/i) || rawText.match(/(\d+)\s*-\s*(\d+)\s*let/i);
             if (rangeMatch) {
                 const min = parseInt(rangeMatch[1]);
                 const max = parseInt(rangeMatch[2]);
@@ -131,7 +133,8 @@
         if (!fEl.readOnly) {
             const fineMatch = rawText.match(/do\s+výše\s+([\d.]+)/i) || rawText.match(/pokutou\s+([\d.]+)/i);
             if (fineMatch) {
-                const max = parseInt(fineMatch[1].replace(/[.\s]/g, ''));
+                const cleanFine = fineMatch[1].replace(/[.\s]/g, '');
+                const max = parseInt(cleanFine);
                 if (userFine > max) {
                     showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU !");
                     return;
