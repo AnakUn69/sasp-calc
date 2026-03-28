@@ -20,12 +20,19 @@
         .law-card.active .law-content { display: block; }
         .sub-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; }
         .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; }
-        .license-danger { background: var(--danger); color: #fff; font-weight: bold; text-transform: uppercase; font-size: 10px; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 4px; }
+        
+        /* Červené zvýraznění pro seznam i protokol */
+        .license-danger { 
+            background: var(--danger); color: #fff; font-weight: bold; 
+            text-transform: uppercase; font-size: 10px; padding: 2px 5px; 
+            border-radius: 3px; display: inline-block; margin-top: 4px; 
+        }
+
         .input-group { display: flex; gap: 8px; }
         .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; outline: none; }
         .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
+        
         .case-entry { background: #111; padding: 12px; border-bottom: 1px solid #222; position: relative; margin-bottom: 5px; border-left: 2px solid var(--accent); }
-        .case-alert { color: var(--danger); font-weight: bold; font-size: 10px; text-transform: uppercase; display: block; margin-top: 5px; }
         #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 40px; border-radius: 10px; font-weight: bold; z-index: 99999; display: none; border: 4px solid white; text-transform: uppercase; font-size: 18px; text-align: center; box-shadow: 0 0 100px #000; max-width: 80%; }
         #globalAlert { background: rgba(255, 68, 68, 0.2); border: 2px solid var(--danger); color: #fff; padding: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; display: none; text-align: center; }
     </style>
@@ -76,12 +83,23 @@
                 const displayHtml = text.replace(/ODEBRAT Zbrojní Průkaz/g, '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
                                         .replace(/ODEBRAT Řidičský Průkaz/g, '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
 
+                // Detekce předdefinovaných hodnot (automatické vyplnění)
+                const isRange = /od|do|až|sazba|rozmezí/i.test(text);
+                const cleanText = text.replace(/(?<=\d)[\s.](?=\d)/g, '').replace(/[.$]/g, '');
+                
+                const jailNums = (cleanText.split(/pokut/i)[0].match(/\d+/g) || []).map(Number).filter(n => n < 100);
+                const finePart = cleanText.includes("pokut") ? cleanText.split(/pokut/i)[1] : cleanText;
+                const fineNums = (finePart.match(/\d+/g) || []).map(Number).filter(n => n >= 50);
+
+                const autoJail = (!isRange && jailNums.length === 1) ? jailNums[0] : "";
+                const autoFine = (!isRange && fineNums.length === 1) ? fineNums[0] : "";
+
                 rows += `
                     <div class="sub-row">
                         <div class="sub-text">${displayHtml}</div>
                         <div class="input-group">
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" placeholder="Let">
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" placeholder="Suma">
+                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${autoJail}" placeholder="Let">
+                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${autoFine}" placeholder="Suma">
                             <button class="btn-add" onclick="addItem('${title}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>`;
@@ -112,9 +130,8 @@
         if (jailNums.length > 0) {
             const max = Math.max(...jailNums);
             const min = (isRange && jailNums.length >= 2) ? Math.min(...jailNums) : (isRange ? 1 : max);
-            
             if (userJail < min || userJail > max) {
-                showNotify("CHYBA VEZENÍ UPRAV DÉLKU TRESTU DLE POVOLENÉHO PARAGRAFU");
+                showNotify("CHYBA V TRESTU ODNĚTÍM SVOBODY UPRAV DÉLKU TRESTU DLE POVOLENÉHO PARAGRAFU !");
                 return;
             }
         }
@@ -125,9 +142,8 @@
         if (fineNums.length > 0) {
             const max = Math.max(...fineNums);
             const min = (isRange && fineNums.length >= 2) ? Math.min(...fineNums) : (isRange ? 50 : max);
-
             if (userFine < min || userFine > max) {
-                showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU");
+                showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU !");
                 return;
             }
         }
@@ -135,8 +151,8 @@
         if (userJail === 0 && userFine === 0) return;
 
         let lics = [];
-        if (rawText.includes("Zbrojní Průkaz")) lics.push("ZBROJNÍ PRŮKAZ");
-        if (rawText.includes("Řidičský Průkaz")) lics.push("ŘIDIČSKÝ PRŮKAZ");
+        if (rawText.toLowerCase().includes("zbrojní průkaz")) lics.push("ZBROJNÍ PRŮKAZ");
+        if (rawText.toLowerCase().includes("řidičský průkaz")) lics.push("ŘIDIČSKÝ PRŮKAZ");
 
         protocolData.push({ title, jail: userJail, fine: userFine, lics, html: formattedHtml });
         render();
@@ -148,12 +164,10 @@
         let tj = 0, tf = 0; let allLics = new Set();
         protocolData.forEach((i, idx) => {
             tj += i.jail; tf += i.fine; i.lics.forEach(l => allLics.add(l));
-            let licAlerts = i.lics.map(l => `<span class="case-alert">⚠ ODEBRAT ${l}</span>`).join("");
             cont.innerHTML += `<div class="case-entry">
                 <button style="position:absolute; right:8px; top:8px; color:red; background:none; border:none; cursor:pointer; font-size:18px;" onclick="removeItem(${idx})">×</button>
                 <div style="color:var(--accent); font-weight:bold; font-size:12px;">${i.title}</div>
                 <div style="font-size:11px; color:#aaa;">${i.html}</div>
-                ${licAlerts}
                 <div style="margin-top:5px; font-weight:bold; font-size:12px;">${i.jail} let | ${i.fine.toLocaleString()} $</div>
             </div>`;
         });
