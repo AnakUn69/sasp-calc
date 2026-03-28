@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP - MDT Terminal v59</title>
+    <title>SASP - MDT Terminal v60</title>
     <style>
         :root {
             --bg-main: #0a0b0d;
@@ -15,47 +15,40 @@
         }
 
         body { background: var(--bg-main); color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
-        /* TUČNÉ PÍSMO JE ŽLUTÉ */
         b, strong { color: var(--accent) !important; font-weight: bold; }
 
-        /* LOGIN OBRAZOVKA */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-main); z-index: 5000; display: flex; justify-content: center; align-items: center; }
-        .login-btn { padding: 20px 60px; background: var(--jail-color); border: none; color: #fff; font-weight: 900; border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .login-btn { padding: 20px 60px; background: var(--jail-color); border: none; color: #fff; font-weight: 900; border-radius: 6px; cursor: pointer; text-transform: uppercase; }
         
-        /* HLAVNÍ ROZLOŽENÍ */
         #mainApp { display: none; width: 100%; height: 100%; display: flex; }
         #leftPanel { flex: 3; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
-        #rightPanel { flex: 1.2; min-width: 420px; background: var(--bg-panel); display: flex; flex-direction: column; position: relative; }
+        #rightPanel { flex: 1.2; min-width: 420px; background: var(--bg-panel); display: flex; flex-direction: column; }
 
         .header-bar { padding: 25px 30px; border-bottom: 1px solid var(--border); background: var(--bg-panel); }
         #lawsContainer { padding: 20px; overflow-y: auto; flex-grow: 1; background: #0c0d0f; }
 
-        /* KARTY ZÁKONŮ */
         .law-card { background: var(--bg-panel); border: 1px solid var(--border); margin-bottom: 12px; border-radius: 8px; }
         .law-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 800; color: var(--accent); text-transform: uppercase; }
         .law-content { display: none; padding: 15px 20px; border-top: 1px solid var(--border); }
         .law-card.active .law-content { display: block; }
 
-        /* ODEBRAT V ČERVENÉM */
         .license-red { 
             background: rgba(255, 68, 68, 0.1); color: var(--danger); 
-            padding: 6px 12px; border-radius: 4px; font-size: 11px; 
+            padding: 8px; border-radius: 4px; font-size: 11px; 
             font-weight: 900; text-transform: uppercase; display: block; 
             margin-bottom: 5px; border: 1px solid var(--danger); text-align: center;
         }
 
-        /* INPUTY */
-        .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; }
+        .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; font-weight: bold; }
+        .input-box:disabled { opacity: 0.5; cursor: not-allowed; border-color: #444; color: #888; }
         .jail-input { border-color: var(--jail-color); color: var(--jail-color); }
         .fine-input { border-color: var(--fine-color); color: var(--fine-color); }
 
-        /* PROTOKOL */
         .protocol-item { background: #000; padding: 15px; border-radius: 8px; border-left: 4px solid var(--jail-color); margin-bottom: 15px; position: relative; }
         .protocol-edit-input { background: transparent; border: none; border-bottom: 2px solid #333; color: inherit; width: 65px; text-align: center; font-weight: 900; font-size: 18px; outline: none; }
+        .protocol-edit-input:disabled { border-bottom: none; }
 
         .summary-box { padding: 25px; background: #000; border-top: 1px solid var(--border); }
-        #licenseWarningContainer { padding: 10px 25px; background: #000; }
     </style>
 </head>
 <body>
@@ -68,9 +61,7 @@
     <div id="leftPanel">
         <div class="header-bar">
             <h1 style="margin:0; color:var(--accent); font-size:20px; margin-bottom:15px;">TRESTNÍ ZÁKONÍK</h1>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="searchInput" placeholder="Vyhledat paragraf..." oninput="renderLaws()" style="flex:2; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:6px;">
-            </div>
+            <input type="text" id="searchInput" placeholder="Vyhledat paragraf..." oninput="renderLaws()" style="width:100%; background:#000; border:1px solid var(--border); color:#fff; padding:10px; border-radius:6px; box-sizing: border-box;">
         </div>
         <div id="lawsContainer"></div>
     </div>
@@ -79,7 +70,7 @@
         <div style="padding:20px; border-bottom:1px solid var(--border); font-weight:800; color:var(--accent);">AKTIVNÍ PROTOKOL</div>
         <div id="caseEntries" style="flex-grow:1; overflow-y:auto; padding:15px;"></div>
         
-        <div id="licenseWarningContainer"></div>
+        <div id="licenseWarningContainer" style="padding: 10px 25px; background: #000;"></div>
 
         <div class="summary-box">
             <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:15px; font-size:16px;">
@@ -101,44 +92,30 @@
         loadLaws();
     }
 
-    function formatLawText(html) {
-        return html.replace(/ODEBRAT (Zbrojní|Řidičský) Průkaz/gi, '<span style="color:var(--danger); font-weight:900;">ODEBRAT $1 PRŮKAZ</span>');
-    }
-
-    function extractLimits(text) {
-        // Regex pro detekci let (např. 1-5 let, od 5 let do 15 let, 10 let)
-        const jailMatch = text.match(/(\d+)\s*-\s*(\d+)\s*let/) || text.match(/od\s*(\d+)\s*let\s*do\s*(\d+)\s*let/) || text.match(/(\d+)\s*let/);
-        const fineMatch = text.match(/do\s*výše\s*([\d.]+)\s*\$/);
-        
-        let maxJ = 999;
-        if (jailMatch) {
-            maxJ = jailMatch[2] ? parseInt(jailMatch[2]) : parseInt(jailMatch[1]);
-        }
-
-        return {
-            maxJail: maxJ,
-            maxFine: fineMatch ? parseInt(fineMatch[1].replace('.', '')) : 999999,
-            hasLic: text.includes("ODEBRAT")
-        };
-    }
-
     async function loadLaws() {
-        try {
-            const res = await fetch('tresty.html?v=' + Date.now());
-            const html = await res.text();
-            const temp = document.createElement('div');
-            temp.innerHTML = html;
-            
-            allLaws = Array.from(temp.querySelectorAll('.law-item')).map(item => ({
-                title: item.getAttribute('data-title'),
-                subs: Array.from(item.querySelectorAll('.sub-line')).map(line => ({
+        const res = await fetch('tresty.html?v=' + Date.now());
+        const html = await res.text();
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        
+        allLaws = Array.from(temp.querySelectorAll('.law-item')).map(item => ({
+            title: item.getAttribute('data-title'),
+            subs: Array.from(item.querySelectorAll('.sub-line')).map(line => {
+                const jailMatch = line.innerText.match(/(\d+)\s*-\s*(\d+)\s*let/) || line.innerText.match(/od\s*(\d+)\s*let\s*do\s*(\d+)\s*let/) || line.innerText.match(/(\d+)\s*let/);
+                const fineMatch = line.innerText.match(/do\s*výše\s*([\d.]+)\s*\$/);
+                
+                return {
                     html: line.innerHTML,
                     text: line.innerText,
-                    ...extractLimits(line.innerText)
-                }))
-            }));
-            renderLaws();
-        } catch(e) { console.error("Soubor tresty.html nenalezen."); }
+                    fixJail: line.getAttribute('data-fix-jail'), // Načtení blokování
+                    fixFine: line.getAttribute('data-fix-fine'),
+                    maxJail: jailMatch ? (jailMatch[2] ? parseInt(jailMatch[2]) : parseInt(jailMatch[1])) : 999,
+                    maxFine: fineMatch ? parseInt(fineMatch[1].replace('.', '')) : 999999,
+                    licenseType: line.innerText.match(/ODEBRAT (Zbrojní|Řidičský) Průkaz/i)?.[0] || null
+                };
+            })
+        }));
+        renderLaws();
     }
 
     function renderLaws() {
@@ -146,37 +123,44 @@
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         
         container.innerHTML = allLaws.filter(l => l.title.toLowerCase().includes(searchTerm)).map(law => {
-            const rows = law.subs.map((sub, idx) => `
+            const rows = law.subs.map((sub, idx) => {
+                // Aplikace blokování z tresty.html
+                const jailVal = sub.fixJail !== null ? sub.fixJail : '';
+                const jailDisabled = sub.fixJail !== null ? 'disabled' : '';
+                const fineVal = sub.fixFine !== null ? sub.fixFine : '';
+                const fineDisabled = sub.fixFine !== null ? 'disabled' : '';
+
+                return `
                 <div style="padding:12px 0; border-bottom:1px solid #222; display:flex; align-items:center; gap:10px;">
-                    <div style="flex:1; font-size:12px; color:#ccc;">${formatLawText(sub.html)}</div>
-                    <input type="number" class="input-box jail-input" id="j_${law.title}_${idx}" min="0" oninput="forceLimit(this, ${sub.maxJail})" placeholder="Max ${sub.maxJail}">
-                    <input type="number" class="input-box fine-input" id="f_${law.title}_${idx}" min="0" oninput="forceLimit(this, ${sub.maxFine})" placeholder="$">
+                    <div style="flex:1; font-size:12px; color:#ccc;">${sub.html}</div>
+                    <input type="number" class="input-box jail-input" id="j_${law.title}_${idx}" value="${jailVal}" ${jailDisabled} placeholder="Let" oninput="validate(this, ${sub.maxJail})">
+                    <input type="number" class="input-box fine-input" id="f_${law.title}_${idx}" value="${fineVal}" ${fineDisabled} placeholder="$" oninput="validate(this, ${sub.maxFine})">
                     <button style="background:var(--accent); border:none; padding:8px 15px; border-radius:4px; font-weight:900; cursor:pointer;" onclick="addItem('${law.title}', ${idx})">+</button>
-                </div>`).join('');
+                </div>`;
+            }).join('');
             return `<div class="law-card"><div class="law-header" onclick="this.parentElement.classList.toggle('active')"><span>${law.title}</span><span>▼</span></div><div class="law-content">${rows}</div></div>`;
         }).join('');
     }
 
-    /* NEKOMPROMISNÍ BLOKOVÁNÍ */
-    function forceLimit(el, max) {
-        if (parseInt(el.value) > max) {
-            el.value = max;
-            el.style.borderColor = "var(--danger)";
-        } else {
-            el.style.borderColor = "";
-        }
-    }
+    function validate(el, max) { if (parseInt(el.value) > max) el.value = max; }
 
     function addItem(title, idx) {
         const sub = allLaws.find(l => l.title === title).subs[idx];
-        let jVal = parseInt(document.getElementById(`j_${title}_${idx}`).value) || 0;
-        let fVal = parseInt(document.getElementById(`f_${title}_${idx}`).value) || 0;
+        const jVal = sub.fixJail !== null ? parseInt(sub.fixJail) : (parseInt(document.getElementById(`j_${title}_${idx}`).value) || 0);
+        const fVal = sub.fixFine !== null ? parseInt(sub.fixFine) : (parseInt(document.getElementById(`f_${title}_${idx}`).value) || 0);
 
-        // Kontrola před přidáním do protokolu
-        if (jVal > sub.maxJail) jVal = sub.maxJail;
-        if (fVal > sub.maxFine) fVal = sub.maxFine;
-
-        protocolData.push({ id: Date.now(), lawTitle: title, subText: sub.text, jail: jVal, fine: fVal, maxJail: sub.maxJail, maxFine: sub.maxFine, hasLic: sub.hasLic });
+        protocolData.push({ 
+            id: Date.now(), 
+            lawTitle: title, 
+            subText: sub.text, 
+            jail: jVal, 
+            fine: fVal, 
+            maxJ: sub.maxJail, 
+            maxF: sub.maxFine, 
+            fixJ: sub.fixJail, 
+            fixF: sub.fixFine,
+            lic: sub.licenseType 
+        });
         renderProtocol();
     }
 
@@ -190,21 +174,25 @@
                 <div style="color:var(--accent); font-weight:900; font-size:14px; margin-bottom:5px;">${i.lawTitle}</div>
                 <div style="font-size:11px; color:#aaa; margin-bottom:10px;">${i.subText}</div>
                 <div style="display:flex; gap:25px; align-items:center;">
-                    <span style="color:var(--jail-color); font-weight:900;">LET: <input type="number" class="protocol-edit-input p-jail" value="${i.jail}" oninput="updateProtocolVal(${i.id}, 'jail', this)"></span>
-                    <span style="color:var(--fine-color); font-weight:900;">$: <input type="number" class="protocol-edit-input p-fine" value="${i.fine}" oninput="updateProtocolVal(${i.id}, 'fine', this)"></span>
+                    <span style="color:var(--jail-color); font-weight:900;">LET: 
+                        <input type="number" class="protocol-edit-input p-jail" value="${i.jail}" ${i.fixJ !== null ? 'disabled' : ''} oninput="updateVal(${i.id}, 'jail', this)">
+                    </span>
+                    <span style="color:var(--fine-color); font-weight:900;">$: 
+                        <input type="number" class="protocol-edit-input p-fine" value="${i.fine}" ${i.fixF !== null ? 'disabled' : ''} oninput="updateVal(${i.id}, 'fine', this)">
+                    </span>
                 </div>
             </div>`).join('');
 
-        // ODEBRAT NAD CELKEM
-        const uniqueWarnings = [...new Set(protocolData.filter(x => x.hasLic).map(x => x.lawTitle))];
-        warnCont.innerHTML = uniqueWarnings.map(title => `<div class="license-red">⚠ ODEBRAT PRŮKAZ DLE: ${title}</div>`).join('');
+        // KONKRÉTNÍ VAROVÁNÍ
+        const licenses = protocolData.filter(x => x.lic).map(x => `⚠ ${x.lic} (Dle: ${x.lawTitle})`);
+        warnCont.innerHTML = [...new Set(licenses)].map(l => `<div class="license-red">${l}</div>`).join('');
         
         calculateSum();
     }
 
-    function updateProtocolVal(id, key, el) {
+    function updateVal(id, key, el) {
         const item = protocolData.find(x => x.id === id);
-        const max = key === 'jail' ? item.maxJail : item.maxFine;
+        const max = key === 'jail' ? item.maxJ : item.maxF;
         if (parseInt(el.value) > max) el.value = max;
         item[key] = parseInt(el.value) || 0;
         calculateSum();
@@ -218,11 +206,7 @@
     }
 
     function removeItem(id) { protocolData = protocolData.filter(x => x.id !== id); renderProtocol(); }
-
-    function saveCase() {
-        if (protocolData.length === 0) return;
-        protocolData = []; renderProtocol(); alert("Případ uložen.");
-    }
+    function saveCase() { if (protocolData.length > 0) { protocolData = []; renderProtocol(); alert("Případ uložen."); } }
 </script>
 </body>
 </html>
