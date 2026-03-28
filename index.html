@@ -4,30 +4,110 @@
     <meta charset="UTF-8">
     <title>SASP - Penal Code</title>
     <style>
-        :root { --bg: #000; --card: #0c0c0c; --accent: #ffcc00; --border: #1a1a1a; --jail: #00aaff; --fine: #00ff88; --danger: #ff4444; }
-        body { background: var(--bg); color: #fff; font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root {
+            --bg: #000000;
+            --card: #0c0c0c;
+            --accent: #ffcc00;
+            --border: #1a1a1a;
+            --jail: #00aaff;
+            --fine: #00ff88;
+            --danger: #ff4444;
+            --fixed: #00ff88;
+        }
+
+        body {
+            background: var(--bg);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+        }
+
         #leftPanel { flex: 3; padding: 20px; overflow-y: auto; }
-        #rightPanel { flex: 1; min-width: 350px; background: var(--card); border-left: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
-        .main-header { font-size: 28px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
-        #searchInput { width: 100%; background: #111; border: 1px solid var(--border); color: var(--accent); padding: 12px; margin-bottom: 20px; border-left: 4px solid var(--accent); outline: none; }
+
+        .main-header {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        #searchInput {
+            width: 100%; background: #111; border: 1px solid var(--border);
+            color: var(--accent); padding: 12px; margin-bottom: 20px;
+            border-left: 4px solid var(--accent); outline: none; box-sizing: border-box;
+        }
+
         .law-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); margin-bottom: 10px; border-radius: 4px; }
         .law-header { padding: 15px; cursor: pointer; }
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
+        .law-desc { color: #555; font-size: 11px; margin-top: 5px; }
         .law-content { display: none; padding: 0 15px 15px 15px; border-top: 1px solid #111; }
         .law-card.active .law-content { display: block; }
+
         .sub-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; }
         .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; }
+
+        /* Červené ODEBRAT v seznamu */
+        .license-danger {
+            background-color: var(--danger);
+            color: #fff;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
         .input-group { display: flex; gap: 8px; }
-        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 85px; text-align: center; border-radius: 4px; }
-        /* Styl pro zamknutá políčka */
-        .input-box[readonly] { border-color: #004400; color: #00ff88; cursor: not-allowed; background: #050505; }
+        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 65px; text-align: center; border-radius: 4px; outline: none; }
+        .input-box[readonly] { background: #051a05; color: var(--fixed); border: 1px solid var(--fixed); cursor: not-allowed; }
+
         .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 50px; border-radius: 15px; font-weight: bold; z-index: 99999; display: none; border: 5px solid white; text-transform: uppercase; font-size: 22px; text-align: center; box-shadow: 0 0 100px #000; }
+
+        /* PRAVÝ PANEL */
+        #rightPanel { flex: 1; min-width: 320px; background: var(--card); border-left: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
+        .protocol-header { color: var(--accent); font-weight: bold; border-bottom: 1px solid var(--accent); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; }
+        #caseEntries { flex-grow: 1; overflow-y: auto; }
+
+        .case-entry { background: #111; padding: 12px; border-bottom: 1px solid #222; position: relative; margin-bottom: 5px; border-left: 2px solid var(--accent); }
+        .case-entry-title { color: var(--accent); font-weight: bold; font-size: 12px; display: block; }
+        .case-entry-sub { color: #fff; font-size: 11px; display: block; margin-top: 2px; }
+
+        /* Varování v Aktivním Protokolu (vpravo) */
+        .case-alert { color: var(--danger); font-weight: bold; font-size: 10px; text-transform: uppercase; display: block; margin-top: 5px; }
+
+        .btn-delete-item { position: absolute; right: 8px; top: 8px; color: #ff4444; cursor: pointer; font-weight: bold; font-size: 18px; background: none; border: none; }
+
+        .summary-box { border-top: 2px solid var(--accent); padding-top: 15px; margin-top: 10px; }
+        .summary-line { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 8px; }
+
+        /* OPRAVENÉ A ZVÝRAZNĚNÉ GLOBÁLNÍ VAROVÁNÍ */
+        #globalAlert { 
+            background: rgba(255, 68, 68, 0.15); 
+            border: 2px solid var(--danger); 
+            color: #fff; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            text-align: center; 
+            display: none; 
+            border-radius: 4px;
+        }
+        #alertList { color: var(--danger); text-decoration: underline; }
+
+        .btn-clear { width: 100%; background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 10px; cursor: pointer; font-weight: bold; }
+        .btn-clear:hover { background: var(--danger); color: #000; }
     </style>
 </head>
 <body>
-
-<div id="notification"></div>
 
 <div id="leftPanel">
     <div class="main-header">POLICAJNÍ DATABAZE - PENAL CODE - GenK</div>
@@ -36,62 +116,55 @@
 </div>
 
 <div id="rightPanel">
-    <div style="color:var(--accent); font-weight:bold; border-bottom:1px solid var(--accent); padding-bottom:10px; margin-bottom:15px;">AKTIVNÍ PROTOKOL</div>
-    <div id="caseEntries" style="flex-grow:1; overflow-y:auto;"></div>
-    <div style="border-top:2px solid var(--accent); padding-top:15px; margin-top:10px;">
-        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:16px; margin-bottom:8px;">Vězení: <span id="sumJail" style="color:var(--jail)">0 let</span></div>
-        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:16px; margin-bottom:15px;">Pokuta: <span id="sumFine" style="color:var(--fine)">0 $</span></div>
-        <button style="width:100%; background:transparent; border:1px solid var(--danger); color:var(--danger); padding:10px; cursor:pointer; font-weight:bold;" onclick="clearAll()">VYMAZAT PŘÍPAD</button>
+    <div class="protocol-header">AKTIVNÍ PROTOKOL</div>
+    <div id="globalAlert">⚠ ZABAVIT: <span id="alertList"></span></div>
+    <div id="caseEntries"></div>
+    <div class="summary-box">
+        <div class="summary-line">Vězení: <span id="sumJail" style="color:var(--jail)">0 let</span></div>
+        <div class="summary-line">Pokuta: <span id="sumFine" style="color:var(--fine)">0 $</span></div>
+        <button class="btn-clear" onclick="clearAll()">VYMAZAT PŘÍPAD</button>
     </div>
 </div>
 
 <script>
     let protocolData = [];
 
-    function showNotify(msg) {
-        const n = document.getElementById('notification');
-        n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => { n.style.display = 'none'; }, 3000);
-    }
-
     async function loadLaws() {
+        const container = document.getElementById('lawsContainer');
         const res = await fetch('tresty.html?v=' + Date.now());
         const html = await res.text();
         const temp = document.createElement('div');
         temp.innerHTML = html;
-        const container = document.getElementById('lawsContainer');
-        container.innerHTML = "";
         
+        container.innerHTML = "";
         temp.querySelectorAll('.law-item').forEach((item, lIdx) => {
             const title = item.getAttribute('data-title');
+            const desc = item.querySelector('.law-description')?.innerText || "";
             let rows = "";
+
             item.querySelectorAll('.sub-line').forEach((line, rIdx) => {
-                const text = line.innerHTML;
-                const clean = text.replace(/(?<=\d)[\s.](?=\d)/g, '').replace(/[.$]/g, '');
-                
-                // Detekce pevných trestů (pokud chybí klíčová slova pro rozmezí)
-                const isRange = /od|do|až|sazba|rozmezí/i.test(text);
-                
                 const fF = line.getAttribute('data-fix-fine');
                 const fJ = line.getAttribute('data-fix-jail');
                 
-                // Pokud je v data-fix nastaveno, nebo pokud text není rozmezí a obsahuje jen jedno číslo
-                const isJailFixed = fJ !== null || (!isRange && (text.match(/\d+/g) || []).filter(n => n < 100).length === 1);
-                const isFineFixed = fF !== null || (!isRange && (clean.match(/\d+/g) || []).filter(n => n >= 100).length === 1);
+                // Formátování textu a nahrazení průkazu
+                let displayHtml = line.innerHTML
+                    .replace(/ODEBRAT Zbrojní Průkaz/g, '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
+                    .replace(/ODEBRAT Řidičský Průkaz/g, '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
 
                 rows += `
                     <div class="sub-row">
-                        <div class="sub-text">${text}</div>
+                        <div class="sub-text">${displayHtml}</div>
                         <div class="input-group">
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${fJ || ''}" placeholder="Let" ${isJailFixed ? 'readonly' : ''}>
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${fF || ''}" placeholder="Suma $" ${isFineFixed ? 'readonly' : ''}>
-                            <button class="btn-add" onclick="addItem('${title}', ${lIdx}, ${rIdx})">+</button>
+                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${fJ || ''}" placeholder="Let" onclick="event.stopPropagation()" ${fJ !== null ? 'readonly' : ''}>
+                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${fF || ''}" placeholder="Suma" onclick="event.stopPropagation()" ${fF !== null ? 'readonly' : ''}>
+                            <button class="btn-add" onclick="event.stopPropagation(); addItem('${title}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>`;
             });
+
             const card = document.createElement('div');
             card.className = 'law-card';
-            card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div></div><div class="law-content">${rows}</div>`;
+            card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div><div class="law-desc">${desc}</div></div><div class="law-content">${rows}</div>`;
             container.appendChild(card);
         });
     }
@@ -99,51 +172,23 @@
     function addItem(title, lIdx, rIdx) {
         const jEl = document.getElementById(`j_${lIdx}_${rIdx}`);
         const fEl = document.getElementById(`f_${lIdx}_${rIdx}`);
-        const userJail = parseInt(jEl.value) || 0;
-        const userFine = parseInt(fEl.value) || 0;
+        if (!jEl.value && !fEl.value) return;
+
+        const jail = parseInt(jEl.value) || 0;
+        const fine = parseInt(fEl.value) || 0;
         
-        const rawText = jEl.closest('.sub-row').querySelector('.sub-text').innerText;
-        const isRange = /od|do|až|sazba|rozmezí/i.test(rawText);
-        const cleanText = rawText.replace(/(?<=\d)[\s.](?=\d)/g, '').replace(/[.$]/g, '');
+        const rowElement = jEl.closest('.sub-row');
+        // Získání naformátovaného textu (včetně <span class="license-danger">) pro protokol
+        const formattedHtml = rowElement.querySelector('.sub-text').innerHTML;
+        
+        // Získání čistého textu pro detekci klíčových slov
+        const cleanText = rowElement.querySelector('.sub-text').innerText;
+        
+        let licenses = [];
+        if (cleanText.includes("Zbrojní Průkaz")) licenses.push("ZBROJNÍ PRŮKAZ");
+        if (cleanText.includes("Řidičský Průkaz")) licenses.push("ŘIDIČSKÝ PRŮKAZ");
 
-        // --- KONTROLA VĚZENÍ ---
-        if (userJail > 0) {
-            const jailNums = (cleanText.split(/pokut/i)[0].match(/\d+/g) || []).map(Number).filter(n => n < 100);
-            if (jailNums.length > 0) {
-                const min = (isRange && jailNums.length >= 2) ? Math.min(...jailNums) : (isRange ? 1 : Math.max(...jailNums));
-                const max = Math.max(...jailNums);
-                
-                if (!isRange && userJail !== max) {
-                    showNotify(`CHYBA: Tento trest je pevně daný (${max} let)!`);
-                    return;
-                }
-                if (isRange && (userJail < min || userJail > max)) {
-                    showNotify(`CHYBA: Rozmezí je ${min}-${max} let!`);
-                    return;
-                }
-            }
-        }
-
-        // --- KONTROLA POKUTY ---
-        if (userFine > 0) {
-            const finePart = cleanText.includes("pokut") ? cleanText.split(/pokut/i)[1] : cleanText;
-            const fineNums = (finePart.match(/\d+/g) || []).map(Number).filter(n => n >= 50);
-            if (fineNums.length > 0) {
-                const min = (isRange && fineNums.length >= 2) ? Math.min(...fineNums) : (isRange ? 50 : Math.max(...fineNums));
-                const max = Math.max(...fineNums);
-
-                if (!isRange && userFine !== max) {
-                    showNotify(`CHYBA: Pevná pokuta je ${max.toLocaleString()}$!`);
-                    return;
-                }
-                if (isRange && (userFine < min || userFine > max)) {
-                    showNotify(`CHYBA: Rozmezí pokuty je ${min}-${max}$!`);
-                    return;
-                }
-            }
-        }
-
-        protocolData.push({ title, jail: userJail, fine: userFine, rawText });
+        protocolData.push({ title, fullHtml: formattedHtml, jail, fine, licenses });
         render();
     }
 
@@ -151,27 +196,51 @@
         const cont = document.getElementById('caseEntries');
         cont.innerHTML = "";
         let tj = 0, tf = 0;
+        let allLicenses = new Set();
+
         protocolData.forEach((i, idx) => {
             tj += i.jail; tf += i.fine;
-            cont.innerHTML += `<div class="case-entry">
-                <button style="position:absolute; right:8px; top:8px; color:red; background:none; border:none; cursor:pointer;" onclick="removeItem(${idx})">×</button>
-                <div style="color:var(--accent); font-weight:bold; font-size:12px;">${i.title}</div>
-                <div style="font-size:11px; color:#aaa;">${i.rawText}</div>
-                <div style="margin-top:5px; font-weight:bold;">${i.jail} let | ${i.fine.toLocaleString()} $</div>
-            </div>`;
+            i.licenses.forEach(l => allLicenses.add(l));
+
+            // Vytvoření varování přímo u záznamu v protokolu
+            let licenseAlerts = i.licenses.map(l => `<span class="case-alert">⚠ ODEBRAT ${l}</span>`).join("");
+
+            cont.innerHTML += `
+                <div class="case-entry">
+                    <button class="btn-delete-item" onclick="removeItem(${idx})">×</button>
+                    <span class="case-entry-title">${i.title}</span>
+                    <span class="case-entry-sub">${i.fullHtml}</span>
+                    ${licenseAlerts}
+                    <div style="margin-top:5px; font-weight:bold; font-size:12px;">
+                        <span style="color:var(--jail)">${i.jail} let</span> | <span style="color:var(--fine)">${i.fine.toLocaleString()} $</span>
+                    </div>
+                </div>`;
         });
+
         document.getElementById('sumJail').innerText = tj + " let";
         document.getElementById('sumFine').innerText = tf.toLocaleString() + " $";
+
+        // Globální varování dole v protokolu
+        const globalAlert = document.getElementById('globalAlert');
+        if (allLicenses.size > 0) {
+            globalAlert.style.display = "block";
+            // Zobrazení seznamu zabavených věcí
+            document.getElementById('alertList').innerText = Array.from(allLicenses).join(" + ");
+        } else {
+            globalAlert.style.display = "none";
+        }
     }
 
     function removeItem(idx) { protocolData.splice(idx, 1); render(); }
-    function clearAll() { protocolData = []; render(); }
+    function clearAll() { if(confirm("Smazat protokol?")) { protocolData = []; render(); } }
+    
     function doSearch() {
-        const v = document.getElementById('searchInput').value.toLowerCase();
+        const val = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.law-card').forEach(c => {
-            c.style.display = c.innerText.toLowerCase().includes(v) ? "block" : "none";
+            c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none";
         });
     }
+
     window.onload = loadLaws;
 </script>
 </body>
