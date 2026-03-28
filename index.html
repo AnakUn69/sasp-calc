@@ -2,15 +2,15 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP - MDT Terminal v39</title>
+    <title>SASP - Penal Code</title>
     <style>
         :root {
             --bg-main: #0a0b0d;
             --bg-panel: #14161a;
             --accent: #ffcc00;
-            --accent-dim: rgba(255, 204, 0, 0.1);
             --danger: #ff4444;
-            --success: #00ff88; /* TA ZELENÁ */
+            --jail-color: #00ff88;  /* ZELENÁ PRO ROKY */
+            --fine-color: #00aaff;  /* MODRÁ PRO POKUTY */
             --text-dim: #9aa0a6;
             --border: #202124;
         }
@@ -34,7 +34,7 @@
         .welcome-card {
             background: var(--bg-panel); border: 1px solid var(--accent);
             padding: 60px; border-radius: 12px; text-align: center;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5), 0 0 20px var(--accent-dim);
+            box-shadow: 0 0 50px rgba(0,0,0,0.5), 0 0 20px rgba(255,204,0,0.1);
         }
         .welcome-title { font-size: 38px; font-weight: 800; color: var(--accent); letter-spacing: 3px; margin-bottom: 5px; }
         .welcome-btn {
@@ -55,7 +55,6 @@
 
         #lawsContainer { padding: 20px 30px; overflow-y: auto; flex-grow: 1; background: #0c0d0f; }
 
-        /* KARTY ZÁKONŮ */
         .law-card {
             background: var(--bg-panel); border: 1px solid var(--border);
             margin-bottom: 15px; border-radius: 8px; overflow: hidden;
@@ -78,23 +77,18 @@
             font-size: 10px; padding: 4px 8px; border-radius: 4px; display: inline-block; margin-top: 8px;
         }
 
-        /* VSTUPY VLEVO - NYNÍ ZELENÉ */
+        /* VSTUPY VLEVO */
         .input-group { display: flex; gap: 10px; }
         .input-box {
-            background: #000; 
-            border: 1px solid var(--success); /* ZELENÝ OKRAJ */
-            color: var(--success); /* ZELENÝ TEXT */
-            padding: 10px; width: 85px; text-align: center; border-radius: 6px; outline: none;
-            font-weight: bold;
+            background: #000; padding: 10px; width: 85px; text-align: center; border-radius: 6px; outline: none; font-weight: bold;
         }
-        .input-box::placeholder {
-            color: rgba(0, 255, 136, 0.3); /* TLUMENÁ ZELENÁ PRO PLACEHOLDER */
-        }
+        .input-box.jail-input { border: 1px solid var(--jail-color); color: var(--jail-color); }
+        .input-box.fine-input { border: 1px solid var(--fine-color); color: var(--fine-color); }
+        
+        .input-box::placeholder { opacity: 0.3; color: inherit; }
+        
         .input-box[readonly] { 
-            background: rgba(255, 255, 255, 0.03); 
-            border-color: #333; 
-            color: #555; 
-            cursor: not-allowed; 
+            background: rgba(255, 255, 255, 0.03); border-color: #333 !important; color: #555 !important; cursor: not-allowed; 
         }
         .btn-add {
             background: var(--accent); border: none; color: #000; padding: 0 15px;
@@ -107,19 +101,11 @@
         #caseEntries { flex-grow: 1; overflow-y: auto; padding: 20px; }
         
         /* EDITAČNÍ VSTUPY V PROTOKOLU */
-        .edit-jail, .edit-fine { 
-            border: 1px solid var(--success) !important; 
-            color: var(--success) !important; 
-            width: 60px !important; 
-            padding: 5px !important; 
-            font-weight: bold; 
-        }
+        .edit-jail { border: 1px solid var(--jail-color) !important; color: var(--jail-color) !important; width: 60px !important; padding: 5px !important; font-weight: bold; background: #000; }
+        .edit-fine { border: 1px solid var(--fine-color) !important; color: var(--fine-color) !important; width: 85px !important; padding: 5px !important; font-weight: bold; background: #000; }
 
         .edit-jail[readonly], .edit-fine[readonly] {
-            border-color: #333 !important;
-            color: #555 !important;
-            background: rgba(255,255,255,0.02) !important;
-            cursor: not-allowed !important;
+            border-color: #333 !important; color: #555 !important; background: rgba(255,255,255,0.02) !important; cursor: not-allowed !important;
         }
 
         /* SUMÁŘ */
@@ -150,7 +136,7 @@
     <div class="welcome-card">
         <div style="font-size:60px; margin-bottom:15px;">🚔</div>
         <div class="welcome-title">SASP MDT</div>
-        <div style="color:var(--text-dim); margin-bottom:40px;">MOBILE DATA TERMINAL v39</div>
+        <div style="color:var(--text-dim); margin-bottom:40px;">MOBILE DATA TERMINAL</div>
         <button class="welcome-btn" onclick="document.getElementById('welcomeOverlay').style.display='none'">Vstoupit</button>
     </div>
 </div>
@@ -171,8 +157,8 @@
     
     <div class="summary-box">
         <div id="globalAlert">⚠ ZABAVIT: <span id="alertList"></span></div>
-        <div class="summary-row"><span>CELKEM VĚZENÍ:</span> <span id="sumJail" style="color:var(--success)">0 let</span></div>
-        <div class="summary-row"><span>CELKEM POKUTA:</span> <span id="sumFine" style="color:var(--success)">0 $</span></div>
+        <div class="summary-row"><span>CELKEM VĚZENÍ:</span> <span id="sumJail" style="color:var(--jail-color)">0 let</span></div>
+        <div class="summary-row"><span>CELKEM POKUTA:</span> <span id="sumFine" style="color:var(--fine-color)">0 $</span></div>
         <button class="btn-clear" onclick="clearAll()">VYMAZAT PŘÍPAD</button>
     </div>
 
@@ -209,11 +195,11 @@
                     <div class="sub-row">
                         <div class="sub-text">${text}</div>
                         <div class="input-group">
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" 
+                            <input type="number" class="input-box jail-input" id="j_${lIdx}_${rIdx}" 
                                 value="${fixJail !== null ? fixJail : ''}" 
                                 placeholder="${fixJail !== null ? '' : 'Let'}" 
                                 ${fixJail !== null ? 'readonly' : ''}>
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" 
+                            <input type="number" class="input-box fine-input" id="f_${lIdx}_${rIdx}" 
                                 value="${fixFine !== null ? fixFine : ''}" 
                                 placeholder="${fixFine !== null ? '' : 'Suma'}" 
                                 ${fixFine !== null ? 'readonly' : ''}>
@@ -299,7 +285,7 @@
         const cont = document.getElementById('caseEntries');
         cont.innerHTML = "";
         protocolData.forEach((i, idx) => {
-            cont.innerHTML += `<div style="background:#000; padding:15px; border-radius:8px; border-left:3px solid var(--success); position:relative; margin-bottom:10px;">
+            cont.innerHTML += `<div style="background:#000; padding:15px; border-radius:8px; border-left:3px solid var(--jail-color); position:relative; margin-bottom:10px;">
                 <button style="position:absolute; right:10px; top:10px; color:var(--danger); background:none; border:none; cursor:pointer; font-weight:bold;" onclick="removeItem(${idx})">×</button>
                 <div style="color:var(--accent); font-weight:800; font-size:11px; margin-bottom:5px;">${i.title}</div>
                 <div style="font-size:13px; color:#aaa; margin-bottom:10px;">${i.html}</div>
@@ -309,13 +295,13 @@
                         <input type="number" class="input-box edit-jail" value="${i.jail}" 
                             oninput="updateEntry(${idx}, 'jail', this.value)" 
                             ${i.jailFixed ? 'readonly' : ''}>
-                        <span style="font-size:12px; color:var(--success);">let</span>
+                        <span style="font-size:12px; color:var(--jail-color);">let</span>
                     </div>
                     <div style="display:flex; align-items:center; gap:5px;">
                         <input type="number" class="input-box edit-fine" value="${i.fine}" 
                             oninput="updateEntry(${idx}, 'fine', this.value)" 
                             ${i.fineFixed ? 'readonly' : ''}>
-                        <span style="font-size:12px; color:var(--success);">$</span>
+                        <span style="font-size:12px; color:var(--fine-color);">$</span>
                     </div>
                 </div>
             </div>`;
