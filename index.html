@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP MDT - TERMINÁL v90</title>
+    <title>SASP MDT - Penal Code System</title>
     <style>
         :root {
             --bg-main: #0a0b0d; --bg-panel: #14161a;
@@ -13,15 +13,13 @@
         body { background: var(--bg-main); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         b, strong, .bold-yellow { color: var(--accent); font-weight: bold; }
 
-        /* Levý panel */
+        /* Panely */
         #leftPanel { flex: 3; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        .header-bar { padding: 20px; background: var(--bg-panel); border-bottom: 1px solid var(--border); }
-        #lawsContainer { padding: 20px; overflow-y: auto; flex-grow: 1; }
-
-        /* Pravý panel */
         #rightPanel { flex: 1.2; min-width: 420px; background: var(--bg-panel); display: flex; flex-direction: column; }
 
-        /* Karty */
+        /* Zákoník */
+        .header-bar { padding: 20px; background: var(--bg-panel); border-bottom: 1px solid var(--border); }
+        #lawsContainer { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .law-card { background: var(--bg-panel); border: 1px solid var(--border); margin-bottom: 10px; border-radius: 6px; }
         .law-header { padding: 15px; cursor: pointer; color: var(--accent); font-weight: 800; display: flex; justify-content: space-between; }
         .law-content { display: none; padding: 10px 20px; background: #0f1114; }
@@ -32,8 +30,6 @@
         .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 85px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; transition: 0.2s; }
         .input-jail { border-color: var(--jail); }
         .input-fine { border-color: var(--fine); }
-        
-        /* Chybový stav inputu */
         .border-danger { border-color: var(--danger) !important; box-shadow: 0 0 10px rgba(255, 68, 68, 0.5); }
 
         .input-box:disabled, .input-box[readonly] { 
@@ -56,7 +52,6 @@
         }
 
         @keyframes pulse { from { scale: 1; } to { scale: 1.05; } }
-
         .summary-box { padding: 20px; background: #000; border-top: 1px solid var(--border); }
     </style>
 </head>
@@ -67,7 +62,7 @@
 <div id="leftPanel">
     <div class="header-bar">
         <h2 style="margin:0; color:var(--accent);">TRESTNÍ ZÁKONÍK</h2>
-        <input type="text" id="searchInput" placeholder="Hledat v zákoníku..." oninput="render()" style="width:100%; margin-top:15px; background:#000; border:1px solid var(--border); color:#fff; padding:12px; border-radius:4px;">
+        <input type="text" id="searchInput" placeholder="Hledat..." oninput="render()" style="width:100%; margin-top:15px; background:#000; border:1px solid var(--border); color:#fff; padding:12px; border-radius:4px;">
     </div>
     <div id="lawsContainer"></div>
 </div>
@@ -112,7 +107,6 @@
                     const fixJ = line.getAttribute('data-fix-jail');
                     const fixF = line.getAttribute('data-fix-fine');
                     
-                    // Pokročilá detekce limitů (bere v úvahu "do", "až", "sazba" i tečky v číslech)
                     const jailMatch = text.match(/(?:sazba|od|do|až)\s+(\d+)(?:\s*-\s*(\d+))?\s*let/i);
                     const fineMatch = text.match(/(?:pokutou|výši|do|až|sazba)\s+([\d.]+)\s*\$/i);
 
@@ -120,7 +114,7 @@
                     let maxF = fineMatch ? parseInt(fineMatch[1].replace(/\./g, '')) : 0;
 
                     return {
-                        html: line.innerHTML.replace(/<b>/g, '<b class="bold-yellow">'),
+                        html: line.innerHTML,
                         fullText: text,
                         letter: (text.match(/^[a-z]\)/i) || [""])[0],
                         valJ: fixJ || "",
@@ -134,7 +128,7 @@
                 })
             }));
             render();
-        } catch (e) { console.error("Chyba při načítání dat:", e); }
+        } catch (e) { console.error(e); }
     }
 
     function render() {
@@ -164,9 +158,15 @@
         let jail = parseInt(document.getElementById(`j_${lIdx}_${sIdx}`).value) || 0;
         let fine = parseInt(document.getElementById(`f_${lIdx}_${sIdx}`).value) || 0;
 
-        // Okamžitá kontrola při přidání
-        if (!sub.isFixJ && jail > sub.limitJ) showAlert(`PŘEKROČEN LIMIT LET: Max ${sub.limitJ}!`);
-        if (!sub.isFixF && sub.limitF > 0 && fine > sub.limitF) showAlert(`PŘEKROČEN LIMIT POKUTY: Max $${sub.limitF.toLocaleString()}!`);
+        // --- BLOKACE PŘIDÁNÍ PŘI PŘEKROČENÍ ---
+        if (!sub.isFixJ && jail > sub.limitJ) {
+            showAlert(`NEPŘIDÁNO: Překročen limit let (Max ${sub.limitJ})!`);
+            return; // Ukončí funkci, položka se nepřidá
+        }
+        if (!sub.isFixF && sub.limitF > 0 && fine > sub.limitF) {
+            showAlert(`NEPŘIDÁNO: Překročen limit pokuty (Max $${sub.limitF.toLocaleString()})!`);
+            return; // Ukončí funkci, položka se nepřidá
+        }
 
         protocol.push({
             id: Date.now(),
@@ -186,30 +186,26 @@
 
     function updateProtocol() {
         const list = document.getElementById('caseEntries');
-        list.innerHTML = protocol.map((p, idx) => {
-            const jailError = !p.isFixJ && p.jail > p.maxJ;
-            const fineError = !p.isFixF && p.maxF > 0 && p.fine > p.maxF;
-
-            return `
+        list.innerHTML = protocol.map((p, idx) => `
             <div class="protocol-item">
                 <div style="color:var(--accent); font-weight:900; font-size:13px; margin-bottom: 5px;">${p.title} ${p.letter}</div>
                 <div style="font-size: 11px; color: #bbb; margin-bottom: 10px; line-height: 1.4;">${p.fullText}</div>
                 <div class="proto-inputs">
                     <div>
                         <span style="font-size:10px; color:var(--jail)">LET</span><br>
-                        <input type="number" class="input-box ${jailError ? 'border-danger' : ''}" value="${p.jail}" 
+                        <input type="number" class="input-box" value="${p.jail}" 
                             ${p.isFixJ ? 'readonly' : ''} onchange="edit(${idx}, 'jail', this.value)">
                     </div>
                     <div>
                         <span style="font-size:10px; color:var(--fine)">POKUTA</span><br>
-                        <input type="number" class="input-box ${fineError ? 'border-danger' : ''}" value="${p.fine}" 
+                        <input type="number" class="input-box" value="${p.fine}" 
                             ${p.isFixF ? 'readonly' : ''} onchange="edit(${idx}, 'fine', this.value)">
                     </div>
                 </div>
                 ${p.lic ? '<div style="color:var(--danger); font-size:11px; font-weight:900; margin-top:10px;">⚠ ODEBRAT ZBROJNÍ PRŮKAZ</div>' : ''}
                 <button onclick="remove(${p.id})" style="position:absolute; right:12px; top:12px; background:none; border:none; color:var(--danger); cursor:pointer; font-size:18px; font-weight:bold;">✕</button>
             </div>
-        `}).join('');
+        `).join('');
 
         document.getElementById('licenseWarning').style.display = protocol.some(p => p.lic) ? 'block' : 'none';
         document.getElementById('sumJail').innerText = protocol.reduce((a, b) => a + b.jail, 0);
@@ -220,16 +216,23 @@
         let v = parseInt(val) || 0;
         const p = protocol[idx];
         
-        // Kontrola při ruční změně v protokolu
-        if (type === 'jail' && !p.isFixJ && v > p.maxJ) showAlert(`PŘEKROČEN LIMIT LET: Max ${p.maxJ}!`);
-        if (type === 'fine' && !p.isFixF && p.maxF > 0 && v > p.maxF) showAlert(`PŘEKROČEN LIMIT POKUTY: Max $${p.maxF.toLocaleString()}!`);
+        // Pokud někdo zkusí limit obejít úpravou přímo v protokolu, 
+        // hodnota se vrátí na maximum a zobrazí se varování.
+        if (type === 'jail' && !p.isFixJ && v > p.maxJ) {
+            showAlert(`LIMIT OMEZEN: Vráceno na max ${p.maxJ} let!`);
+            v = p.maxJ;
+        }
+        if (type === 'fine' && !p.isFixF && p.maxF > 0 && v > p.maxF) {
+            showAlert(`LIMIT OMEZEN: Vráceno na max $${p.maxF.toLocaleString()}!`);
+            v = p.maxF;
+        }
         
         protocol[idx][type] = v;
         updateProtocol();
     }
 
     function remove(id) { protocol = protocol.filter(x => x.id !== id); updateProtocol(); }
-    function save() { alert("Data odeslána do databáze."); protocol = []; updateProtocol(); }
+    function save() { alert("Uloženo."); protocol = []; updateProtocol(); }
 
     load();
 </script>
