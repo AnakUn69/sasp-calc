@@ -12,6 +12,7 @@
             --jail: #00aaff;
             --fine: #00ff88;
             --danger: #ff4444;
+            --fixed: #00ff88;
         }
 
         body {
@@ -23,12 +24,7 @@
             height: 100vh;
         }
 
-        /* LEVÝ PANEL */
-        #leftPanel {
-            flex: 3;
-            padding: 20px;
-            overflow-y: auto;
-        }
+        #leftPanel { flex: 3; padding: 20px; overflow-y: auto; }
 
         .main-header {
             color: #ffffff;
@@ -41,42 +37,23 @@
         }
 
         #searchInput {
-            width: 100%;
-            background: #111;
-            border: 1px solid var(--border);
-            color: var(--accent);
-            padding: 12px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent);
-            outline: none;
-            box-sizing: border-box;
+            width: 100%; background: #111; border: 1px solid var(--border);
+            color: var(--accent); padding: 12px; margin-bottom: 20px;
+            border-left: 4px solid var(--accent); outline: none; box-sizing: border-box;
         }
 
-        .law-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--accent);
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-
+        .law-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); margin-bottom: 10px; border-radius: 4px; }
         .law-header { padding: 15px; cursor: pointer; }
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
         .law-desc { color: #555; font-size: 11px; margin-top: 5px; }
         .law-content { display: none; padding: 0 15px 15px 15px; border-top: 1px solid #111; }
         .law-card.active .law-content { display: block; }
 
-        .sub-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #111;
-        }
-
+        .sub-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; }
         .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; }
         .sub-text b { color: var(--accent); font-weight: bold; }
 
+        /* Styl pro ODEBRAT v seznamu */
         .license-danger {
             background-color: var(--danger);
             color: #fff;
@@ -90,73 +67,32 @@
         }
 
         .input-group { display: flex; gap: 8px; }
-        
-        .input-box {
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            padding: 8px;
-            width: 65px;
-            text-align: center;
-            border-radius: 4px;
-        }
+        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 65px; text-align: center; border-radius: 4px; outline: none; }
+        .input-box[readonly] { background: #051a05; color: var(--fixed); border: 1px solid var(--fixed); cursor: not-allowed; }
 
-        /* Styl pro uzamčená pole */
-        .input-box[readonly] {
-            background: #0a0a0a;
-            color: #888;
-            border: 1px solid #111;
-            cursor: not-allowed;
-        }
+        .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
 
-        .btn-add {
-            background: var(--accent); border: none; color: #000;
-            padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px;
-        }
-
-        /* PRAVÝ PANEL - PROTOKOL */
-        #rightPanel {
-            flex: 1;
-            min-width: 320px;
-            background: var(--card);
-            border-left: 2px solid var(--border);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .protocol-header {
-            color: var(--accent); font-weight: bold; border-bottom: 1px solid var(--accent);
-            padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase;
-        }
-
+        /* PRAVÝ PANEL */
+        #rightPanel { flex: 1; min-width: 320px; background: var(--card); border-left: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
+        .protocol-header { color: var(--accent); font-weight: bold; border-bottom: 1px solid var(--accent); padding-bottom: 10px; margin-bottom: 15px; text-transform: uppercase; }
         #caseEntries { flex-grow: 1; overflow-y: auto; }
 
-        .case-entry {
-            background: #111;
-            padding: 12px;
-            border-bottom: 1px solid #222;
-            position: relative;
-            margin-bottom: 5px;
-            border-left: 2px solid var(--accent);
-        }
+        .case-entry { background: #111; padding: 12px; border-bottom: 1px solid #222; position: relative; margin-bottom: 5px; border-left: 2px solid var(--accent); }
+        .case-entry-title { color: var(--accent); font-weight: bold; font-size: 12px; display: block; }
+        .case-entry-sub { color: #fff; font-size: 11px; display: block; margin-top: 2px; }
 
-        .case-entry-title { color: var(--accent); font-weight: bold; font-size: 12px; display: block; margin-bottom: 2px; }
-        .case-entry-sub { color: #fff; font-size: 11px; display: block; line-height: 1.3; }
+        /* Červené varování v protokolu */
+        .case-alert { color: var(--danger); font-weight: bold; font-size: 10px; text-transform: uppercase; display: block; margin-top: 5px; }
 
-        .btn-delete-item {
-            position: absolute; right: 8px; top: 8px;
-            color: #ff4444; cursor: pointer; font-weight: bold; font-size: 18px;
-            background: none; border: none;
-        }
+        .btn-delete-item { position: absolute; right: 8px; top: 8px; color: #ff4444; cursor: pointer; font-weight: bold; font-size: 18px; background: none; border: none; }
 
         .summary-box { border-top: 2px solid var(--accent); padding-top: 15px; margin-top: 10px; }
         .summary-line { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 8px; }
 
-        .btn-clear {
-            width: 100%; background: transparent; border: 1px solid var(--danger);
-            color: var(--danger); padding: 10px; cursor: pointer; font-weight: bold; margin-top: 10px;
-        }
+        /* Globální varování dole */
+        #globalAlert { background: rgba(255, 68, 68, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 8px; margin-bottom: 10px; font-size: 12px; font-weight: bold; text-align: center; display: none; }
+
+        .btn-clear { width: 100%; background: transparent; border: 1px solid var(--danger); color: var(--danger); padding: 10px; cursor: pointer; font-weight: bold; }
         .btn-clear:hover { background: var(--danger); color: #000; }
     </style>
 </head>
@@ -172,6 +108,7 @@
     <div class="protocol-header">AKTIVNÍ PROTOKOL</div>
     <div id="caseEntries"></div>
     <div class="summary-box">
+        <div id="globalAlert">⚠ ZABAVIT: <span id="alertList"></span></div>
         <div class="summary-line">Vězení: <span id="sumJail" style="color:var(--jail)">0 let</span></div>
         <div class="summary-line">Pokuta: <span id="sumFine" style="color:var(--fine)">0 $</span></div>
         <button class="btn-clear" onclick="clearAll()">VYMAZAT PŘÍPAD</button>
@@ -198,19 +135,16 @@
                 const fF = line.getAttribute('data-fix-fine');
                 const fJ = line.getAttribute('data-fix-jail');
                 
-                // Formátování textu a nahrazení průkazu
-                let displayHtml = line.innerHTML.replace("ODEBRAT Zbrojní Průkaz", '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>');
+                let displayHtml = line.innerHTML
+                    .replace("ODEBRAT Zbrojní Průkaz", '<span class="license-danger">ODEBRAT Zbrojní Průkaz</span>')
+                    .replace("ODEBRAT Řidičský Průkaz", '<span class="license-danger">ODEBRAT Řidičský Průkaz</span>');
 
                 rows += `
                     <div class="sub-row">
                         <div class="sub-text">${displayHtml}</div>
                         <div class="input-group">
-                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" 
-                                value="${fJ || ''}" placeholder="Let" 
-                                onclick="event.stopPropagation()" ${fJ !== null ? 'readonly' : ''}>
-                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" 
-                                value="${fF || ''}" placeholder="Suma" 
-                                onclick="event.stopPropagation()" ${fF !== null ? 'readonly' : ''}>
+                            <input type="number" class="input-box" id="j_${lIdx}_${rIdx}" value="${fJ || ''}" placeholder="Let" onclick="event.stopPropagation()" ${fJ !== null ? 'readonly' : ''}>
+                            <input type="number" class="input-box" id="f_${lIdx}_${rIdx}" value="${fF || ''}" placeholder="Suma" onclick="event.stopPropagation()" ${fF !== null ? 'readonly' : ''}>
                             <button class="btn-add" onclick="event.stopPropagation(); addItem('${title}', ${lIdx}, ${rIdx})">+</button>
                         </div>
                     </div>`;
@@ -218,12 +152,7 @@
 
             const card = document.createElement('div');
             card.className = 'law-card';
-            card.innerHTML = `
-                <div class="law-header" onclick="this.parentElement.classList.toggle('active')">
-                    <div class="law-title">${title}</div>
-                    <div class="law-desc">${desc}</div>
-                </div>
-                <div class="law-content">${rows}</div>`;
+            card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div><div class="law-desc">${desc}</div></div><div class="law-content">${rows}</div>`;
             container.appendChild(card);
         });
     }
@@ -231,17 +160,21 @@
     function addItem(title, lIdx, rIdx) {
         const jVal = document.getElementById(`j_${lIdx}_${rIdx}`).value;
         const fVal = document.getElementById(`f_${lIdx}_${rIdx}`).value;
-        
         if (!jVal && !fVal) return;
 
         const jail = parseInt(jVal) || 0;
         const fine = parseInt(fVal) || 0;
         
         const rowElement = document.getElementById(`j_${lIdx}_${rIdx}`).closest('.sub-row');
-        // Získání celého textu (včetně podbodu) pro protokol
-        const fullText = rowElement.querySelector('.sub-text').innerText.replace("ODEBRAT Zbrojní Průkaz", "").trim();
+        const originalText = rowElement.querySelector('.sub-text').innerText;
+        
+        let licenses = [];
+        if (originalText.includes("Zbrojní Průkaz")) licenses.push("ZBROJNÍ PRŮKAZ");
+        if (originalText.includes("Řidičský Průkaz")) licenses.push("ŘIDIČSKÝ PRŮKAZ");
 
-        protocolData.push({ title, fullText, jail, fine });
+        const cleanText = originalText.replace("ODEBRAT Zbrojní Průkaz", "").replace("ODEBRAT Řidičský Průkaz", "").trim();
+
+        protocolData.push({ title, fullText: cleanText, jail, fine, licenses });
         render();
     }
 
@@ -249,35 +182,40 @@
         const cont = document.getElementById('caseEntries');
         cont.innerHTML = "";
         let tj = 0, tf = 0;
+        let allLicenses = new Set();
 
         protocolData.forEach((i, idx) => {
             tj += i.jail; tf += i.fine;
+            i.licenses.forEach(l => allLicenses.add(l));
+
+            let licenseAlerts = i.licenses.map(l => `<span class="case-alert">⚠ ODEBRAT ${l}</span>`).join("");
+
             cont.innerHTML += `
                 <div class="case-entry">
                     <button class="btn-delete-item" onclick="removeItem(${idx})">×</button>
                     <span class="case-entry-title">${i.title}</span>
                     <span class="case-entry-sub">${i.fullText}</span>
+                    ${licenseAlerts}
                     <div style="margin-top:5px; font-weight:bold; font-size:12px;">
-                        <span style="color:var(--jail)">${i.jail} let</span> | 
-                        <span style="color:var(--fine)">${i.fine.toLocaleString()} $</span>
+                        <span style="color:var(--jail)">${i.jail} let</span> | <span style="color:var(--fine)">${i.fine.toLocaleString()} $</span>
                     </div>
                 </div>`;
         });
 
         document.getElementById('sumJail').innerText = tj + " let";
         document.getElementById('sumFine').innerText = tf.toLocaleString() + " $";
+
+        const globalAlert = document.getElementById('globalAlert');
+        if (allLicenses.size > 0) {
+            globalAlert.style.display = "block";
+            document.getElementById('alertList').innerText = Array.from(allLicenses).join(", ");
+        } else {
+            globalAlert.style.display = "none";
+        }
     }
 
-    function removeItem(idx) {
-        protocolData.splice(idx, 1);
-        render();
-    }
-
-    function clearAll() {
-        protocolData = [];
-        render();
-    }
-
+    function removeItem(idx) { protocolData.splice(idx, 1); render(); }
+    function clearAll() { protocolData = []; render(); }
     function doSearch() {
         const val = document.getElementById('searchInput').value.toLowerCase();
         document.querySelectorAll('.law-card').forEach(c => {
