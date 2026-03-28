@@ -2,6 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <title>SASP - Penal Code</title>
     <style>
         :root {
@@ -29,17 +30,66 @@
         .law-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
+=======
+    <title>SASP - Penal Code - GenK</title>
+    <style>
+        :root {
+            --bg: #0d0d0d; --card: #151515; --accent: #ffcc00;
+            --input-bg: #1a1a1a; --text: #e0e0e0; --border: #222;
+            --danger: #ff4444; --jail: #4dabf7; --fine: #69db7c;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        
+        b, strong { color: var(--accent); }
+
+        /* HLAVNÍ STRUKTURA */
+        .main-content { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+        
+        /* HORNÍ LIŠTA S NÁZVEM A HLEDÁNÍM */
+        .header-area { 
+            padding: 20px 25px; 
+            border-bottom: 1px solid var(--border); 
+            background: #0a0a0a;
+        }
+        .main-title {
+            color: var(--accent);
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        #searchInput { 
+            width: 100%; 
+            background: var(--input-bg); 
+            border: 1px solid #333; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 4px; 
+            outline: none; 
+>>>>>>> parent of 66ef011 (Update index.html)
             border-left: 4px solid var(--accent);
             border-radius: 4px;
             padding: 15px;
             cursor: pointer;
         }
 
+<<<<<<< HEAD
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
         .law-description { color: #555; font-size: 11px; margin-bottom: 10px; }
+=======
+        /* SEZNAM ZÁKONŮ */
+        .laws-list { flex: 1; padding: 15px 25px; overflow-y: auto; }
+        .law-card { background: var(--card); border: 1px solid var(--border); margin-bottom: 8px; border-radius: 4px; }
+>>>>>>> parent of 66ef011 (Update index.html)
         
         .law-content { display: none; border-top: 1px solid #1a1a1a; padding-top: 10px; }
         .law-card.active .law-content { display: block; }
+<<<<<<< HEAD
 
         /* Řádky trestů */
         .sub-row { margin-bottom: 15px; }
@@ -49,12 +99,29 @@
         .input-box {
             background: #000; border: 1px solid #333; color: #fff;
             padding: 5px; width: 60px; text-align: center; border-radius: 3px;
+=======
+        
+        /* ŘÁDKY S TRESTY */
+        .sub-row { padding: 12px 15px; border-top: 1px solid #1a1a1a; }
+        .row-main { display: flex; justify-content: space-between; align-items: center; gap: 20px; width: 100%; }
+        .sub-text { flex: 1; font-size: 12px; color: #ccc; line-height: 1.4; }
+        
+        .input-group { display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+        .input-box { 
+            background: #111; border: 1px solid #333; color: white; padding: 8px; 
+            width: 100px; border-radius: 3px; text-align: center; font-size: 12px; outline: none; 
+        }
+        .input-box[readonly] { 
+            background: #0a110a !important; border-color: #1b3d20 !important; 
+            color: #69db7c !important; cursor: not-allowed; font-weight: bold; 
+>>>>>>> parent of 66ef011 (Update index.html)
         }
 
         .btn-add {
             background: var(--accent); border: none; color: #000;
             padding: 5px 12px; font-weight: bold; cursor: pointer; border-radius: 3px;
         }
+<<<<<<< HEAD
 
         /* Pravý panel - Protokol */
         #caseProtocol {
@@ -63,6 +130,18 @@
         }
 
         .protocol-title { color: var(--accent); font-weight: bold; margin-bottom: 20px; text-transform: uppercase; }
+=======
+        .btn-add:hover { background: #e6b800; }
+
+        .red-alert-bar { display: inline-block; background: var(--danger); color: white; font-weight: 900; font-size: 9px; padding: 2px 8px; margin-top: 8px; text-transform: uppercase; border-radius: 2px; }
+
+        /* SIDEBAR / PROTOKOL */
+        .sidebar { width: 380px; background: #080808; padding: 20px; display: flex; flex-direction: column; }
+        .sidebar-title { color: var(--accent); text-align: center; font-size: 16px; letter-spacing: 3px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .case-entries { flex: 1; overflow-y: auto; }
+        .case-item { position: relative; background: #111; padding: 12px; border-radius: 6px; margin-bottom: 10px; border: 1px solid #222; }
+        .btn-remove { position: absolute; top: 5px; right: 8px; background: transparent; color: #555; border: none; cursor: pointer; font-size: 20px; }
+>>>>>>> parent of 66ef011 (Update index.html)
         
         .case-item {
             background: #111; border: 1px solid #222; border-left: 3px solid var(--accent);
@@ -73,8 +152,16 @@
         .summary-box { margin-top: 20px; border-top: 2px solid var(--accent); padding-top: 15px; }
         .summary-line { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 5px; }
         
+<<<<<<< HEAD
         .btn-remove { position: absolute; right: 8px; top: 5px; color: #444; cursor: pointer; background:none; border:none; font-size: 16px; }
         .btn-remove:hover { color: #ff4444; }
+=======
+        .summary-box { background: #111; padding: 15px; border-radius: 6px; border: 1px solid var(--accent); margin-top: 15px; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: bold; margin-bottom: 8px; }
+        
+        .btn-clear { width:100%; padding:12px; background:#1a1a1a; color:var(--danger); border:1px solid #333; cursor:pointer; font-weight:bold; font-size:11px; text-transform: uppercase; }
+        .btn-clear:hover { background: #222; }
+>>>>>>> parent of 66ef011 (Update index.html)
     </style>
 </head>
 <body>
