@@ -2,18 +2,17 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>Policejní Kalkulačka v18 - Gen Trooper</title>
+    <title>Policejní Kalkulačka v19 - Black Edition</title>
     <style>
         :root {
-            --bg: #1a1d24; /* Tmavší pozadí podle tvého obrázku */
-            --card: #111419; /* Pozadí boxu */
+            --bg: #000000; /* Čistě černé pozadí */
+            --card: #0c0c0c; /* Pozadí boxu */
             --accent: #ffcc00; /* Žlutá */
-            --border: #2a2e37; /* Barva ohraničení boxu */
+            --border: #1a1a1a; /* Jemné ohraničení boxu */
             --jail: #00aaff;
             --fine: #00ff88;
             --danger: #ff4444;
             --fixed: #00ff88;
-            --discord: #5865f2; /* Barva Discord tlačítka pro inspiraci */
         }
 
         body {
@@ -30,7 +29,7 @@
         #welcomeModal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); /* Pozadí celé obrazovky */
+            background: var(--bg); /* Pozadí celé obrazovky - ČERNÁ */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -38,52 +37,44 @@
         }
 
         .modal-box {
-            background: var(--card);
+            background: var(--card); /* Pozadí boxu */
             width: 400px;
             height: 600px;
-            border: 1px solid var(--border);
+            border: 1px solid var(--border); /* Jemný šedý rámeček */
             border-radius: 8px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Logo nahoře, tlačítko dole */
+            justify-content: space-between; /* Obsah nahoře, tlačítko dole */
             align-items: center;
             padding: 50px 30px;
             box-sizing: border-box;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-top: 50px;
-        }
-
-        .logo-text {
-            font-size: 48px;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .logo-cube {
-            width: 60px;
-            height: 60px;
-            /* Jednoduchá kostka pomocí CSS, pokud nemáš obrázek */
-            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
-            transform: rotateX(-20deg) rotateY(45deg);
-            box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
-        }
-
         .welcome-text {
-            color: #aaa;
+            color: #fff;
             font-size: 16px;
             text-align: center;
-            margin-top: -100px; /* Posun textu blíž ke středu */
+            margin-top: 100px; /* Posun textu víc do horní třetiny */
+        }
+
+        .welcome-text h2 {
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+
+        .welcome-text p {
+            color: #aaa;
+            font-size: 16px;
         }
 
         .modal-btn {
             width: 100%;
-            background: var(--accent); /* Tvoje žlutá barevná kombinace */
-            color: #000;
+            background: var(--accent); /* Žlutá plocha tlačítka */
+            color: #000; /* Černý text tlačítka */
             border: none;
             padding: 15px;
             font-size: 16px;
@@ -95,7 +86,7 @@
         }
 
         .modal-btn:hover {
-            background: #e6b800;
+            background: #e6b800; /* Tmavší žlutá při přejetí */
         }
 
         /* --- STYL PRO HLAVNÍ OBSAH (KALKULAČKU) --- */
@@ -107,10 +98,10 @@
         }
 
         #leftPanel { flex: 3; padding: 20px; overflow-y: auto; }
-        #rightPanel { flex: 1; min-width: 350px; background: var(--card); border-left: 2px solid #2a2e37; padding: 20px; display: flex; flex-direction: column; }
+        #rightPanel { flex: 1; min-width: 350px; background: var(--card); border-left: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
         .main-header { font-size: 28px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
-        #searchInput { width: 100%; background: #111; border: 1px solid #2a2e37; color: var(--accent); padding: 12px; margin-bottom: 20px; border-left: 4px solid var(--accent); outline: none; box-sizing: border-box; }
-        .law-card { background: var(--card); border: 1px solid #2a2e37; border-left: 3px solid var(--accent); margin-bottom: 10px; border-radius: 4px; }
+        #searchInput { width: 100%; background: #111; border: 1px solid var(--border); color: var(--accent); padding: 12px; margin-bottom: 20px; border-left: 4px solid var(--accent); outline: none; box-sizing: border-box; }
+        .law-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); margin-bottom: 10px; border-radius: 4px; }
         .law-header { padding: 15px; cursor: pointer; }
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
         .law-content { display: none; padding: 0 15px 15px 15px; border-top: 1px solid #111; }
@@ -131,10 +122,6 @@
 
 <div id="welcomeModal">
     <div class="modal-box">
-        <div class="logo-area">
-            <div class="logo-text">Gen</div>
-            <div class="logo-cube"></div> </div>
-        
         <div class="welcome-text">
             <h2>Vítej Trooper !</h2>
             <p>Pro přístup do kalkulačky stiskni tlačítko níže.</p>
@@ -166,11 +153,11 @@
 </div>
 
 <script>
-    // Funkce pro zavření úvodního okna a zobrazení kalkulačky [cite: 2026-03-28]
+    // Funkce pro zavření úvodního okna a zobrazení kalkulačky
     function closeModal() {
         document.getElementById('welcomeModal').style.display = 'none';
         document.getElementById('mainContent').style.display = 'flex';
-        // Spustíme načítání zákonů až po zavření okna, aby to bylo plynulé
+        // Načteme zákony až po zavření okna pro plynulost
         loadLaws();
     }
 
@@ -183,9 +170,7 @@
     }
 
     async function loadLaws() {
-        // Kontrola, zda už není obsah načtený (aby se nenačítal dvakrát)
         if (document.getElementById('lawsContainer').innerHTML !== "") return;
-
         try {
             const res = await fetch('tresty.html?v=' + Date.now());
             const html = await res.text();
@@ -226,9 +211,7 @@
                 card.innerHTML = `<div class="law-header" onclick="this.parentElement.classList.toggle('active')"><div class="law-title">${title}</div></div><div class="law-content">${rows}</div>`;
                 container.appendChild(card);
             });
-        } catch (e) {
-            console.error("Chyba při načítání tresty.html:", e);
-        }
+        } catch (e) { console.error("Chyba načítání tresty.html:", e); }
     }
 
     function addItem(title, lIdx, rIdx) {
@@ -250,10 +233,7 @@
             if (jailNums.length > 0) {
                 const max = Math.max(...jailNums);
                 const min = (isRange && jailNums.length >= 2) ? Math.min(...jailNums) : (isRange ? 1 : max);
-                if (userJail < min || userJail > max) {
-                    showNotify("CHYBA VEZENÍ UPRAV DÉLKU TRESTU DLE POVOLENÉHO PARAGRAFU");
-                    return;
-                }
+                if (userJail < min || userJail > max) { showNotify("CHYBA VEZENÍ UPRAV DÉLKU TRESTU DLE POVOLENÉHO PARAGRAFU"); return; }
             }
         }
 
@@ -263,15 +243,11 @@
             if (fineNums.length > 0) {
                 const max = Math.max(...fineNums);
                 const min = (isRange && fineNums.length >= 2) ? Math.min(...fineNums) : (cleanText.includes("do výše") ? 50 : max);
-                if (userFine < min || userFine > max) {
-                    showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU");
-                    return;
-                }
+                if (userFine < min || userFine > max) { showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU"); return; }
             }
         }
 
         if (userJail === 0 && userFine === 0) return;
-
         protocolData.push({ title, jail: userJail, fine: userFine, html: formattedHtml });
         render();
     }
@@ -306,7 +282,6 @@
             c.style.display = c.innerText.toLowerCase().includes(v) ? "block" : "none";
         });
     }
-    // loadLaws už nevoláme tady, ale až po kliknutí na tlačítko v closeModal() [cite: 2026-03-28]
 </script>
 </body>
 </html>
