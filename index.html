@@ -65,7 +65,7 @@
         }
 
         .input-group { display: flex; gap: 8px; }
-        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 65px; text-align: center; border-radius: 4px; outline: none; }
+        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 65px; text-align: center; border-radius: 4px; outline: none; transition: 0.3s; }
         .input-box[readonly] { background: #051a05; color: var(--fixed); border: 1px solid var(--fixed); cursor: not-allowed; }
 
         .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
@@ -86,13 +86,14 @@
         .summary-box { border-top: 2px solid var(--accent); padding-top: 15px; margin-top: 10px; }
         .summary-line { display: flex; justify-content: space-between; font-weight: bold; font-size: 16px; margin-bottom: 8px; }
 
-        /* NOTIFIKACE - CHYBA */
+        /* NOTIFIKACE - musí být vidět! */
         #notification {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: var(--danger); color: white; padding: 15px 30px; 
-            border-radius: 8px; font-weight: bold; z-index: 9999;
-            display: none; box-shadow: 0 0 20px rgba(255, 68, 68, 0.4);
-            border: 2px solid white; text-transform: uppercase;
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+            background: #ff0000; color: white; padding: 20px 40px; 
+            border-radius: 10px; font-weight: bold; z-index: 10000;
+            display: none; box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+            border: 3px solid #fff; text-transform: uppercase; font-size: 18px;
+            text-align: center;
         }
 
         #globalAlert { 
@@ -107,7 +108,7 @@
 </head>
 <body>
 
-<div id="notification"></div>
+<div id="notification">CHYBA V SAZBĚ! OPRAV TREST ODNĚTNÍM SVOBODY</div>
 
 <div id="leftPanel">
     <div class="main-header">POLICAJNÍ DATABAZE - PENAL CODE - GenK</div>
@@ -131,8 +132,10 @@
 
     function showNotify(msg) {
         const n = document.getElementById('notification');
-        n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => { n.style.display = 'none'; }, 3000);
+        n.innerText = msg;
+        n.style.display = 'block';
+        console.error("Zablokováno: " + msg); // Pro kontrolu v konzoli (F12)
+        setTimeout(() => { n.style.display = 'none'; }, 4000);
     }
 
     async function loadLaws() {
@@ -177,28 +180,41 @@
     function addItem(title, lIdx, rIdx) {
         const jEl = document.getElementById(`j_${lIdx}_${rIdx}`);
         const fEl = document.getElementById(`f_${lIdx}_${rIdx}`);
-        if (!jEl.value && !fEl.value) return;
-
+        
         const jail = parseInt(jEl.value) || 0;
         const fine = parseInt(fEl.value) || 0;
+        if (jail === 0 && fine === 0) return;
+
         const rowElement = jEl.closest('.sub-row');
         const fullText = rowElement.querySelector('.sub-text').innerText;
 
-        // --- HARD CHECK SAZBY ---
+        // --- MNOHEM SILNĚJŠÍ KONTROLA TEXTU ---
         if (!jEl.readOnly && jEl.value) {
-            const rangeMatch = fullText.match(/sazba\s+(\d+)-(\d+)\s+let/i);
-            if (rangeMatch) {
-                const min = parseInt(rangeMatch[1]);
-                const max = parseInt(rangeMatch[2]);
-                
-                if (jail < min || jail > max) {
-                    showNotify(`STOP! Trest musí být v rozmezí ${min} až ${max} let.`);
-                    jEl.style.borderColor = "var(--danger)";
-                    return; // KONEC - nepřidá se nic
+            // Hledáme cokoli jako "1 na 5", "1 až 5", "1-5", "1 do 5"
+            const numbers = fullText.match(/\d+/g); 
+            // Pokud najdeme v textu dvě čísla u sebe, bereme je jako rozsah
+            if (numbers && numbers.length >= 2) {
+                // Musíme najít čísla, která následují po slovech o vězení/letech
+                const jailKeywords = ["rok", "let", "svobody"];
+                const containsJailWords = jailKeywords.some(word => fullText.toLowerCase().includes(word));
+
+                if (containsJailWords) {
+                    const min = Math.min(...numbers.map(Number));
+                    const max = Math.max(...numbers.map(Number));
+
+                    if (jail < min || jail > max) {
+                        showNotify(`NEPOVOLENO! Sazba je ${min} až ${max} let.`);
+                        jEl.style.border = "2px solid red";
+                        jEl.style.boxShadow = "0 0 10px red";
+                        return; // BLOKACE PŘIDÁNÍ
+                    }
                 }
             }
         }
-        jEl.style.borderColor = "#333"; // Reset barvy pokud je to OK
+        
+        // Reset stylu pokud je to v pořádku
+        jEl.style.border = "1px solid #333";
+        jEl.style.boxShadow = "none";
 
         let licenses = [];
         if (fullText.toLowerCase().includes("zbrojní")) licenses.push("ZBROJNÍ PRŮKAZ");
