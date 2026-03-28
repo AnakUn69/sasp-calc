@@ -2,7 +2,7 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP MDT - Penal Code System</title>
+    <title>SASP MDT - TERMINÁL v94</title>
     <style>
         :root {
             --bg-main: #0a0b0d; --bg-panel: #14161a;
@@ -12,11 +12,12 @@
 
         body { background: var(--bg-main); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
         
-        /* Panely */
+        /* OPRAVA: Tučné písmo v zákoníku bude žluté */
+        #lawsContainer b, #lawsContainer strong { color: var(--accent) !important; font-weight: bold; }
+
         #leftPanel { flex: 3; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
         #rightPanel { flex: 1.2; min-width: 420px; background: var(--bg-panel); display: flex; flex-direction: column; }
 
-        /* Zákoník */
         .header-bar { padding: 20px; background: var(--bg-panel); border-bottom: 1px solid var(--border); }
         #lawsContainer { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .law-card { background: var(--bg-panel); border: 1px solid var(--border); margin-bottom: 10px; border-radius: 6px; }
@@ -25,7 +26,6 @@
         .law-card.active .law-content { display: block; }
         .row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #1a1c20; }
 
-        /* Inputy */
         .input-box { background: #000; border: 1px solid var(--border); color: #fff; padding: 8px; width: 85px; text-align: center; border-radius: 4px; font-weight: bold; outline: none; }
         
         /* BLOKOVANÉ POLE - ČERVENÉ */
@@ -34,10 +34,9 @@
             color: var(--danger) !important;
             background: rgba(255, 68, 68, 0.05) !important;
             cursor: not-allowed;
-            opacity: 1; /* Aby byl text dobře vidět i při disabled */
+            opacity: 1;
         }
 
-        /* Protokol */
         .protocol-item { background: #000; padding: 15px; border-radius: 8px; border-left: 4px solid var(--jail); margin: 10px; position: relative; border: 1px solid var(--border); }
         .proto-inputs { display: flex; gap: 15px; margin-top: 10px; }
         
@@ -117,12 +116,22 @@
                     const fixJ = line.getAttribute('data-fix-jail');
                     const fixF = line.getAttribute('data-fix-fine');
                     
-                    // OPRAVA DETEKCE LIMITU: Najde všechna čísla v textu a vezme to největší jako limit
-                    const jailNumbers = text.match(/\d+(?=\s*let)/gi);
-                    let maxJ = jailNumbers ? Math.max(...jailNumbers.map(Number)) : 999;
+                    // OPRAVA DETEKCE: Hledáme čísla pouze v kontextu trestů, ne u výše škody
+                    // Hledá čísla v okolí slov "sazba", "od", "do" následovaných "let"
+                    const jailMatch = text.match(/(?:sazba|od|do|až)\s*([\d\s-]+)\s*let/gi);
+                    let maxJ = 999;
+                    if (jailMatch) {
+                        const nums = jailMatch.join(' ').match(/\d+/g);
+                        if (nums) maxJ = Math.max(...nums.map(Number));
+                    }
                     
-                    const fineNumbers = text.match(/[\d.]+(?=\s*\$)/gi);
-                    let maxF = fineNumbers ? Math.max(...fineNumbers.map(n => parseInt(n.replace(/\./g, '')))) : 0;
+                    // Hledá čísla v okolí slov "pokutou", "výši", "do" následovaných "$"
+                    const fineMatch = text.match(/(?:pokutou|výši|do|až)\s*([\d.\s-]+)\s*\$/gi);
+                    let maxF = 0;
+                    if (fineMatch) {
+                        const nums = fineMatch.join(' ').replace(/\./g, '').match(/\d+/g);
+                        if (nums) maxF = Math.max(...nums.map(Number));
+                    }
 
                     return {
                         html: line.innerHTML,
