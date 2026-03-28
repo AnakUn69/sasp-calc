@@ -2,42 +2,224 @@
 <html lang="cs">
 <head>
     <meta charset="UTF-8">
-    <title>SASP - Penal Code</title>
+    <title>Policejní Kalkulačka v22 - Full Freedom</title>
     <style>
         :root {
-            --bg: #000000; --card: #0c0c0c; --accent: #ffcc00; --border: #1a1a1a;
-            --jail: #00aaff; --fine: #00ff88; --danger: #ff4444; --fixed: #00ff88;
+            --bg: #000000; 
+            --card: #0c0c0c; 
+            --accent: #ffcc00; 
+            --border: #1a1a1a;
+            --jail: #00aaff; 
+            --fine: #00ff88; 
+            --danger: #ff4444; 
+            --fixed: #00ff88;
         }
-        body { background: var(--bg); color: #fff; font-family: Arial, sans-serif; margin: 0; display: flex; height: 100vh; overflow: hidden; }
-        
+
+        body {
+            background: var(--bg);
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
         /* ÚVODNÍ OBRAZOVKA */
-        #welcomeModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); display: flex; justify-content: center; align-items: center; z-index: 100000; }
-        .modal-box { background: var(--card); width: 400px; height: 500px; border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 40px; box-sizing: border-box; text-align: center; }
-        .welcome-text h2 { font-size: 32px; text-transform: uppercase; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; }
-        .welcome-text p { color: #aaa; margin-bottom: 40px; }
-        .modal-btn { width: 100%; background: var(--accent); color: #000; border: none; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+        #welcomeModal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100000;
+        }
+
+        .modal-box {
+            background: var(--card);
+            width: 400px;
+            height: 500px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .welcome-text h2 {
+            font-size: 32px;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text p {
+            color: #aaa;
+            margin-bottom: 40px;
+        }
+
+        .modal-btn {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
 
         /* HLAVNÍ OBSAH */
-        #mainContent { display: none; width: 100%; height: 100%; display: flex; }
+        #mainContent {
+            display: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
         #leftPanel { flex: 3; padding: 20px; overflow-y: auto; }
-        #rightPanel { flex: 1; min-width: 350px; background: var(--card); border-left: 2px solid var(--border); padding: 20px; display: flex; flex-direction: column; }
-        .main-header { font-size: 28px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
-        #searchInput { width: 100%; background: #111; border: 1px solid var(--border); color: var(--accent); padding: 12px; margin-bottom: 20px; border-left: 4px solid var(--accent); outline: none; box-sizing: border-box; }
-        .law-card { background: var(--card); border: 1px solid var(--border); border-left: 3px solid var(--accent); margin-bottom: 10px; border-radius: 4px; }
+        #rightPanel { 
+            flex: 1; 
+            min-width: 350px; 
+            background: var(--card); 
+            border-left: 2px solid var(--border); 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .main-header { 
+            font-size: 28px; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            margin-bottom: 20px; 
+            border-bottom: 3px solid var(--accent); 
+            padding-bottom: 10px; 
+        }
+
+        #searchInput { 
+            width: 100%; 
+            background: #111; 
+            border: 1px solid var(--border); 
+            color: var(--accent); 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border-left: 4px solid var(--accent); 
+            outline: none; 
+            box-sizing: border-box; 
+        }
+
+        .law-card { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-left: 3px solid var(--accent); 
+            margin-bottom: 10px; 
+            border-radius: 4px; 
+        }
+
         .law-header { padding: 15px; cursor: pointer; }
         .law-title { color: var(--accent); font-weight: bold; text-transform: uppercase; }
         .law-content { display: none; padding: 0 15px 15px 15px; border-top: 1px solid #111; }
         .law-card.active .law-content { display: block; }
-        .sub-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #111; }
+
+        .sub-row { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 0; 
+            border-bottom: 1px solid #111; 
+        }
+
         .sub-text { flex: 1; font-size: 14px; color: #ccc; padding-right: 15px; }
-        .license-danger { background: var(--danger); color: #fff; font-weight: bold; text-transform: uppercase; font-size: 10px; padding: 2px 5px; border-radius: 3px; display: inline-block; margin-top: 4px; }
+        .license-danger { 
+            background: var(--danger); 
+            color: #fff; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            font-size: 10px; 
+            padding: 2px 5px; 
+            border-radius: 3px; 
+            display: inline-block; 
+            margin-top: 4px; 
+        }
+
         .input-group { display: flex; gap: 8px; }
-        .input-box { background: #000; border: 1px solid #333; color: #fff; padding: 8px; width: 75px; text-align: center; border-radius: 4px; outline: none; }
-        .input-box[readonly] { border-color: var(--fixed) !important; color: var(--fixed) !important; background: #051a05; cursor: not-allowed; font-weight: bold; }
-        .btn-add { background: var(--accent); border: none; color: #000; padding: 8px 12px; font-weight: bold; cursor: pointer; border-radius: 4px; }
-        .case-entry { background: #111; padding: 12px; border-bottom: 1px solid #222; position: relative; margin-bottom: 5px; border-left: 2px solid var(--accent); }
-        #notification { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #ff0000; color: white; padding: 30px 40px; border-radius: 10px; font-weight: bold; z-index: 99999; display: none; border: 4px solid white; text-transform: uppercase; font-size: 18px; text-align: center; box-shadow: 0 0 100px #000; max-width: 80%; }
-        #globalAlert { background: rgba(255, 68, 68, 0.2); border: 2px solid var(--danger); color: #fff; padding: 10px; margin-bottom: 15px; font-size: 13px; font-weight: bold; display: none; text-align: center; }
+        .input-box { 
+            background: #000; 
+            border: 1px solid #333; 
+            color: #fff; 
+            padding: 8px; 
+            width: 75px; 
+            text-align: center; 
+            border-radius: 4px; 
+            outline: none; 
+        }
+
+        .input-box[readonly] { 
+            border-color: var(--fixed) !important; 
+            color: var(--fixed) !important; 
+            background: #051a05; 
+            cursor: not-allowed; 
+            font-weight: bold; 
+        }
+
+        .btn-add { 
+            background: var(--accent); 
+            border: none; 
+            color: #000; 
+            padding: 8px 12px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 4px; 
+        }
+
+        .case-entry { 
+            background: #111; 
+            padding: 12px; 
+            border-bottom: 1px solid #222; 
+            position: relative; 
+            margin-bottom: 5px; 
+            border-left: 2px solid var(--accent); 
+        }
+
+        #notification { 
+            position: fixed; 
+            top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); 
+            background: #ff0000; 
+            color: white; 
+            padding: 30px 40px; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            z-index: 99999; 
+            display: none; 
+            border: 4px solid white; 
+            text-transform: uppercase; 
+            font-size: 18px; 
+            text-align: center; 
+            box-shadow: 0 0 100px #000; 
+            max-width: 80%; 
+        }
+
+        #globalAlert { 
+            background: rgba(255, 68, 68, 0.2); 
+            border: 2px solid var(--danger); 
+            color: #fff; 
+            padding: 10px; 
+            margin-bottom: 15px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            display: none; 
+            text-align: center; 
+        }
     </style>
 </head>
 <body>
@@ -55,7 +237,7 @@
 <div id="mainContent" style="display:none;">
     <div id="notification"></div>
     <div id="leftPanel">
-        <div class="main-header">POLICAJNÍ DATABAZE - PENAL CODE - GenK</div>
+        <div class="main-header">POLICAJNÍ DATABÁZE - GEN TRN</div>
         <input type="text" id="searchInput" placeholder="Vyhledat paragraf..." oninput="doSearch()">
         <div id="lawsContainer"></div>
     </div>
@@ -79,12 +261,6 @@
     }
 
     let protocolData = [];
-
-    function showNotify(msg) {
-        const n = document.getElementById('notification');
-        n.innerText = msg; n.style.display = 'block';
-        setTimeout(() => { n.style.display = 'none'; }, 4000);
-    }
 
     async function loadLaws() {
         if (document.getElementById('lawsContainer').innerHTML !== "") return;
@@ -122,38 +298,35 @@
         } catch (e) { console.error(e); }
     }
 
+    // FUNKCE PŘIDÁVÁNÍ BEZ VALIDACE - umožňuje zadat libovolnou částku
     function addItem(title, lIdx, rIdx) {
         const jEl = document.getElementById(`j_${lIdx}_${rIdx}`);
         const fEl = document.getElementById(`f_${lIdx}_${rIdx}`);
+        
         const uj = jEl.value === "" ? 0 : parseInt(jEl.value);
         const uf = fEl.value === "" ? 0 : parseInt(fEl.value);
+        
         const row = jEl.closest('.sub-row');
-        const txt = row.querySelector('.sub-text').innerText.replace(/(?<=\d)[\s.](?=\d)/g, '').replace(/[.$]/g, '');
-        const isRange = /od\s+\d+\s+.*na\s+\d+/i.test(txt);
+        const formattedHtml = row.querySelector('.sub-text').innerHTML;
 
-        if (!jEl.readOnly && uj > 0) {
-            const jNums = (txt.split(/pokut/i)[0].match(/\d+/g) || []).map(Number).filter(n => n < 100);
-            if (jNums.length > 0) {
-                const max = Math.max(...jNums), min = (isRange && jNums.length >= 2) ? Math.min(...jNums) : (isRange ? 1 : max);
-                if (uj < min || uj > max) { showNotify("CHYBA V TRESTU ODNĚTÍM SVOBODY UPRAV DÉLKU TRESTU DLE POVOLENÉHO PARAGRAFU !"); return; }
-            }
-        }
-        if (!fEl.readOnly && uf > 0) {
-            const fNums = ((txt.includes("pokut") ? txt.split(/pokut/i)[1] : txt).match(/\d+/g) || []).map(Number).filter(n => n >= 50);
-            if (fNums.length > 0) {
-                const max = Math.max(...fNums), min = (isRange && fNums.length >= 2) ? Math.min(...fNums) : (txt.includes("do výše") ? 50 : max);
-                if (uf < min || uf > max) { showNotify("CHYBA FINANČNÍ ČÁSTKY UPRAV JÍ PODLE PARAGRAFU !"); return; }
-            }
-        }
         if (uj === 0 && uf === 0) return;
-        protocolData.push({ title, jail: uj, fine: uf, html: row.querySelector('.sub-text').innerHTML });
+
+        protocolData.push({ 
+            title: title, 
+            jail: uj, 
+            fine: uf, 
+            html: formattedHtml 
+        });
+        
         render();
     }
 
     function render() {
         const cont = document.getElementById('caseEntries');
         cont.innerHTML = "";
-        let tj = 0, tf = 0; let allLics = new Set();
+        let tj = 0, tf = 0; 
+        let allLics = new Set();
+        
         protocolData.forEach((i, idx) => {
             tj += i.jail; tf += i.fine;
             if (i.html.toLowerCase().includes("zbrojní průkaz")) allLics.add("ZBROJNÍ PRŮKAZ");
@@ -165,16 +338,22 @@
                 <div style="margin-top:5px; font-weight:bold; font-size:12px; color:#fff;">${i.jail} let | ${i.fine.toLocaleString()} $</div>
             </div>`;
         });
+        
         document.getElementById('sumJail').innerText = tj + " let";
         document.getElementById('sumFine').innerText = tf.toLocaleString() + " $";
+        
         const ga = document.getElementById('globalAlert');
-        if (allLics.size > 0) { ga.style.display = "block"; document.getElementById('alertList').innerText = Array.from(allLics).join(" + "); }
-        else { ga.style.display = "none"; }
+        if (allLics.size > 0) { 
+            ga.style.display = "block"; 
+            document.getElementById('alertList').innerText = Array.from(allLics).join(" + "); 
+        } else { 
+            ga.style.display = "none"; 
+        }
     }
 
     function removeItem(idx) { protocolData.splice(idx, 1); render(); }
     
-    // Automatické smazání bez potvrzení [cite: 2026-03-25]
+    // Automatické smazání bez potvrzení 
     function clearAll() { 
         protocolData = []; 
         render(); 
