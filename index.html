@@ -37,16 +37,65 @@
         
         .status-bar { color: white; padding: 14px; font-weight: 900; text-align: center; margin: 5px 10px; border-radius: 4px; display: none; text-transform: uppercase; }
         .add-btn { background: var(--accent); border: none; padding: 10px 20px; font-weight: 900; cursor: pointer; border-radius: 4px; color: #000; }
+        #loginOverlay { 
+    position: fixed; 
+    width: 100%; 
+    height: 100%; 
+    background: #000; /* Čistě černá jako na screenu */
+    z-index: 200000; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.login-card {
+    text-align: center;
+}
+
+.login-card h1 {
+    color: #ffcc00; /* Ta tvoje žlutá */
+    font-size: 36px; 
+    margin-bottom: 5px; 
+    letter-spacing: 3px;
+    font-weight: 900;
+}
+
+.login-card p {
+    color: #555; 
+    font-size: 12px; 
+    letter-spacing: 4px; 
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+
+.login-btn {
+    background: #fff; /* Bílé tlačítko podle obrázku */
+    color: #000; 
+    border: none; 
+    padding: 10px 30px;
+    font-weight: 700; 
+    font-size: 14px; 
+    cursor: pointer;
+    transition: 0.2s;
+    text-transform: uppercase;
+}
+
+.login-btn:hover {
+    background: #ffcc00;
+    transform: scale(1.05);
+}
     </style>
 </head>
 <body>
 
 <div id="loginOverlay">
     <div class="login-card">
-        <h1 style="color:var(--accent); font-size: 32px; margin-bottom: 5px; letter-spacing: 2px;">SASP TERMINÁL</h1>
-        <p style="color:#555; font-size: 12px; letter-spacing: 3px; margin-bottom: 40px;">SECURE ACCESS GATEWAY</p>
+        <h1>SASP TERMINÁL</h1>
+        <p>SECURE ACCESS GATEWAY</p>
         <button class="login-btn" onclick="login()">VSTOUPIT DO EVIDENCE</button>
-        <div style="color:#333; font-size:10px; margin-top:40px;">© 2026 SASP Nathaniel Hartman</div>
+        <div style="color:#222; font-size:10px; margin-top:60px; letter-spacing: 1px;">
+            © 2026 SASP Nathaniel Hartman
+        </div>
     </div>
 </div>
 
