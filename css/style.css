@@ -240,9 +240,9 @@ body.no-vignette::after {
 }
 
 @keyframes bootLogoSpin3D {
-  0%    { transform: rotateY(0deg); }
-  49.9% { transform: rotateY(89.9deg); }
-  50%   { transform: rotateY(-89.9deg); }
+  0%    { transform: rotateY(0deg);    animation-timing-function: linear; }
+  49.9% { transform: rotateY(89.9deg); animation-timing-function: step-end; }
+  50%   { transform: rotateY(-89.9deg); animation-timing-function: linear; }
   100%  { transform: rotateY(0deg); }
 }
 
@@ -405,9 +405,9 @@ body.no-vignette::after {
   filter: drop-shadow(0 0 18px rgba(255,204,0,0.4));
 }
 @keyframes loginLogoSpin3D {
-  0%    { transform: rotateY(0deg); }
-  49.9% { transform: rotateY(89.9deg); }
-  50%   { transform: rotateY(-89.9deg); }
+  0%    { transform: rotateY(0deg);    animation-timing-function: linear; }
+  49.9% { transform: rotateY(89.9deg); animation-timing-function: step-end; }
+  50%   { transform: rotateY(-89.9deg); animation-timing-function: linear; }
   100%  { transform: rotateY(0deg); }
 }
 @keyframes shieldPulse {
