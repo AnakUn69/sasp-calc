@@ -122,26 +122,20 @@
         <!-- credential box -->
         <div class="login-cred-box">
           <div class="cred-row">
-            <label class="cred-label">BADGE NO.</label>
-            <input class="cred-input" type="text" value="SASP-4471" readonly />
+            <label class="cred-label" for="loginBadge">BADGE NO.</label>
+            <input class="cred-input cred-editable" id="loginBadge" type="text" placeholder="SASP-0000" autocomplete="off" spellcheck="false" />
           </div>
           <div class="cred-row">
-            <label class="cred-label">PŘÍSTUPOVÁ ÚROVEŇ</label>
-            <input
-              class="cred-input"
-              type="text"
-              value="LEVEL 3 — OFFICER"
-              readonly
-            />
+            <label class="cred-label" for="loginFirstName">JMÉNO</label>
+            <input class="cred-input cred-editable" id="loginFirstName" type="text" placeholder="Jméno" autocomplete="off" spellcheck="false" />
           </div>
           <div class="cred-row">
-            <label class="cred-label">TERMINÁL ID</label>
-            <input
-              class="cred-input"
-              type="text"
-              value="MDT-BLAINE-009"
-              readonly
-            />
+            <label class="cred-label" for="loginLastName">PŘÍJMENÍ</label>
+            <input class="cred-input cred-editable" id="loginLastName" type="text" placeholder="Příjmení" autocomplete="off" spellcheck="false" />
+          </div>
+          <div class="cred-row">
+            <label class="cred-label">HESLO</label>
+            <input class="cred-input cred-password" id="loginPassword" type="text" placeholder="*******" readonly autocomplete="off" />
           </div>
         </div>
 
@@ -182,9 +176,15 @@
       </div>
     </div>
 
+    <!-- ══ WELCOME OVERLAY ══════════════════════════════════════ -->
+    <div id="welcomeOverlay" style="display: none">
+      <div id="welcomeText" class="welcome-text"></div>
+    </div>
+
     <!-- ══ MAIN APP ════════════════════════════════════════════ -->
     <div id="mainApp" style="display: none">
       <div class="crt-overlay"></div>
+      <div class="user-bar">PŘIHLÁŠENÝ UŽIVATEL:&nbsp;<span id="loggedUserName">—</span></div>
 
       <div class="app-panels">
         <!-- LEFT PANEL -->
@@ -238,6 +238,25 @@
             ZÁSTUPCE NUTNÁ
           </div>
 
+          <!-- SUSPECT FORM -->
+          <div id="suspectForm" class="suspect-form">
+            <div class="suspect-form-title">IDENTITA SUSPECTA</div>
+            <div class="suspect-row">
+              <div class="suspect-field">
+                <label class="suspect-label" for="suspectFirst">JMÉNO</label>
+                <input class="suspect-input" id="suspectFirst" type="text" placeholder="Jméno" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="suspect-field">
+                <label class="suspect-label" for="suspectLast">PŘÍJMENÍ</label>
+                <input class="suspect-input" id="suspectLast" type="text" placeholder="Příjmení" autocomplete="off" spellcheck="false" />
+              </div>
+              <div class="suspect-field suspect-birth">
+                <label class="suspect-label" for="suspectBirth">DATUM NAROZENÍ</label>
+                <input class="suspect-input" id="suspectBirth" type="text" placeholder="DD.MM.RRRR" autocomplete="off" spellcheck="false" />
+              </div>
+            </div>
+          </div>
+
           <div id="caseEntries" class="case-entries"></div>
 
           <div class="protocol-footer">
@@ -253,18 +272,23 @@
               </div>
             </div>
             <div class="footer-actions">
-              <button id="copyBtn" class="action-btn copy-btn">
-                <span class="btn-ic"
-                  ><i class="fa-solid fa-clipboard"></i
-                ></span>
-                <span class="btn-lbl">KOPÍROVAT PROTOKOL</span>
+              <button id="saveAndCopyBtn" class="action-btn save-btn">
+                <span class="btn-ic"><i class="fa-solid fa-floppy-disk"></i></span>
+                <span class="btn-lbl">ULOŽIT A ZKOPÍROVAT</span>
               </button>
-              <button id="clearBtn" class="action-btn clear-btn">
-                <span class="btn-ic"
-                  ><i class="fa-solid fa-trash-can"></i
-                ></span>
-                <span class="btn-lbl">NOVÝ PŘÍPAD</span>
-              </button>
+              <div class="footer-actions-row">
+                <button id="historyBtn" class="action-btn history-btn">
+                  <span class="btn-ic"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                  <span class="btn-lbl">HISTORIE</span>
+                </button>
+              </div>
+               <div class="footer-actions-row">
+                <button id="clearBtn" class="action-btn clear-btn">
+                  <span class="btn-ic"><i class="fa-solid fa-trash-can"></i></span>
+                  <span class="btn-lbl">NOVÝ PŘÍPAD</span>
+                </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -300,12 +324,30 @@
           <button id="adminClose" class="admin-close">✕</button>
         </div>
         <div class="admin-tabs">
-          <button class="admin-tab active" data-tab="laws">
-            Správa zákonů
-          </button>
+          <button class="admin-tab active" data-tab="laws">Správa zákonů</button>
           <button class="admin-tab" data-tab="export">Export / Import</button>
+          <button class="admin-tab" data-tab="settings">Nastavení</button>
         </div>
         <div id="adminContent" class="admin-content"></div>
+      </div>
+    </div>
+
+    <!-- ══ HISTORY MODAL ═══════════════════════════════════════ -->
+    <div id="historyOverlay" style="display: none">
+      <div class="history-modal">
+        <div class="history-header">
+          <span><i class="fa-solid fa-clock-rotate-left"></i>&nbsp; ARCHIV PROTOKOLŮ</span>
+          <button id="historyClose" class="admin-close">✕</button>
+        </div>
+        <div class="history-content">
+          <div id="historyListWrap">
+            <div id="historyListContent"></div>
+          </div>
+          <div id="historyDetail" style="display: none">
+            <button class="history-back-btn" onclick="SASP.historyBack()"><i class="fa-solid fa-arrow-left"></i>&nbsp; ZPĚT NA SEZNAM</button>
+            <pre id="historyDetailContent" class="history-detail-content"></pre>
+          </div>
+        </div>
       </div>
     </div>
 
