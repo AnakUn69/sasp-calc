@@ -304,11 +304,17 @@ const SASP = (() => {
     },
 
     delete(id) {
-      if (!confirm('Smazat tento protokol z historie?')) return;
-      let list = this._list().filter(e => e.id !== id);
-      localStorage.setItem(this.KEY, JSON.stringify(list));
-      this._renderList();
-      UI.toast('Protokol smazán');
+      Modal.confirm(
+        '<i class="fa-solid fa-trash"></i>',
+        'SMAZAT PROTOKOL',
+        'Opravdu smazat tento protokol z&nbsp;historie?<br><span class="modal-accent">Akce je nevratná.</span>',
+        () => {
+          let list = this._list().filter(e => e.id !== id);
+          localStorage.setItem(this.KEY, JSON.stringify(list));
+          this._renderList();
+          UI.toast('Protokol smazán');
+        }
+      );
     }
   };
 
@@ -422,10 +428,15 @@ const SASP = (() => {
     },
 
     reset() {
-      if (confirm('Resetovat všechna data na výchozí stav ze souboru laws.json?\nVšechny vaše úpravy budou ztraceny!')) {
-        localStorage.removeItem(this.KEY);
-        location.reload();
-      }
+      Modal.confirm(
+        '<i class="fa-solid fa-rotate-left"></i>',
+        'RESET DAT',
+        'Resetovat všechna data na výchozí stav ze&nbsp;souboru <span class="modal-highlight">laws.json</span>?<br><span class="modal-accent">Všechny vaše úpravy budou ztraceny!</span>',
+        () => {
+          localStorage.removeItem(this.KEY);
+          location.reload();
+        }
+      );
     },
 
     toJSON() {
@@ -517,6 +528,8 @@ const SASP = (() => {
         .toLocaleString('cs-CZ') + ' $';
 
       wrap.innerHTML = _protocol.map(p => _card(p)).join('');
+      _checkSaveBtn();
+      _spinify(wrap);
     }
   };
 
@@ -564,30 +577,17 @@ const SASP = (() => {
       return '';
     })();
 
-    const jDisabled = (s.hasJ && !(s.isLife && s.minJ === 0)) ? '' : 'disabled';
-    const fDisabled = s.hasF ? '' : 'disabled';
-    const jRO = s.fixedJail !== null ? 'readonly' : '';
-    const fRO = s.fixedFine !== null ? 'readonly' : '';
-    const jVal = s.fixedJail !== null ? `value="${s.fixedJail}"` : '';
-    const fVal = s.fixedFine !== null ? `value="${s.fixedFine}"` : '';
-
     return `
-      <div class="sub-row">
+      <div class="sub-row sub-row-clickable" onclick="SASP.openChargeModal(${gi},${si})">
         <span class="sub-label">${_esc(s.label)}</span>
         <div class="sub-info">
           <div class="sub-text">${_esc(s.text)}</div>
           ${range ? `<div class="sub-range">${range}</div>` : ''}
         </div>
         ${badges ? `<div class="sub-badges">${badges}</div>` : ''}
-        <div class="sub-inputs">
-          <input type="number" class="sub-input jail" id="j_${gi}_${si}"
-            placeholder="LET" min="${s.minJ}" max="${s.isLife ? '' : s.maxJ || ''}"
-            ${jVal} ${jDisabled} ${jRO}>
-          <input type="number" class="sub-input fine" id="f_${gi}_${si}"
-            placeholder="$" min="0"
-            ${fVal} ${fDisabled} ${fRO}>
-          <button class="add-btn" onclick="SASP.addCharge(${gi},${si})">+</button>
-        </div>
+        <button class="sub-add-trigger" tabindex="-1" aria-hidden="true">
+          <i class="fa-solid fa-plus"></i>
+        </button>
       </div>`;
   }
 
@@ -651,39 +651,14 @@ const SASP = (() => {
     document.getElementById('sumJail').textContent  = hasLife ? 'DOŽIVOTÍ' : totalJ + ' LET';
     document.getElementById('sumFine').textContent  = totalF.toLocaleString('cs-CZ') + ' $';
     document.getElementById('courtAlert').style.display = needSZ ? 'flex' : 'none';
+    _checkSaveBtn();
   }
 
   // ── Protocol ──────────────────────────────────────────────
   const Protocol = {
-    add(gi, si) {
+    add(gi, si, jVal, fVal) {
       const law = _laws[gi];
       const s = law.subs[si];
-      const jEl = document.getElementById(`j_${gi}_${si}`);
-      const fEl = document.getElementById(`f_${gi}_${si}`);
-      const jVal = parseInt(jEl.value) || 0;
-      const fVal = parseInt(fEl.value) || 0;
-
-      // Validate min jail (applies to all crimes incl. isLife where minJ > 0)
-      if (s.hasJ && s.minJ > 0 && jVal > 0 && jVal < s.minJ) {
-        const maxLabel = s.isLife ? 'doživotí' : `${s.maxJ} let`;
-        Modal.info('<i class="fa-solid fa-ban"></i>', 'PODMINIMÁLNÍ TREST',
-          `Zákon neumožňuje udělit méně než ${s.minJ} let. Zadejte hodnotu od ${s.minJ} do ${maxLabel}.`);
-        return;
-      }
-
-      // Validate max jail
-      if (s.hasJ && s.maxJ > 0 && s.maxJ < 99 && jVal > s.maxJ) {
-        Modal.info('<i class="fa-solid fa-ban"></i>', 'NADMAXIMOÁLNÍ TREST',
-          `Maximální sazba je ${s.maxJ} let. Vyšší trest není zákonem povolen.`);
-        return;
-      }
-
-      // Validate that a value was entered
-      if (s.hasJ && !s.isLife && jVal === 0 && !s.fixedJail) {
-        Modal.info('<i class="fa-solid fa-triangle-exclamation"></i>', 'CHYBÍ POČET LET',
-          `Zadejte délku trestu odnětí svobody (${s.minJ}–${s.maxJ} let).`);
-        return;
-      }
 
       if (s.removeZP || s.removeRP) {
         const items = [s.removeZP ? 'Zbrojní průkaz' : '', s.removeRP ? 'Řidičský průkaz' : '']
@@ -708,6 +683,7 @@ const SASP = (() => {
     },
 
     _commit(gi, si, jVal, fVal) {
+      ChargeModal.close();
       const law = _laws[gi];
       const s = law.subs[si];
       _protocol.push({
@@ -754,10 +730,12 @@ const SASP = (() => {
       const noBtn  = document.getElementById('modalNo');
       yesBtn.style.display = hasYes ? '' : 'none';
       noBtn.textContent = hasYes ? 'NE, ZPĚT' : 'ZAVŘÍT';
-      document.getElementById('modalOverlay').style.display = 'flex';
+      const overlay = document.getElementById('modalOverlay');
+      overlay.style.display = 'flex';
+      overlay.focus();
     },
 
-    yes() { if (this._cb) this._cb(); else this.close(); },
+    yes() { const cb = this._cb; this.close(); if (cb) cb(); },
     close() {
       document.getElementById('modalOverlay').style.display = 'none';
       this._cb = null;
@@ -793,21 +771,18 @@ const SASP = (() => {
       if (this._tab === 'laws') wrap.innerHTML = this._renderLaws();
       else if (this._tab === 'export') wrap.innerHTML = this._renderExport();
       else wrap.innerHTML = this._renderSettings();
+      _spinify(wrap);
     },
 
     _renderLaws() {
       return _categories.map((cat, ci) => `
         <div class="admin-category">
-          <div class="admin-cat-header" onclick="SASP.adminToggleCat(${ci})">
-            <span>${_esc(cat.icon || '')} ${_esc(cat.name)}</span>
-            <span>${cat.laws.length} zákonů ▾</span>
+          <div class="admin-cat-header">
+            <span class="admin-cat-toggle" onclick="SASP.adminToggleCat(${ci})">${_esc(cat.icon || '')} ${_esc(cat.name)} <span class="cat-count">${cat.laws.length} zákonů ▾</span></span>
+            <button class="admin-btn btn-icon btn-add" onclick="event.stopPropagation();SASP.adminNewLaw(${ci})" title="Přidat zákon"><i class="fa-solid fa-plus"></i></button>
           </div>
           <div class="admin-cat-body" id="acb_${ci}">
             ${cat.laws.map((law, li) => this._renderLawRow(ci, li, law)).join('')}
-            <div class="admin-law-row">
-              <button class="admin-btn btn-add" style="width:100%"
-                onclick="SASP.adminNewLaw(${ci})">+ PŘIDAT NOVÝ ZÁKON</button>
-            </div>
           </div>
         </div>`).join('');
     },
@@ -820,12 +795,15 @@ const SASP = (() => {
           <div class="admin-law-row">
             <span class="admin-law-title">${_esc(law.title)}</span>
             <div class="admin-law-actions">
-              <button class="admin-btn btn-edit" onclick="SASP.adminEditLaw(${ci},${li})">EDITOVAT</button>
-              <button class="admin-btn btn-del"  onclick="SASP.adminDelLaw(${ci},${li})">SMAZAT</button>
+              <button class="admin-btn btn-icon btn-add"  onclick="SASP.adminNewSub(${ci},${li})"   title="Přidat sub-položku"><i class="fa-solid fa-plus"></i></button>
+              <button class="admin-btn btn-icon btn-edit" onclick="SASP.adminEditLaw(${ci},${li})"  title="Editovat"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="admin-btn btn-icon btn-del"  onclick="SASP.adminDelLaw(${ci},${li})"   title="Smazat"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
           ${isEditing ? this._lawEditForm(ci, li, law) : ''}
           ${law.subs.map((s, si) => this._renderSubRow(ci, li, si, s)).join('')}
+          ${this._editing && this._editing.type === 'newsub' && this._editing.ci === ci && this._editing.li === li
+            ? this._subNewForm(ci, li) : ''}
         </div>`;
     },
 
@@ -840,8 +818,8 @@ const SASP = (() => {
               ${_esc(s.label)} ${_esc(s.text.substring(0, 70))}${s.text.length > 70 ? '…' : ''}
             </span>
             <div class="admin-law-actions">
-              <button class="admin-btn btn-edit" onclick="SASP.adminEditSub(${ci},${li},${si})">EDIT</button>
-              <button class="admin-btn btn-del"  onclick="SASP.adminDelSub(${ci},${li},${si})">✕</button>
+              <button class="admin-btn btn-icon btn-edit" onclick="SASP.adminEditSub(${ci},${li},${si})" title="Editovat"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="admin-btn btn-icon btn-del"  onclick="SASP.adminDelSub(${ci},${li},${si})" title="Smazat"><i class="fa-solid fa-trash"></i></button>
             </div>
           </div>
           ${isEditing ? this._subEditForm(ci, li, si, s) : ''}
@@ -914,6 +892,50 @@ const SASP = (() => {
         </div>`;
     },
 
+    _subNewForm(ci, li) {
+      return `
+        <div class="edit-form-wrap" style="margin-left:24px;border-top-color:var(--accent)">
+          <div class="edit-form-title">+ NOVÁ SUB-POLOŽKA</div>
+          <div class="edit-grid">
+            <div class="edit-cell">
+              <label>OZNAČENÍ (label)</label>
+              <input class="edit-input" id="ef_label" placeholder="např. a)">
+            </div>
+            <div class="edit-cell full">
+              <label>POPIS (text)</label>
+              <textarea class="edit-input" id="ef_text" rows="3" style="resize:vertical" placeholder="Popis skutkové podstaty..."></textarea>
+            </div>
+            <div class="edit-cell">
+              <label>MIN. LET (minJ)</label>
+              <input class="edit-input" id="ef_minJ" type="number" min="0" value="0">
+            </div>
+            <div class="edit-cell">
+              <label>MAX. LET (maxJ)</label>
+              <input class="edit-input" id="ef_maxJ" type="number" min="0" value="0">
+            </div>
+            <div class="edit-cell">
+              <label>FIXNÍ POKUTA (fixedFine)</label>
+              <input class="edit-input" id="ef_fixFine" type="number" min="0" placeholder="prázdné = variabilní">
+            </div>
+            <div class="edit-cell">
+              <label>FIXNÍ VAZBA (fixedJail)</label>
+              <input class="edit-input" id="ef_fixJail" type="number" min="0" placeholder="prázdné = variabilní">
+            </div>
+          </div>
+          <div class="edit-checkbox-row">
+            <label class="edit-check"><input type="checkbox" id="ef_hasJ"> MÁ VAZBU</label>
+            <label class="edit-check"><input type="checkbox" id="ef_hasF"> MÁ POKUTU</label>
+            <label class="edit-check"><input type="checkbox" id="ef_isLife"> DOŽIVOTÍ</label>
+            <label class="edit-check"><input type="checkbox" id="ef_zp"> ODEBRAT ZP</label>
+            <label class="edit-check"><input type="checkbox" id="ef_rp"> ODEBRAT ŘP</label>
+          </div>
+          <div class="edit-form-actions">
+            <button class="admin-btn btn-save"   onclick="SASP.adminSaveNewSub(${ci},${li})">ULOŽIT</button>
+            <button class="admin-btn btn-cancel" onclick="SASP.adminCancelEdit()">ZRUŠIT</button>
+          </div>
+        </div>`;
+    },
+
     _renderExport() {
       return `
         <div class="export-area">
@@ -967,6 +989,265 @@ const SASP = (() => {
             </div>
           </div>
         </div>`;
+    }
+  };
+
+  // ── ChargeModal ──────────────────────────────────────────
+  const ChargeModal = {
+    _gi: null,
+    _si: null,
+
+    open(gi, si) {
+      this._gi = gi;
+      this._si = si;
+      const s = _laws[gi].subs[si];
+      this._render(_laws[gi], s);
+      const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
+                   && s.text.includes('nebo');
+      const needsJail = s.hasJ && !s.isLife && s.fixedJail === null;
+      const needsFine = s.hasF && s.fixedFine === null && (s.minF || 0) > 0;
+      this._setConfirmEnabled(orMode ? false : (!needsJail && !needsFine));
+      document.getElementById('chargeOverlay').style.display = 'flex';
+      setTimeout(() => {
+        this._attachListeners();
+        _spinify(document.getElementById('chargeOverlay'));
+        const first = document.querySelector('#chargeOverlay .cm-input');
+        if (first) first.focus();
+      }, 60);
+    },
+
+    close() {
+      document.getElementById('chargeOverlay').style.display = 'none';
+      this._gi = null;
+      this._si = null;
+    },
+
+    confirm() {
+      if (this._gi === null) return;
+      const s = _laws[this._gi].subs[this._si];
+      const jEl = document.getElementById('cm_jail');
+      const fEl = document.getElementById('cm_fine');
+      const jVal = s.fixedJail !== null ? s.fixedJail
+                 : (jEl ? parseInt(jEl.value) || 0 : 0);
+      const fVal = s.fixedFine !== null ? s.fixedFine
+                 : (fEl ? parseInt(fEl.value) || 0 : 0);
+
+      const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
+                   && s.text.includes('nebo');
+
+      // In OR mode, at least one must be filled
+      if (orMode && jVal === 0 && fVal === 0) {
+        this._setError('cm_jail', 'Vyplňte alespoň vazbu nebo pokutu.');
+        return;
+      }
+
+      // Jail validation (skip range check if OR mode and jail is 0 = user chose fine)
+      if (s.hasJ && !s.isLife && s.fixedJail === null && jEl && jVal > 0) {
+        if (s.minJ > 0 && jVal < s.minJ) {
+          this._setError('cm_jail', `Minimum je ${s.minJ} let (max. ${s.maxJ} let).`);
+          return;
+        }
+        if (s.maxJ > 0 && s.maxJ < 99 && jVal > s.maxJ) {
+          this._setError('cm_jail', `Maximum je ${s.maxJ} let.`);
+          return;
+        }
+      }
+      if (!orMode && s.hasJ && !s.isLife && s.fixedJail === null && jEl && jVal === 0) {
+        this._setError('cm_jail', `Zadejte délku trestu${s.minJ > 0 ? ` (${s.minJ}–${s.maxJ} let)` : ''}.`);
+        return;
+      }
+      this._clearError('cm_jail');
+
+      // Fine validation (skip if OR mode and fine is 0 = user chose jail)
+      if (s.hasF && s.fixedFine === null && fEl && fVal > 0) {
+        const minF = s.minF || 0;
+        const maxF = s.maxF || 0;
+        if (minF > 0 && fVal < minF) {
+          this._setError('cm_fine', `Minimum je ${minF.toLocaleString('cs-CZ')} $ (max. ${maxF.toLocaleString('cs-CZ')} $).`);
+          return;
+        }
+        if (maxF > 0 && fVal > maxF) {
+          this._setError('cm_fine', `Maximum je ${maxF.toLocaleString('cs-CZ')} $.`);
+          return;
+        }
+      }
+      if (!orMode && s.hasF && s.fixedFine === null && fEl && fVal === 0 && (s.minF || 0) > 0) {
+        this._setError('cm_fine', `Zadejte výši pokuty (${(s.minF||0).toLocaleString('cs-CZ')}–${(s.maxF||0).toLocaleString('cs-CZ')} $).`);
+        return;
+      }
+      this._clearError('cm_fine');
+
+      Protocol.add(this._gi, this._si, jVal, fVal);
+    },
+
+    _setConfirmEnabled(enabled) {
+      const btn = document.getElementById('cm_confirm');
+      if (btn) btn.disabled = !enabled;
+    },
+
+    _updateConfirmState() {
+      if (this._gi === null) return;
+      const s = _laws[this._gi].subs[this._si];
+      const jEl = document.getElementById('cm_jail');
+      const fEl = document.getElementById('cm_fine');
+
+      const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
+                   && s.text.includes('nebo');
+
+      let jOk = true, jFilled = false;
+      if (s.hasJ && !s.isLife && s.fixedJail === null && jEl) {
+        const v = parseInt(jEl.value) || 0;
+        jFilled = v > 0;
+        jOk = v === 0 || (
+          (s.minJ <= 0 || v >= s.minJ)
+          && (s.maxJ <= 0 || s.maxJ >= 99 || v <= s.maxJ)
+        );
+      }
+
+      let fOk = true, fFilled = false;
+      if (s.hasF && s.fixedFine === null && fEl) {
+        const v = parseInt(fEl.value) || 0;
+        const minF = s.minF || 0;
+        const maxF = s.maxF || 0;
+        fFilled = v > 0;
+        fOk = v === 0 || (
+          v >= minF && (maxF <= 0 || v <= maxF)
+        );
+      }
+
+      if (orMode) {
+        // At least one filled and whatever is filled must be in range
+        this._setConfirmEnabled((jFilled || fFilled) && jOk && fOk);
+      } else {
+        // Both must be filled (if required) and in range
+        const jReq = s.hasJ && !s.isLife && s.fixedJail === null;
+        const fReq = s.hasF && s.fixedFine === null && (s.minF || 0) > 0;
+        this._setConfirmEnabled(
+          (!jReq || jFilled) && (!fReq || fFilled) && jOk && fOk
+        );
+      }
+    },
+
+    _setError(inputId, msg) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+      el.classList.add('cm-input-error');
+      let err = el.parentElement.querySelector('.cm-error');
+      if (!err) {
+        err = document.createElement('div');
+        err.className = 'cm-error';
+        el.parentElement.appendChild(err);
+      }
+      err.textContent = msg;
+      this._setConfirmEnabled(false);
+    },
+
+    _clearError(inputId) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+      el.classList.remove('cm-input-error');
+      const err = el.parentElement?.querySelector('.cm-error');
+      if (err) err.remove();
+    },
+
+    _attachListeners() {
+      if (this._gi === null) return;
+      const s = _laws[this._gi].subs[this._si];
+      const jEl = document.getElementById('cm_jail');
+      const fEl = document.getElementById('cm_fine');
+
+      if (jEl && s.hasJ && !s.isLife && s.fixedJail === null) {
+        jEl.addEventListener('input', () => {
+          this._clearError('cm_jail');
+          const v = parseInt(jEl.value) || 0;
+          const jOk = v > 0
+            && (s.minJ <= 0 || v >= s.minJ)
+            && (s.maxJ <= 0 || s.maxJ >= 99 || v <= s.maxJ);
+          if (!jOk && v > 0) {
+            if (s.minJ > 0 && v < s.minJ) {
+              this._setError('cm_jail', `Minimum je ${s.minJ} let (max. ${s.maxJ} let).`);
+            } else if (s.maxJ > 0 && s.maxJ < 99 && v > s.maxJ) {
+              this._setError('cm_jail', `Maximum je ${s.maxJ} let.`);
+            }
+          }
+          this._updateConfirmState();
+        });
+      }
+
+      const minF = s.minF || 0;
+      const maxF = s.maxF || 0;
+      if (fEl && s.hasF && s.fixedFine === null) {
+        fEl.addEventListener('input', () => {
+          this._clearError('cm_fine');
+          const v = parseInt(fEl.value) || 0;
+          if (v > 0 && maxF > 0 && v > maxF) {
+            this._setError('cm_fine', `Maximum je ${maxF.toLocaleString('cs-CZ')} $.`);
+          } else if (v > 0 && minF > 0 && v < minF) {
+            this._setError('cm_fine', `Minimum je ${minF.toLocaleString('cs-CZ')} $ (max. ${maxF.toLocaleString('cs-CZ')} $).`);
+          }
+          this._updateConfirmState();
+        });
+      }
+    },
+
+    _render(law, s) {
+      const range = s.isLife && s.minJ > 0 ? `${s.minJ} let – DOŽIVOTÍ`
+                  : s.isLife ? 'DOŽIVOTÍ'
+                  : (s.hasJ && s.minJ > 0 && s.maxJ > 0) ? `${s.minJ}–${s.maxJ} let` : '';
+
+      const badges = [
+        s.isLife   ? '<span class="badge badge-life">DOŽIVOTÍ</span>' : '',
+        s.removeZP ? '<span class="badge badge-zp">ZP — Zbrojní průkaz</span>' : '',
+        s.removeRP ? '<span class="badge badge-rp">ŘP — Řidičský průkaz</span>' : ''
+      ].filter(Boolean).join('');
+
+      let inputsHtml = '';
+
+      if (s.hasJ) {
+        if (s.fixedJail !== null) {
+          inputsHtml += `<div class="cm-field">
+            <label class="cm-label">VAZBA</label>
+            <div class="cm-fixed jail-color">${s.fixedJail}<span class="cm-unit"> let</span></div>
+          </div>`;
+        } else if (s.isLife && s.minJ === 0) {
+          inputsHtml += `<div class="cm-field">
+            <label class="cm-label">VAZBA</label>
+            <div class="cm-fixed" style="color:var(--danger)">DOŽIVOTÍ</div>
+          </div>`;
+        } else {
+          const ph = range ? range : 'zadejte počet let';
+          const maxAttr = s.maxJ > 0 && !s.isLife ? `max="${s.maxJ}"` : '';
+          inputsHtml += `<div class="cm-field">
+            <label class="cm-label">VAZBA (roky)${range ? ` <span class="cm-range-hint">${range}</span>` : ''}</label>
+            <input type="number" id="cm_jail" class="cm-input cm-input-jail"
+              placeholder="${ph}" min="${s.minJ}" ${maxAttr} autocomplete="off">
+          </div>`;
+        }
+      }
+
+      if (s.hasF) {
+        const minF = s.minF || 0;
+        const maxF = s.maxF || 0;
+        const fRange = maxF > 0 ? `${minF.toLocaleString('cs-CZ')}–${maxF.toLocaleString('cs-CZ')} $` : '';
+        if (s.fixedFine !== null) {
+          inputsHtml += `<div class="cm-field">
+            <label class="cm-label">POKUTA</label>
+            <div class="cm-fixed fine-color">${s.fixedFine.toLocaleString('cs-CZ')}<span class="cm-unit"> $</span></div>
+          </div>`;
+        } else {
+          const fPh = fRange ? fRange : 'zadejte výši pokuty';
+          inputsHtml += `<div class="cm-field">
+            <label class="cm-label">POKUTA ($)${fRange ? ` <span class="cm-range-hint cm-range-hint--fine">${fRange}</span>` : ''}</label>
+            <input type="number" id="cm_fine" class="cm-input cm-input-fine"
+              placeholder="${fPh}" min="${minF}" ${maxF > 0 ? `max="${maxF}"` : ''} autocomplete="off">
+          </div>`;
+        }
+      }
+
+      document.getElementById('cm_lawTitle').textContent = law.title;
+      document.getElementById('cm_subLabel').textContent = s.label + ' — ' + s.text;
+      document.getElementById('cm_badges').innerHTML = badges;
+      document.getElementById('cm_inputs').innerHTML = inputsHtml;
     }
   };
 
@@ -1137,7 +1418,98 @@ const SASP = (() => {
     }
   };
 
+  // ── InputDialog ───────────────────────────────────────────
+  const InputDialog = {
+    _cb:     null,
+    _fields: [],
+
+    show(step, title, msg, fields, onConfirm) {
+      this._cb     = onConfirm;
+      this._fields = fields;
+      document.getElementById('idStep').textContent  = step;
+      document.getElementById('idTitle').textContent = title;
+      document.getElementById('idMsg').innerHTML     = msg;
+      document.getElementById('idFields').innerHTML  = fields.map(f => `
+        <div class="modal-input-field">
+          <label>${f.label}</label>
+          <input type="${f.type || 'text'}" class="edit-input" id="id_${f.key}"
+            placeholder="${f.placeholder || ''}" autocomplete="off">
+        </div>`).join('');
+      const overlay = document.getElementById('inputDialogOverlay');
+      overlay.style.display = 'flex';
+      overlay.focus();
+      setTimeout(() => {
+        _spinify(overlay);
+        document.getElementById('id_' + fields[0].key)?.focus();
+      }, 60);
+    },
+
+    confirm() {
+      const vals = {};
+      this._fields.forEach(f => {
+        vals[f.key] = document.getElementById('id_' + f.key)?.value?.trim() || '';
+      });
+      const cb = this._cb;
+      this.close();
+      if (cb) cb(vals);
+    },
+
+    close() {
+      document.getElementById('inputDialogOverlay').style.display = 'none';
+      this._cb     = null;
+      this._fields = [];
+    }
+  };
+
   // ── Utility ───────────────────────────────────────────────
+  function _checkSaveBtn() {
+    const btn = document.getElementById('saveAndCopyBtn');
+    if (!btn) return;
+    const suspectOk =
+      (document.getElementById('suspectFirst')?.value?.trim() || '') !== '' &&
+      (document.getElementById('suspectLast')?.value?.trim()  || '') !== '' &&
+      (document.getElementById('suspectBirth')?.value?.trim() || '') !== '';
+    const notEmpty = _protocol.length > 0;
+    const noErrors = !document.querySelector('#caseEntries .input-error');
+    const ok = suspectOk && notEmpty && noErrors;
+    btn.disabled = !ok;
+    btn.classList.toggle('btn-disabled', !ok);
+  }
+
+  function _spinify(container) {
+    const root = container || document;
+    root.querySelectorAll('input[type=number]:not(.spinified)').forEach(inp => {
+      inp.classList.add('spinified');
+      const isLarge = inp.classList.contains('cm-input');
+      const wrap = document.createElement('div');
+      wrap.className = 'num-spin' + (isLarge ? ' num-spin--lg' : '');
+      inp.parentNode.insertBefore(wrap, inp);
+      wrap.appendChild(inp);
+      const btns = document.createElement('div');
+      btns.className = 'num-spin-btns';
+      btns.innerHTML =
+        '<button type="button" class="num-spin-btn" tabindex="-1" aria-label="Zvýšit"><i class="fa-solid fa-chevron-up"></i></button>' +
+        '<button type="button" class="num-spin-btn" tabindex="-1" aria-label="Snížit"><i class="fa-solid fa-chevron-down"></i></button>';
+      wrap.appendChild(btns);
+      const [up, dn] = btns.querySelectorAll('.num-spin-btn');
+      const step = () => parseFloat(inp.step) || 1;
+      const minV = () => inp.min !== '' ? parseFloat(inp.min) : -Infinity;
+      const maxV = () => inp.max !== '' ? parseFloat(inp.max) :  Infinity;
+      const dispatch = () => inp.dispatchEvent(new Event('input', { bubbles: true }));
+      up.addEventListener('mousedown', e => {
+        e.preventDefault();
+        inp.value = Math.min((parseFloat(inp.value) || 0) + step(), maxV());
+        dispatch();
+      });
+      dn.addEventListener('mousedown', e => {
+        e.preventDefault();
+        const next = (parseFloat(inp.value) || 0) - step();
+        inp.value = Math.max(next, minV());
+        dispatch();
+      });
+    });
+  }
+
   function _esc(str) {
     if (!str) return '';
     return String(str)
@@ -1185,7 +1557,10 @@ const SASP = (() => {
     onSearch() { Render.laws(); },
 
     /* Protocol */
-    addCharge(gi, si) { Protocol.add(gi, si); },
+    addCharge(gi, si)        { ChargeModal.open(gi, si); },
+    openChargeModal(gi, si)  { ChargeModal.open(gi, si); },
+    confirmCharge()          { ChargeModal.confirm(); },
+    closeChargeModal()       { ChargeModal.close(); },
     removeCharge(id) {
       _protocol = _protocol.filter(p => p.id !== id);
       Render.protocol();
@@ -1223,10 +1598,15 @@ const SASP = (() => {
     },
     clearProtocol() {
       if (_protocol.length === 0) return;
-      if (confirm('Vymazat celý protokol? Aktuální případ bude ztracen.')) {
-        _protocol = [];
-        Render.protocol();
-      }
+      Modal.confirm(
+        '<i class="fa-solid fa-folder-open"></i>',
+        'NOVÝ PŘÍPAD',
+        'Opravdu vymazat celý protokol?<br><span class="modal-accent">Aktuální případ bude ztracen.</span>',
+        () => {
+          _protocol = [];
+          Render.protocol();
+        }
+      );
     },
 
     /* About */
@@ -1242,9 +1622,16 @@ const SASP = (() => {
     closeSettings()            { QuickSettings.close(); },
     quickSaveSetting(key, val) { QuickSettings.save(key, val); },
 
+    /* Save button state */
+    checkSaveBtn() { _checkSaveBtn(); },
+
     /* Modal */
     modalYes()   { Modal.yes(); },
     modalClose() { Modal.close(); },
+
+    /* Input Dialog */
+    inputDialogConfirm() { InputDialog.confirm(); },
+    inputDialogClose()   { InputDialog.close(); },
 
     /* Admin – open/close/tabs */
     openAdmin()       { Admin.open(); },
@@ -1276,35 +1663,86 @@ const SASP = (() => {
     },
     adminDelLaw(ci, li) {
       const law = _categories[ci].laws[li];
-      if (!confirm('Smazat zákon: ' + law.title + '?')) return;
-      _categories[ci].laws.splice(li, 1);
+      Modal.confirm(
+        '<i class="fa-solid fa-trash"></i>',
+        'SMAZAT ZÁKON',
+        `Opravdu smazat zákon: <span class="modal-highlight">${_esc(law.title)}</span>?`,
+        () => {
+          _categories[ci].laws.splice(li, 1);
+          _buildFlat();
+          Data.save();
+          Admin._editing = null;
+          Admin._render();
+          Render.laws();
+          UI.toast('Zákon smazán');
+        }
+      );
+    },
+    adminNewLaw(ci) {
+      InputDialog.show(
+        'ADMIN PANEL',
+        'NOVÝ ZÁKON',
+        'Vyplňte informace o novém zákoně:',
+        [
+          { key: 'num',   label: 'ČÍSLO PARAGRAFU', type: 'number', placeholder: 'např. 123' },
+          { key: 'title', label: 'NÁZEV ZÁKONA',    type: 'text',   placeholder: 'např. §123 Název' }
+        ],
+        (vals) => {
+          if (!vals.num || !vals.title) return;
+          _categories[ci].laws.push({
+            id: 'par' + vals.num + '_' + Date.now(),
+            number: parseInt(vals.num) || 0,
+            title: vals.title,
+            description: '',
+            subs: []
+          });
+          _buildFlat();
+          Data.save();
+          Admin._render();
+          Render.laws();
+          UI.toast('✓ Zákon přidán');
+        }
+      );
+    },
+
+    /* Admin – sub CRUD */
+    adminNewSub(ci, li) {
+      Admin._editing = { type: 'newsub', ci, li };
+      Admin._render();
+      // scroll to the form
+      setTimeout(() => {
+        document.getElementById('ef_label')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        document.getElementById('ef_label')?.focus();
+      }, 60);
+    },
+    adminSaveNewSub(ci, li) {
+      const g = (id) => document.getElementById(id);
+      const text = g('ef_text')?.value?.trim();
+      if (!text) { UI.toast('Text nesmí být prázdný!'); return; }
+      const ff = g('ef_fixFine')?.value;
+      const fj = g('ef_fixJail')?.value;
+      _categories[ci].laws[li].subs.push({
+        label:     g('ef_label')?.value?.trim() || '',
+        text,
+        minJ:      parseInt(g('ef_minJ')?.value) || 0,
+        maxJ:      parseInt(g('ef_maxJ')?.value) || 0,
+        fixedFine: (ff !== '' && ff !== null) ? parseInt(ff) : null,
+        fixedJail: (fj !== '' && fj !== null) ? parseInt(fj) : null,
+        hasJ:      g('ef_hasJ')?.checked || false,
+        hasF:      g('ef_hasF')?.checked || false,
+        isLife:    g('ef_isLife')?.checked || false,
+        removeZP:  g('ef_zp')?.checked || false,
+        removeRP:  g('ef_rp')?.checked || false,
+        minF:      0,
+        maxF:      0
+      });
       _buildFlat();
       Data.save();
       Admin._editing = null;
       Admin._render();
       Render.laws();
-      UI.toast('Zákon smazán');
+      UI.toast('✓ Sub-položka přidána');
     },
-    adminNewLaw(ci) {
-      const num = prompt('Číslo paragrafu (číslo):');
-      if (!num) return;
-      const title = prompt('Název zákona (např. §' + num + ' Název):');
-      if (!title) return;
-      _categories[ci].laws.push({
-        id: 'par' + num + '_' + Date.now(),
-        number: parseInt(num) || 0,
-        title: title.trim(),
-        description: '',
-        subs: []
-      });
-      _buildFlat();
-      Data.save();
-      Admin._render();
-      Render.laws();
-      UI.toast('✓ Zákon přidán');
-    },
-
-    /* Admin – sub CRUD */
     adminEditSub(ci, li, si) {
       Admin._editing = { type: 'sub', ci, li, si };
       Admin._render();
@@ -1335,14 +1773,20 @@ const SASP = (() => {
       UI.toast('✓ Sub-položka uložena');
     },
     adminDelSub(ci, li, si) {
-      if (!confirm('Smazat tuto sub-položku?')) return;
-      _categories[ci].laws[li].subs.splice(si, 1);
-      _buildFlat();
-      Data.save();
-      Admin._editing = null;
-      Admin._render();
-      Render.laws();
-      UI.toast('Sub-položka smazána');
+      Modal.confirm(
+        '<i class="fa-solid fa-trash"></i>',
+        'SMAZAT SUB-POLOŽKU',
+        'Opravdu smazat tuto sub-položku?<br><span class="modal-accent">Akce je nevratná.</span>',
+        () => {
+          _categories[ci].laws[li].subs.splice(si, 1);
+          _buildFlat();
+          Data.save();
+          Admin._editing = null;
+          Admin._render();
+          Render.laws();
+          UI.toast('Sub-položka smazána');
+        }
+      );
     },
     adminCancelEdit() {
       Admin._editing = null;
@@ -1397,6 +1841,7 @@ const SASP = (() => {
         p.fine = val;
       }
       _updateTotals();
+      _checkSaveBtn();
     }
   };
 })();
@@ -1418,6 +1863,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Protocol buttons
   document.getElementById('saveAndCopyBtn')
     ?.addEventListener('click', () => SASP.saveAndCopyProtocol());
+
+  // Suspect inputs — recheck save button on every keystroke
+  ['suspectFirst', 'suspectLast', 'suspectBirth'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', () => SASP.checkSaveBtn());
+  });
   document.getElementById('historyBtn')
     ?.addEventListener('click', () => SASP.openHistory());
   document.getElementById('historyClose')
@@ -1454,11 +1904,42 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.admin-tab').forEach(t =>
     t.addEventListener('click', () => SASP.adminSwitchTab(t.dataset.tab)));
 
+  // Charge input modal
+  document.getElementById('cm_confirm')
+    ?.addEventListener('click', () => SASP.confirmCharge());
+  document.getElementById('cm_cancel')
+    ?.addEventListener('click', () => SASP.closeChargeModal());
+  document.getElementById('cm_close')
+    ?.addEventListener('click', () => SASP.closeChargeModal());
+  document.getElementById('chargeOverlay')
+    ?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); SASP.confirmCharge(); }
+    });
+
   // Modal
   document.getElementById('modalYes')
     .addEventListener('click', () => SASP.modalYes());
   document.getElementById('modalNo')
     .addEventListener('click', () => SASP.modalClose());
+  document.getElementById('modalOverlay')
+    ?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const yesBtn = document.getElementById('modalYes');
+        if (yesBtn && yesBtn.style.display !== 'none') SASP.modalYes();
+        else SASP.modalClose();
+      }
+    });
+
+  // Input Dialog
+  document.getElementById('idConfirm')
+    ?.addEventListener('click', () => SASP.inputDialogConfirm());
+  document.getElementById('idCancel')
+    ?.addEventListener('click', () => SASP.inputDialogClose());
+  document.getElementById('inputDialogOverlay')
+    ?.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); SASP.inputDialogConfirm(); }
+    });
 
   // Keyboard shortcuts
   document.addEventListener('keydown', e => {
@@ -1469,11 +1950,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Escape → close modals
     if (e.key === 'Escape') {
+      SASP.closeChargeModal();
       SASP.closeAbout();
       SASP.closeHelp();
       SASP.closeSettings();
       SASP.closeAdmin();
       SASP.modalClose();
+      SASP.inputDialogClose();
       SASP.closeHistory();
     }
     }

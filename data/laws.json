@@ -7,166 +7,644 @@
       "icon": "⚔️",
       "laws": [
         {
-          "id": "par7", "number": 7,
+          "id": "par7",
+          "number": 7,
           "title": "§7 Ublížení na zdraví",
           "description": "Vyhrožování usmrcením, těžkou újmou na zdraví či majetku, takovým způsobem, že to může vzbudit důvodnou obavu druhého",
           "subs": [
-            {"label":"a)","text":"neúmyslně a zbraní – sazba 1–5 let","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"úmyslně a zbraní – sazba 1–5 let","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"úmyslně a zbraní střelnou – sazba 3–10 let","minJ":3,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"d)","text":"úmyslně a zbraní proti úřední osobě – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":15,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"e)","text":"úmyslně a zbraní proti členům záchranných složek při výkonu povolání – odnětím svobody od 10 do 20 let – ODEBRAT Zbrojní Průkaz","minJ":10,"maxJ":20,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "neúmyslně a zbraní – sazba 1–5 let",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "úmyslně a zbraní – sazba 1–5 let",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "úmyslně a zbraní střelnou – sazba 3–10 let",
+              "minJ": 3,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "úmyslně a zbraní proti úřední osobě – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 15,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "e)",
+              "text": "úmyslně a zbraní proti členům záchranných složek při výkonu povolání – odnětím svobody od 10 do 20 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 10,
+              "maxJ": 20,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par8", "number": 8,
+          "id": "par8",
+          "number": 8,
           "title": "§8 Napadení",
           "description": "Násilí na osobě bez použití zbraně",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou ve výši do 2.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"proti úřední osobě je přestupek – pokutou do výše 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"které způsobí vážnou újmu na zdraví – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou ve výši do 2.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 2000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "proti úřední osobě je přestupek – pokutou do výše 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "které způsobí vážnou újmu na zdraví – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par9", "number": 9,
+          "id": "par9",
+          "number": 9,
           "title": "§9 Mučení a jiné nelidské a kruté zacházení",
           "description": "",
           "subs": [
-            {"label":"–","text":"Kruté či jiné zacházení působící jinému tělesné nebo duševní utrpení – odnětím svobody od 1 do 15 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":15,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Kruté či jiné zacházení působící jinému tělesné nebo duševní utrpení – odnětím svobody od 1 do 15 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 15,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par10", "number": 10,
+          "id": "par10",
+          "number": 10,
           "title": "§10 Zabití",
           "description": "",
           "subs": [
-            {"label":"–","text":"Neúmyslné usmrcení osoby v silném rozrušení nebo v důsledku předchozího zavrženíhodného jednání poškozeného – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Neúmyslné usmrcení osoby v silném rozrušení nebo v důsledku předchozího zavrženíhodného jednání poškozeného – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par11", "number": 11,
+          "id": "par11",
+          "number": 11,
           "title": "§11 Pokus o vraždu",
           "description": "Plánování či neúspěšný a úmyslný pokus o usmrcení jiné osoby",
           "subs": [
-            {"label":"–","text":"Plánování či neúspěšně plánovaný a úmyslný pokus o usmrcení jiné osoby – odnětím svobody od 25 let po doživotí – ODEBRAT Zbrojní Průkaz","minJ":25,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Plánování či neúspěšně plánovaný a úmyslný pokus o usmrcení jiné osoby – odnětím svobody od 25 let po doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 25,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par12", "number": 12,
+          "id": "par12",
+          "number": 12,
           "title": "§12 Vražda",
           "description": "",
           "subs": [
-            {"label":"a)","text":"Úmyslné usmrcení jiné osoby – odnětím svobody od 25 let po doživotí – ODEBRAT Zbrojní Průkaz","minJ":25,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"Úmyslné a plánované usmrcení jiné osoby – odnětím svobody na doživotí – ODEBRAT Zbrojní Průkaz","minJ":0,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "Úmyslné usmrcení jiné osoby – odnětím svobody od 25 let po doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 25,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "Úmyslné a plánované usmrcení jiné osoby – odnětím svobody na doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 0,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par13", "number": 13,
+          "id": "par13",
+          "number": 13,
           "title": "§13 Obchodování s lidmi",
           "description": "Úmyslné odepření osobních svobod jedné nebo více osob za účelem jejich prodeje, nákupu či zneužití k nucené práci",
           "subs": [
-            {"label":"–","text":"Obchodování s lidmi – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Obchodování s lidmi – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par14", "number": 14,
+          "id": "par14",
+          "number": 14,
           "title": "§14 Omezování nebo zbavení osobní svobody",
           "description": "Nezákonné bránění či zamezení osobě ve volném pohybu, manipulace s touto osobou",
           "subs": [
-            {"label":"a)","text":"pokud nedošlo k přesunutí osoby – odnětím svobody od 1 do 3 let nebo pokutou do 5.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":3,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"zaměstnanců státních institucí z důvodu výkonu povolání – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":15,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "pokud nedošlo k přesunutí osoby – odnětím svobody od 1 do 3 let nebo pokutou do 5.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 3,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "zaměstnanců státních institucí z důvodu výkonu povolání – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 15,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par15", "number": 15,
+          "id": "par15",
+          "number": 15,
           "title": "§15 Vyhrožování",
           "description": "Vyhrožování usmrcením, těžkou újmou na zdraví či majetku, takovým způsobem, že to může vzbudit důvodnou obavu druhého",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou ve výši do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"s cílem působit na úřední osobu – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou ve výši do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "s cílem působit na úřední osobu – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par16", "number": 16,
+          "id": "par16",
+          "number": 16,
           "title": "§16 Vydírání",
           "description": "",
           "subs": [
-            {"label":"–","text":"Použití násilí, případně pohrůžky násilí či jiné těžké újmy na právech druhého – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Použití násilí, případně pohrůžky násilí či jiné těžké újmy na právech druhého – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par17", "number": 17,
+          "id": "par17",
+          "number": 17,
           "title": "§17 Neoprávněné nakládání s osobními údaji",
           "description": "Neoprávněné zveřejnění, sdělení, zpřístupnění či přisvojení osobních údajů",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou ve výši do 10.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"způsobí-li vážnou újmu nebo za použití médií – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"zaměstnancem státem zřízené instituce – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou ve výši do 10.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "způsobí-li vážnou újmu nebo za použití médií – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "zaměstnancem státem zřízené instituce – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par18", "number": 18,
+          "id": "par18",
+          "number": 18,
           "title": "§18 Zneužití pravomoci",
           "description": "Dle z. č. 006-19 – zneužití postavení či pravomoci k získání výhody, porušení povinností nebo napomáhání protiprávní činnosti",
           "subs": [
-            {"label":"a)","text":"odnětím svobody od 5 do 20 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":20,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"v případě těžké újmy na zdraví – odnětím svobody od 20 let po doživotí – ODEBRAT Zbrojní Průkaz","minJ":20,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "odnětím svobody od 5 do 20 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 20,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "v případě těžké újmy na zdraví – odnětím svobody od 20 let po doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 20,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par19", "number": 19,
+          "id": "par19",
+          "number": 19,
           "title": "§19 Pomluva",
           "description": "Záměrné a vědomé rozšíření nepravdy o jiné osobě či společnosti",
           "subs": [
-            {"label":"a)","text":"v úmyslu způsobit majetkovou škodu nebo společenské znevážení – pokutou do 10.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"v úmyslu způsobit trestní stíhání – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "v úmyslu způsobit majetkovou škodu nebo společenské znevážení – pokutou do 10.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "v úmyslu způsobit trestní stíhání – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par20", "number": 20,
+          "id": "par20",
+          "number": 20,
           "title": "§20 Narušení občanského soužití",
           "description": "",
           "subs": [
-            {"label":"–","text":"Hrubé narušení občanského soužití je přestupek – pokutou ve výši do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Hrubé narušení občanského soužití je přestupek – pokutou ve výši do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par21", "number": 21,
+          "id": "par21",
+          "number": 21,
           "title": "§21 Stalking",
           "description": "Dlouhodobé pronásledování, sledování a obtěžování jiné osoby",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou do výše 10.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"pokud způsobí důvodnou obavu o život nebo zdraví – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou do výše 10.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "pokud způsobí důvodnou obavu o život nebo zdraví – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par22", "number": 22,
+          "id": "par22",
+          "number": 22,
           "title": "§22 Násilí proti skupině obyvatel a proti jednotlivci",
           "description": "",
           "subs": [
-            {"label":"–","text":"Vyhrožování nebo podněcování násilí proti skupině či jednotlivci z rasových, národnostních nebo jiných diskriminačních důvodů – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Vyhrožování nebo podněcování násilí proti skupině či jednotlivci z rasových, národnostních nebo jiných diskriminačních důvodů – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par23", "number": 23,
+          "id": "par23",
+          "number": 23,
           "title": "§23 Nedovolený pohlavní styk a jiné sexuální aktivity",
           "description": "Nedovolený pohlavní styk a jiné sexuální aktivity",
           "subs": [
-            {"label":"a)","text":"incest – jakýkoliv sexuální vztah mezi příbuznými v přímé rodinné vazbě – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"zoofilie – jakákoliv sexuální interakce se zvířaty – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"nekrofilie – jakákoliv sexuální interakce s mrtvým tělem – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"pedofilní jednání – jakákoliv sexuální interakce s dětmi do 14 let věku – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "incest – jakýkoliv sexuální vztah mezi příbuznými v přímé rodinné vazbě – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "zoofilie – jakákoliv sexuální interakce se zvířaty – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "nekrofilie – jakákoliv sexuální interakce s mrtvým tělem – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "pedofilní jednání – jakákoliv sexuální interakce s dětmi do 14 let věku – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par24", "number": 24,
+          "id": "par24",
+          "number": 24,
           "title": "§24 Znásilnění",
           "description": "Pohlavní styk, jiná obdobná sexuální aktivita, či sexuální nátlak proti vůli jiné osoby",
           "subs": [
-            {"label":"a)","text":"je trestný čin – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":15,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"způsobí-li těžkou újmu na zdraví – odnětím svobody od 15 do 20 let – ODEBRAT Zbrojní Průkaz","minJ":15,"maxJ":20,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je trestný čin – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 15,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "způsobí-li těžkou újmu na zdraví – odnětím svobody od 15 do 20 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 15,
+              "maxJ": 20,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -177,90 +655,409 @@
       "icon": "🏚️",
       "laws": [
         {
-          "id": "par25", "number": 25,
+          "id": "par25",
+          "number": 25,
           "title": "§25 Krádež",
           "description": "Přisvojení si cizí věci za účelem osobního obohacení",
           "subs": [
-            {"label":"a)","text":"v hodnotě do 20.000 $ je přestupek – pokutou do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"v hodnotě od 20.001 $ do 200.000 $ – odnětím svobody od 1 do 3 let nebo pokutou od 2.000 $ do 8.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":3,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"v hodnotě nad 200.001 $ – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"krádež bankomatu – odnětím svobody od 1 do 5 let nebo pokutou od 1.000 $ do 5.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "v hodnotě do 20.000 $ je přestupek – pokutou do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "v hodnotě od 20.001 $ do 200.000 $ – odnětím svobody od 1 do 3 let nebo pokutou od 2.000 $ do 8.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 3,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 2000,
+              "maxF": 8000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "v hodnotě nad 200.001 $ – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "krádež bankomatu – odnětím svobody od 1 do 5 let nebo pokutou od 1.000 $ do 5.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 1000,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par26", "number": 26,
+          "id": "par26",
+          "number": 26,
           "title": "§26 Loupež",
           "description": "Získání cizí věci násilím či pohrůžkou násilí",
           "subs": [
-            {"label":"a)","text":"poškozené samoobslužné obchody – odnětím svobody od 1 do 3 let nebo pokutou do 5.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":3,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"poškozené finanční instituce nebo klenotnictví – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"obecná loupež – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"poškozená centrální banka – odnětím svobody od 15 do 30 let – ODEBRAT Zbrojní Průkaz","minJ":15,"maxJ":30,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "poškozené samoobslužné obchody – odnětím svobody od 1 do 3 let nebo pokutou do 5.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 3,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "poškozené finanční instituce nebo klenotnictví – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "obecná loupež – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "poškozená centrální banka – odnětím svobody od 15 do 30 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 15,
+              "maxJ": 30,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par27", "number": 27,
+          "id": "par27",
+          "number": 27,
           "title": "§27 Nedovolené používání vozidla",
           "description": "",
           "subs": [
-            {"label":"–","text":"Vloupání se do vozidla nebo zmocnění se vozidla je přestupek – pokutou do 3.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Vloupání se do vozidla nebo zmocnění se vozidla je přestupek – pokutou do 3.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par28", "number": 28,
+          "id": "par28",
+          "number": 28,
           "title": "§28 Zpronevěra",
           "description": "Přisvojení si cizího majetku svěřeného do péče nebo správy",
           "subs": [
-            {"label":"a)","text":"v hodnotě do 20.000 $ je přestupek – pokutou od 1.000 $ do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"v hodnotě od 20.001 $ do 200.000 $ – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"v hodnotě nad 200.001 $ – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "v hodnotě do 20.000 $ je přestupek – pokutou od 1.000 $ do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 1000,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "v hodnotě od 20.001 $ do 200.000 $ – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "v hodnotě nad 200.001 $ – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par29", "number": 29,
+          "id": "par29",
+          "number": 29,
           "title": "§29 Neoprávněný vstup",
           "description": "Neoprávněné vniknutí do uzavřeného prostoru, na pozemek, či do nemovitosti",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou do 3.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"opakovaně v krátké době (14 dní IRL) – odnětím svobody od 1 do 3 let nebo pokutou od 1.000 $ do 5.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":3,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"s překonáním překážky na registrované nemovitosti dle z.č. 004-21 – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"státních institucí – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou do 3.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "opakovaně v krátké době (14 dní IRL) – odnětím svobody od 1 do 3 let nebo pokutou od 1.000 $ do 5.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 3,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 1000,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "s překonáním překážky na registrované nemovitosti dle z.č. 004-21 – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "státních institucí – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par30", "number": 30,
+          "id": "par30",
+          "number": 30,
           "title": "§30 Podvod",
           "description": "Uvedení v omyl nebo využití nevědomosti k získání prospěchu či obohacení",
           "subs": [
-            {"label":"a)","text":"v pracovněprávním vztahu je přestupek – pokutou do 20.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"obecný podvod – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"s úmyslem poškodit výdělečnou činnost dle z.č. 036-25 – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"s úmyslem předstírat příslušnost ke státní složce – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":15,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "v pracovněprávním vztahu je přestupek – pokutou do 20.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 20000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "obecný podvod – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "s úmyslem poškodit výdělečnou činnost dle z.č. 036-25 – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "s úmyslem předstírat příslušnost ke státní složce – odnětím svobody od 5 do 15 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 15,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par31", "number": 31,
+          "id": "par31",
+          "number": 31,
           "title": "§31 Smluvní podvod",
           "description": "",
           "subs": [
-            {"label":"–","text":"Uvedení nepravdivých nebo hrubě zkreslených údajů při sjednání smlouvy – odnětím svobody od 1 do 10 let nebo pokutou do 10.000 $","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Uvedení nepravdivých nebo hrubě zkreslených údajů při sjednání smlouvy – odnětím svobody od 1 do 10 let nebo pokutou do 10.000 $",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par32", "number": 32,
+          "id": "par32",
+          "number": 32,
           "title": "§32 Vandalismus",
           "description": "Svévolné poškozování a ničení veřejného či soukromého majetku",
           "subs": [
-            {"label":"a)","text":"škoda v hodnotě do 20.000 $ je přestupek – pokutou do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"škoda v hodnotě nad 20.001 $ – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "škoda v hodnotě do 20.000 $ je přestupek – pokutou do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "škoda v hodnotě nad 20.001 $ – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par33", "number": 33,
+          "id": "par33",
+          "number": 33,
           "title": "§33 Žhářství",
           "description": "",
           "subs": [
-            {"label":"–","text":"Úmyslné založení požáru – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Úmyslné založení požáru – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -271,107 +1068,383 @@
       "icon": "🚗",
       "laws": [
         {
-          "id": "par34", "number": 34,
+          "id": "par34",
+          "number": 34,
           "title": "§34 Zavinění dopravní nehody",
           "description": "Zavinění dopravní nehody",
           "subs": [
-            {"label":"a)","text":"bez zranění je přestupek – pokutou od 500 $ do 2.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"se zraněním jiné osoby je přestupek – pokutou od 2.000 $ do 10.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"s těžkou újmou na zdraví – odnětím svobody od 1 do 5 let a odebráním ŘP – ODEBRAT Řidičský Průkaz – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":true},
-            {"label":"d)","text":"pod vlivem alkoholu nebo omamných látek – odnětím svobody od 1 do 5 let + pokutou do 10.000 $ a odebráním ŘP – ODEBRAT Řidičský Průkaz – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":true}
+            {
+              "label": "a)",
+              "text": "bez zranění je přestupek – pokutou od 500 $ do 2.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 500,
+              "maxF": 2000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "se zraněním jiné osoby je přestupek – pokutou od 2.000 $ do 10.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 2000,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "s těžkou újmou na zdraví – odnětím svobody od 1 do 5 let a odebráním ŘP – ODEBRAT Řidičský Průkaz – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": true
+            },
+            {
+              "label": "d)",
+              "text": "pod vlivem alkoholu nebo omamných látek – odnětím svobody od 1 do 5 let + pokutou do 10.000 $ a odebráním ŘP – ODEBRAT Řidičský Průkaz – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": true
+            }
           ]
         },
         {
-          "id": "par35", "number": 35,
+          "id": "par35",
+          "number": 35,
           "title": "§35 Řízení vozidla bez řidičského oprávnění",
           "description": "",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou do 3.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"opakovaně (14 dní IRL) – peněžitým trestem do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou do 3.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "opakovaně (14 dní IRL) – peněžitým trestem do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par36", "number": 36,
+          "id": "par36",
+          "number": 36,
           "title": "§36 Řízení pod vlivem alkoholu, omamných a psychotropních látek",
           "description": "",
           "subs": [
-            {"label":"–","text":"Řízení vozidla pod vlivem alkoholu nebo omamné látky je přestupek – pokutou od 3.000 $ do 7.000 $ a odebráním ŘP – ODEBRAT Řidičský Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":true}
+            {
+              "label": "–",
+              "text": "Řízení vozidla pod vlivem alkoholu nebo omamné látky je přestupek – pokutou od 3.000 $ do 7.000 $ a odebráním ŘP – ODEBRAT Řidičský Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 3000,
+              "maxF": 7000,
+              "removeZP": false,
+              "removeRP": true
+            }
           ]
         },
         {
-          "id": "par37", "number": 37,
+          "id": "par37",
+          "number": 37,
           "title": "§37 Překročení rychlostního limitu",
           "description": "Překročení nejvyšší povolené rychlosti",
           "subs": [
-            {"label":"a)","text":"do 15 mph je přestupek – pokutou 500 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":500,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"od 16 mph do 30 mph je přestupek – pokutou 1.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":1000,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"od 31 mph je přestupek – pokutou 2.000 $ a odebráním ŘP dle z.č. 001-20 §26 – ODEBRAT Řidičský Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":2000,"fixedJail":null,"removeZP":false,"removeRP":true}
+            {
+              "label": "a)",
+              "text": "do 15 mph je přestupek – pokutou 500 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 500,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "od 16 mph do 30 mph je přestupek – pokutou 1.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 1000,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "od 31 mph je přestupek – pokutou 2.000 $ a odebráním ŘP dle z.č. 001-20 §26 – ODEBRAT Řidičský Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 2000,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": true
+            }
           ]
         },
         {
-          "id": "par38", "number": 38,
+          "id": "par38",
+          "number": 38,
           "title": "§38 Držení komunikačního zařízení za jízdy",
           "description": "",
           "subs": [
-            {"label":"–","text":"Manipulování s hovorovým zařízením během řízení vozidla je přestupek – pokutou 200 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":200,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Manipulování s hovorovým zařízením během řízení vozidla je přestupek – pokutou 200 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 200,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par39", "number": 39,
+          "id": "par39",
+          "number": 39,
           "title": "§39 Jízda bez použití bezpečnostních prvků",
           "description": "Jízda ve vozidle",
           "subs": [
-            {"label":"a)","text":"bez přilby (kat. A) nebo bez bezpečnostních pásů (kat. B, C, D) je přestupek – pokutou do 500 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"s nedostatečným osvětlením je přestupek – pokutou do 400 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "bez přilby (kat. A) nebo bez bezpečnostních pásů (kat. B, C, D) je přestupek – pokutou do 500 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 500,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "s nedostatečným osvětlením je přestupek – pokutou do 400 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 400,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par40", "number": 40,
+          "id": "par40",
+          "number": 40,
           "title": "§40 Řízení technicky nezpůsobilého vozidla",
           "description": "",
           "subs": [
-            {"label":"–","text":"Řízení vozidla nesplňujícího technické požadavky dle z.č. 001-20 je přestupek – pokutou od 200 $ do 25.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Řízení vozidla nesplňujícího technické požadavky dle z.č. 001-20 je přestupek – pokutou od 200 $ do 25.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 200,
+              "maxF": 25000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par41", "number": 41,
+          "id": "par41",
+          "number": 41,
           "title": "§41 Převážení nepovoleného počtu osob",
           "description": "",
           "subs": [
-            {"label":"–","text":"Převážení více osob než k čemuž je vozidlo přizpůsobeno je přestupek – pokutou od 200 $ do 1.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Převážení více osob než k čemuž je vozidlo přizpůsobeno je přestupek – pokutou od 200 $ do 1.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 200,
+              "maxF": 1000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par42", "number": 42,
+          "id": "par42",
+          "number": 42,
           "title": "§42 Nerespektování dopravního značení",
           "description": "",
           "subs": [
-            {"label":"–","text":"Porušení pravidel silničního provozu stanovených značkami nebo signály je přestupek – pokutou od 200 $ do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Porušení pravidel silničního provozu stanovených značkami nebo signály je přestupek – pokutou od 200 $ do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 200,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par43", "number": 43,
+          "id": "par43",
+          "number": 43,
           "title": "§43 Zneužití zvukové výstrahy vozidla",
           "description": "",
           "subs": [
-            {"label":"–","text":"Využívání zvukové výstrahy vozidla v rozporu s jejím účelem je přestupek – pokutou 200 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":200,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Využívání zvukové výstrahy vozidla v rozporu s jejím účelem je přestupek – pokutou 200 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 200,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par44", "number": 44,
+          "id": "par44",
+          "number": 44,
           "title": "§44 Obecné ohrožení",
           "description": "Vydání pěti a více osob v nebezpečí smrti nebo těžké újmy na zdraví",
           "subs": [
-            {"label":"a)","text":"při řízení vozidla je přestupek – pokutou do 3.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"střelnou či jinou zbraní – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "při řízení vozidla je přestupek – pokutou do 3.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "střelnou či jinou zbraní – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par45", "number": 45,
+          "id": "par45",
+          "number": 45,
           "title": "§45 Neposkytnutí první pomoci",
           "description": "",
           "subs": [
-            {"label":"–","text":"Neposkytnutí první pomoci dle §8, z.č. 001-26 – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Neposkytnutí první pomoci dle §8, z.č. 001-26 – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -382,21 +1455,77 @@
       "icon": "🔫",
       "laws": [
         {
-          "id": "par46", "number": 46,
+          "id": "par46",
+          "number": 46,
           "title": "§46 Nedovolené ozbrojování",
           "description": "Vlastnictví a užívání zbraně, výbušniny nebo střeliva bez příslušného oprávnění dle z.č. 005-20",
           "subs": [
-            {"label":"a)","text":"zbraň nebo střelivo v kategorii ZP T1 – peněžitým trestem do 5.000 $ – ODEBRAT Zbrojní Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"obecné nedovolené ozbrojování – odnětím svobody od 1 do 15 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":15,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"za účelem prodeje a distribuce – odnětím svobody od 20 let po doživotí – ODEBRAT Zbrojní Průkaz","minJ":20,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "zbraň nebo střelivo v kategorii ZP T1 – peněžitým trestem do 5.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "obecné nedovolené ozbrojování – odnětím svobody od 1 do 15 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 15,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "za účelem prodeje a distribuce – odnětím svobody od 20 let po doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 20,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par47", "number": 47,
+          "id": "par47",
+          "number": 47,
           "title": "§47 Delikty na úseku zbraní a střeliva",
           "description": "",
           "subs": [
-            {"label":"–","text":"Porušení předpisu stanoveného v z.č. 005-20 nespadající pod §46 je přestupek – pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Porušení předpisu stanoveného v z.č. 005-20 nespadající pod §46 je přestupek – pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -407,56 +1536,307 @@
       "icon": "💊",
       "laws": [
         {
-          "id": "par48", "number": 48,
+          "id": "par48",
+          "number": 48,
           "title": "§48 Výroba drog",
           "description": "Nelegální výroba nebo pěstování látek kategorie A, B, C, D, E s výjimkou marihuany",
           "subs": [
-            {"label":"a)","text":"do 50 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"od 50 gramů – odnětím svobody od 1 do 10 let + pokutou do 50.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"od 1.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 500.000 $ – ODEBRAT Zbrojní Průkaz","minJ":10,"maxJ":99,"isLife":true,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "do 50 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "od 50 gramů – odnětím svobody od 1 do 10 let + pokutou do 50.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 50000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "od 1.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 500.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 10,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 500000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par49", "number": 49,
+          "id": "par49",
+          "number": 49,
           "title": "§49 Pěstování marihuany",
           "description": "Nelegální pěstování a zpracování marihuany",
           "subs": [
-            {"label":"a)","text":"do 100 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"od 100 gramů – odnětím svobody od 1 do 10 let + pokutou do 50.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"od 2.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 500.000 $ – ODEBRAT Zbrojní Průkaz","minJ":10,"maxJ":99,"isLife":true,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "do 100 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "od 100 gramů – odnětím svobody od 1 do 10 let + pokutou do 50.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 50000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "od 2.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 500.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 10,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 500000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par50", "number": 50,
+          "id": "par50",
+          "number": 50,
           "title": "§50 Držení drog",
           "description": "Nelegální držení látek kategorie A, B, C, D, E s výjimkou marihuany",
           "subs": [
-            {"label":"a)","text":"do 6 gramů je přestupek – pokutou 1.000 $ a zabavením","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":1000,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"nad 6 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 5.000 $ a zabavením – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"od 50 gramů – odnětím svobody od 1 do 10 let + pokutou do 25.000 $ a zabavením – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"od 1.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 250.000 $ a zabavením – ODEBRAT Zbrojní Průkaz","minJ":10,"maxJ":99,"isLife":true,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "do 6 gramů je přestupek – pokutou 1.000 $ a zabavením",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 1000,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "nad 6 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 5.000 $ a zabavením – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "od 50 gramů – odnětím svobody od 1 do 10 let + pokutou do 25.000 $ a zabavením – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 25000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "od 1.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 250.000 $ a zabavením – ODEBRAT Zbrojní Průkaz",
+              "minJ": 10,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 250000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par51", "number": 51,
+          "id": "par51",
+          "number": 51,
           "title": "§51 Držení marihuany",
           "description": "Nelegální držení nebo přechovávání marihuany",
           "subs": [
-            {"label":"a)","text":"od 6 gramů je přestupek – pokutou 500 $ a zabavením","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":500,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"od 12 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 5.000 $ a zabavením","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"od 200 gramů – odnětím svobody od 1 do 10 let + pokutou do 25.000 $ a zabavením","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"d)","text":"od 2.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 250.000 $ a zabavením","minJ":10,"maxJ":99,"isLife":true,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "od 6 gramů je přestupek – pokutou 500 $ a zabavením",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 500,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "od 12 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 5.000 $ a zabavením",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "od 200 gramů – odnětím svobody od 1 do 10 let + pokutou do 25.000 $ a zabavením",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 25000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "od 2.000 gramů – odnětím svobody od 10 let po doživotí + pokutou do 250.000 $ a zabavením",
+              "minJ": 10,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 250000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par52", "number": 52,
+          "id": "par52",
+          "number": 52,
           "title": "§52 Dealing a prodej",
           "description": "Nelegální distribuce a prodej látek kategorie A, B, C, D, E",
           "subs": [
-            {"label":"a)","text":"do 50 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"od 50 do 1.000 gramů – odnětím svobody od 5 do 20 let + pokutou do 100.000 $ – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":20,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"od 1.000 gramů – odnětím svobody od 20 let po doživotí + pokutou do 1.000.000 $ – ODEBRAT Zbrojní Průkaz","minJ":20,"maxJ":99,"isLife":true,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"od 5 gramů, pachatel jako zaměstnanec státní organizace – odnětím svobody od 5 let po doživotí – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "do 50 gramů – odnětím svobody od 1 do 5 let nebo pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "od 50 do 1.000 gramů – odnětím svobody od 5 do 20 let + pokutou do 100.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 20,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 100000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "od 1.000 gramů – odnětím svobody od 20 let po doživotí + pokutou do 1.000.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 20,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 1000000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "od 5 gramů, pachatel jako zaměstnanec státní organizace – odnětím svobody od 5 let po doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -467,96 +1847,315 @@
       "icon": "⚖️",
       "laws": [
         {
-          "id": "par53", "number": 53,
+          "id": "par53",
+          "number": 53,
           "title": "§53 Korupce",
           "description": "",
           "subs": [
-            {"label":"–","text":"Přijetí, nabídnutí, slíbení nebo žádání úplatku – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Přijetí, nabídnutí, slíbení nebo žádání úplatku – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par54", "number": 54,
+          "id": "par54",
+          "number": 54,
           "title": "§54 Nezaplacení pokuty",
           "description": "Nezaplacení pokuty přidělené státní institucí do 14 dnů od rozhodnutí v celkové výši",
           "subs": [
-            {"label":"a)","text":"do 10.000 $ je přestupek – pokutou 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":5000,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"od 10.001 $ do 100.000 $ – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"nad 100.001 $ – odnětím svobody od 10 do 20 let – ODEBRAT Zbrojní Průkaz","minJ":10,"maxJ":20,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "do 10.000 $ je přestupek – pokutou 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 5000,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "od 10.001 $ do 100.000 $ – odnětím svobody od 1 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "nad 100.001 $ – odnětím svobody od 10 do 20 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 10,
+              "maxJ": 20,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par55", "number": 55,
+          "id": "par55",
+          "number": 55,
           "title": "§55 Opovrhování soudem",
           "description": "",
           "subs": [
-            {"label":"–","text":"Úmyslné vyrušování soudního jednání nebo nerespektování nařízení soudu – odnětím svobody od 1 do 10 let nebo pokutou do 100.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Úmyslné vyrušování soudního jednání nebo nerespektování nařízení soudu – odnětím svobody od 1 do 10 let nebo pokutou do 100.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 100000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par56", "number": 56,
+          "id": "par56",
+          "number": 56,
           "title": "§56 Maření omezení",
           "description": "",
           "subs": [
-            {"label":"–","text":"Útěk mimo prostory určené k výkonu trestu, vazby či zadržení – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Útěk mimo prostory určené k výkonu trestu, vazby či zadržení – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par57", "number": 57,
+          "id": "par57",
+          "number": 57,
           "title": "§57 Ovlivňování spravedlnosti",
           "description": "",
           "subs": [
-            {"label":"a)","text":"klást odpor nebo bránit výkonu zákonných povinností státní složky – odnětím svobody od 1 do 5 let + pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"úmyslné ovlivňování účastníků řízení nebo důkazů – odnětím svobody od 1 do 10 let + pokutou do 25.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"úmyslné ztěžování identifikace pachatele – odnětím svobody od 1 do 10 let + pokutou do 250.000 $ – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":10,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "klást odpor nebo bránit výkonu zákonných povinností státní složky – odnětím svobody od 1 do 5 let + pokutou do 10.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "úmyslné ovlivňování účastníků řízení nebo důkazů – odnětím svobody od 1 do 10 let + pokutou do 25.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 25000,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "úmyslné ztěžování identifikace pachatele – odnětím svobody od 1 do 10 let + pokutou do 250.000 $ – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 250000,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par58", "number": 58,
+          "id": "par58",
+          "number": 58,
           "title": "§58 Útěk",
           "description": "Unikání před příslušníky státních ozbrojených složek přes výzvu k zanechání protiprávního jednání",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou do 3.000 $ – ODEBRAT Řidičský Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":true},
-            {"label":"b)","text":"v přímém souběhu s dalším trestným činem – odnětím svobody od 1 do 3 let nebo pokutou do 5.000 $ – ODEBRAT Zbrojní Průkaz – ODEBRAT Řidičský Průkaz","minJ":1,"maxJ":3,"isLife":false,"hasJ":true,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":true}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou do 3.000 $ – ODEBRAT Řidičský Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": true
+            },
+            {
+              "label": "b)",
+              "text": "v přímém souběhu s dalším trestným činem – odnětím svobody od 1 do 3 let nebo pokutou do 5.000 $ – ODEBRAT Zbrojní Průkaz – ODEBRAT Řidičský Průkaz",
+              "minJ": 1,
+              "maxJ": 3,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": true,
+              "removeRP": true
+            }
           ]
         },
         {
-          "id": "par59", "number": 59,
+          "id": "par59",
+          "number": 59,
           "title": "§59 Neuposlechnutí výzvy úřední osoby",
           "description": "",
           "subs": [
-            {"label":"–","text":"Neuposlechnutí zákonné výzvy či nařízení úřední osoby nebo státní instituce je přestupek – pokutou do 3.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Neuposlechnutí zákonné výzvy či nařízení úřední osoby nebo státní instituce je přestupek – pokutou do 3.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par60", "number": 60,
+          "id": "par60",
+          "number": 60,
           "title": "§60 Vyhýbání se spravedlnosti",
           "description": "",
           "subs": [
-            {"label":"–","text":"Úmyslné vyhýbání se trestu – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Úmyslné vyhýbání se trestu – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par61", "number": 61,
+          "id": "par61",
+          "number": 61,
           "title": "§61 Zneužití tísňové linky",
           "description": "",
           "subs": [
-            {"label":"–","text":"Záměrné volání na tísňovou linku bez skutečného ohrožení je přestupek – pokutou do 10.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Záměrné volání na tísňovou linku bez skutečného ohrožení je přestupek – pokutou do 10.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par62", "number": 62,
+          "id": "par62",
+          "number": 62,
           "title": "§62 Zahalování",
           "description": "",
           "subs": [
-            {"label":"–","text":"Zahalování obličeje za účelem skrytí identity na veřejných shromážděních nebo v prostorách státních institucí je přestupek – pokutou 2.500 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":2500,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Zahalování obličeje za účelem skrytí identity na veřejných shromážděních nebo v prostorách státních institucí je přestupek – pokutou 2.500 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": 2500,
+              "fixedJail": null,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par102", "number": 102,
+          "id": "par102",
+          "number": 102,
           "title": "§102 Terorismus",
           "description": "",
           "subs": [
-            {"label":"–","text":"Jakákoliv forma terorismu dle z.č. 018-25 – odnětím svobody od 20 let po doživotí – ODEBRAT Zbrojní Průkaz","minJ":20,"maxJ":99,"isLife":true,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Jakákoliv forma terorismu dle z.č. 018-25 – odnětím svobody od 20 let po doživotí – ODEBRAT Zbrojní Průkaz",
+              "minJ": 20,
+              "maxJ": 99,
+              "isLife": true,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -567,36 +2166,197 @@
       "icon": "🦌",
       "laws": [
         {
-          "id": "par68", "number": 68,
+          "id": "par68",
+          "number": 68,
           "title": "§68 Pytláctví",
           "description": "",
           "subs": [
-            {"label":"a)","text":"usmrcení do 5 kusů lovné zvěře bez platného ZP T3 je přestupek – pokutou do 3.500 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"usmrcení více než 5 kusů lovné zvěře bez ZP T3 – odnětím svobody od 1 do 3 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":3,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"usmrcení chráněné zvěře je přestupek – pokutou do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"d)","text":"usmrcení více než 3 kusů chráněné zvěře – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"e)","text":"lov mimo oblasti k tomu určené je přestupek – pokutou do 3.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "usmrcení do 5 kusů lovné zvěře bez platného ZP T3 je přestupek – pokutou do 3.500 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3500,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "usmrcení více než 5 kusů lovné zvěře bez ZP T3 – odnětím svobody od 1 do 3 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 3,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "usmrcení chráněné zvěře je přestupek – pokutou do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "usmrcení více než 3 kusů chráněné zvěře – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "e)",
+              "text": "lov mimo oblasti k tomu určené je přestupek – pokutou do 3.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par69", "number": 69,
+          "id": "par69",
+          "number": 69,
           "title": "§69 Nezodpovědný lov",
           "description": "Nezodpovědný lov je trestán",
           "subs": [
-            {"label":"a)","text":"usmrcení lovné zvěře jinou zbraní než loveckou je přestupek – pokutou do 3.500 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"lov a usmrcení zvěře bez účelu získání masa, kůže či jiného produktu je přestupek – pokutou do 2.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"lovení směrem k obytné části je přestupek – pokutou do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"d)","text":"lovení bez reflexních prvků je přestupek – pokutou do 500 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "usmrcení lovné zvěře jinou zbraní než loveckou je přestupek – pokutou do 3.500 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 3500,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "lov a usmrcení zvěře bez účelu získání masa, kůže či jiného produktu je přestupek – pokutou do 2.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 2000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "lovení směrem k obytné části je přestupek – pokutou do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "lovení bez reflexních prvků je přestupek – pokutou do 500 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 500,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par70", "number": 70,
+          "id": "par70",
+          "number": 70,
           "title": "§70 Násilí na zvířatech",
           "description": "",
           "subs": [
-            {"label":"a)","text":"úmyslné ublížení na zdraví zvířete – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"b)","text":"úmyslné týrání nebo způsobení těžké újmy nebo smrti zvířete – odnětím svobody od 1 do 7 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":7,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"c)","text":"ublížení zvířeti ve službách státní instituce – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz","minJ":5,"maxJ":10,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "úmyslné ublížení na zdraví zvířete – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "úmyslné týrání nebo způsobení těžké újmy nebo smrti zvířete – odnětím svobody od 1 do 7 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 7,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "ublížení zvířeti ve službách státní instituce – odnětím svobody od 5 do 10 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 5,
+              "maxJ": 10,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -607,64 +2367,235 @@
       "icon": "🚢",
       "laws": [
         {
-          "id": "par71", "number": 71,
+          "id": "par71",
+          "number": 71,
           "title": "§71 Nedovolené používání vodního plavidla",
           "description": "",
           "subs": [
-            {"label":"–","text":"Vloupání se nebo zmocnění se vodního plavidla bez ohledu na hodnotu je přestupek – pokutou do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":5000,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Vloupání se nebo zmocnění se vodního plavidla bez ohledu na hodnotu je přestupek – pokutou do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par72", "number": 72,
+          "id": "par72",
+          "number": 72,
           "title": "§72 Zavinění námořní nehody",
           "description": "",
           "subs": [
-            {"label":"a)","text":"bez zranění je přestupek – pokutou do 30.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"se zraněním jiné osoby je přestupek – pokutou do 60.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"c)","text":"s těžkou újmou na zdraví – trest určuje SZ ve spolupráci se SMA – ODEBRAT Zbrojní Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false},
-            {"label":"d)","text":"pod vlivem omamné nebo psychotropní látky – trest určuje SZ ve spolupráci se SMA – ODEBRAT Zbrojní Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "bez zranění je přestupek – pokutou do 30.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 30000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "se zraněním jiné osoby je přestupek – pokutou do 60.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 60000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "c)",
+              "text": "s těžkou újmou na zdraví – trest určuje SZ ve spolupráci se SMA – ODEBRAT Zbrojní Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            },
+            {
+              "label": "d)",
+              "text": "pod vlivem omamné nebo psychotropní látky – trest určuje SZ ve spolupráci se SMA – ODEBRAT Zbrojní Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par73", "number": 73,
+          "id": "par73",
+          "number": 73,
           "title": "§73 Řízení lodě bez příslušného oprávnění",
           "description": "Řízení vodního plavidla bez příslušného oprávnění dle §6, z.č. 001-23",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou od 2.000 $ do 10.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"opakovaně (14 dní IRL) je přestupek – pokutou od 5.000 $ do 15.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou od 2.000 $ do 10.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 2000,
+              "maxF": 10000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "opakovaně (14 dní IRL) je přestupek – pokutou od 5.000 $ do 15.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 5000,
+              "maxF": 15000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par74", "number": 74,
+          "id": "par74",
+          "number": 74,
           "title": "§74 Užívání vodního plavidla bez technické způsobilosti",
           "description": "Řízení vodního plavidla s neplatnou nebo propadlou technickou prohlídkou dle §4, z.č. 001-23",
           "subs": [
-            {"label":"a)","text":"je přestupek – pokutou do 5.000 $ pro kapitána a do 20.000 $ pro provozovatele","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false},
-            {"label":"b)","text":"opakovaně (14 dní IRL) – pokutou do 15.000 $ pro kapitána a do 50.000 $ pro provozovatele","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "a)",
+              "text": "je přestupek – pokutou do 5.000 $ pro kapitána a do 20.000 $ pro provozovatele",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 20000,
+              "removeZP": false,
+              "removeRP": false
+            },
+            {
+              "label": "b)",
+              "text": "opakovaně (14 dní IRL) – pokutou do 15.000 $ pro kapitána a do 50.000 $ pro provozovatele",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 50000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par75", "number": 75,
+          "id": "par75",
+          "number": 75,
           "title": "§75 Řízení plavidla pod vlivem alkoholu nebo omamných látek",
           "description": "",
           "subs": [
-            {"label":"–","text":"Řízení plavidla pod vlivem alkoholu nebo omamné látky je přestupek – pokutou do 20.000 $ a odebráním oprávnění – ODEBRAT Řidičský Průkaz","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":true}
+            {
+              "label": "–",
+              "text": "Řízení plavidla pod vlivem alkoholu nebo omamné látky je přestupek – pokutou do 20.000 $ a odebráním oprávnění – ODEBRAT Řidičský Průkaz",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 20000,
+              "removeZP": false,
+              "removeRP": true
+            }
           ]
         },
         {
-          "id": "par76", "number": 76,
+          "id": "par76",
+          "number": 76,
           "title": "§76 Nepovolený počet přepravovaných osob",
           "description": "",
           "subs": [
-            {"label":"–","text":"Převážení více osob než k čemuž je plavidlo technicky přizpůsobeno je přestupek – pokutou od 500 $ do 2.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Převážení více osob než k čemuž je plavidlo technicky přizpůsobeno je přestupek – pokutou od 500 $ do 2.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 500,
+              "maxF": 2000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par77", "number": 77,
+          "id": "par77",
+          "number": 77,
           "title": "§77 Nedovolené ukotvení lodě",
           "description": "",
           "subs": [
-            {"label":"–","text":"Ukotvení lodě v oblastech, kde se nacházejí mušle a korály je přestupek – pokutou do 5.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Ukotvení lodě v oblastech, kde se nacházejí mušle a korály je přestupek – pokutou do 5.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 0,
+              "maxF": 5000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         }
       ]
@@ -675,19 +2606,47 @@
       "icon": "🗳️",
       "laws": [
         {
-          "id": "par100", "number": 100,
+          "id": "par100",
+          "number": 100,
           "title": "§100 Maření přípravy a průběhu voleb",
           "description": "",
           "subs": [
-            {"label":"–","text":"Maření přípravy a průběhu voleb dle z.č. 002-20 – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz","minJ":1,"maxJ":5,"isLife":false,"hasJ":true,"hasF":false,"fixedFine":null,"fixedJail":null,"removeZP":true,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Maření přípravy a průběhu voleb dle z.č. 002-20 – odnětím svobody od 1 do 5 let – ODEBRAT Zbrojní Průkaz",
+              "minJ": 1,
+              "maxJ": 5,
+              "isLife": false,
+              "hasJ": true,
+              "hasF": false,
+              "fixedFine": null,
+              "fixedJail": null,
+              "removeZP": true,
+              "removeRP": false
+            }
           ]
         },
         {
-          "id": "par101", "number": 101,
+          "id": "par101",
+          "number": 101,
           "title": "§101 Agitace",
           "description": "",
           "subs": [
-            {"label":"–","text":"Agitace ve volební místnosti a jejím bezprostředním okolí dle z.č. 002-20 je přestupek – pokutou od 10.000 $ do 25.000 $","minJ":0,"maxJ":0,"isLife":false,"hasJ":false,"hasF":true,"fixedFine":null,"fixedJail":null,"removeZP":false,"removeRP":false}
+            {
+              "label": "–",
+              "text": "Agitace ve volební místnosti a jejím bezprostředním okolí dle z.č. 002-20 je přestupek – pokutou od 10.000 $ do 25.000 $",
+              "minJ": 0,
+              "maxJ": 0,
+              "isLife": false,
+              "hasJ": false,
+              "hasF": true,
+              "fixedFine": null,
+              "fixedJail": null,
+              "minF": 10000,
+              "maxF": 25000,
+              "removeZP": false,
+              "removeRP": false
+            }
           ]
         }
       ]

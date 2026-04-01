@@ -297,7 +297,7 @@
               </div>
             </div>
             <div class="footer-actions">
-              <button id="saveAndCopyBtn" class="action-btn save-btn">
+              <button id="saveAndCopyBtn" class="action-btn save-btn btn-disabled" disabled>
                 <span class="btn-ic"><i class="fa-solid fa-floppy-disk"></i></span>
                 <span class="btn-lbl">ULOŽIT A ZKOPÍROVAT</span>
               </button>
@@ -323,8 +323,29 @@
     </div>
     <!-- /#mainApp -->
 
+    <!-- ══ CHARGE INPUT MODAL ════════════════════════════════ -->
+    <div id="chargeOverlay" style="display: none">
+      <div class="charge-modal">
+        <div class="charge-modal-header">
+          <div class="charge-modal-heading">
+            <div class="charge-modal-title" id="cm_lawTitle"></div>
+            <div class="charge-modal-sub" id="cm_subLabel"></div>
+          </div>
+          <button id="cm_close" class="admin-close">✕</button>
+        </div>
+        <div class="charge-modal-body">
+          <div id="cm_badges" class="card-badges cm-badges"></div>
+          <div id="cm_inputs" class="cm-inputs"></div>
+        </div>
+        <div class="charge-modal-footer">
+          <button id="cm_confirm" class="cm-confirm-btn">PŘIDAT DO PROTOKOLU</button>
+          <button id="cm_cancel" class="cm-cancel-btn">ZRUŠIT</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ══ VALIDATION MODAL ════════════════════════════════════ -->
-    <div id="modalOverlay" style="display: none">
+    <div id="modalOverlay" style="display: none" tabindex="-1">
       <div class="modal-box">
         <div class="modal-step" id="modalStep">KONTROLA ZÁKONNOSTI</div>
         <div class="modal-icon" id="modalIcon">
@@ -337,6 +358,20 @@
             ANO, POKRAČOVAT
           </button>
           <button id="modalNo" class="modal-btn modal-no">NE, ZPĚT</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ INPUT DIALOG ════════════════════════════════════════ -->
+    <div id="inputDialogOverlay" style="display: none" tabindex="-1">
+      <div class="modal-box modal-box--input">
+        <div class="modal-step" id="idStep"></div>
+        <div class="modal-title" id="idTitle"></div>
+        <div class="modal-msg" id="idMsg"></div>
+        <div id="idFields" class="modal-input-fields"></div>
+        <div class="modal-actions">
+          <button id="idConfirm" class="modal-btn modal-yes modal-yes--accent">POTVRDIT</button>
+          <button id="idCancel"  class="modal-btn modal-no">ZRUŠIT</button>
         </div>
       </div>
     </div>
