@@ -287,7 +287,7 @@ const SASP = (() => {
       if (sus.firstName || sus.lastName || sus.birth) {
         out += '\n IDENTITA SUSPECTA\n';
         if (sus.firstName || sus.lastName) out += '  Jméno: ' + (sus.firstName || '') + ' ' + (sus.lastName || '') + '\n';
-        if (sus.birth) out += '  Datum narození: ' + sus.birth + '\n';
+        if (sus.birth) out += '  Datum narození: ' + _normBirth(sus.birth) + '\n';
       }
       out += '\n════════════════════════════════════════\n';
       entry.protocol.forEach(p => {
@@ -757,7 +757,7 @@ const SASP = (() => {
           <span class="chip-lbl">POKUTA</span>
           <input type="number" class="card-input card-input-fine"
             data-pid="${pid}" data-field="fine"
-            value="${p.fine}" min="0"
+            value="${p.fine}" min="${p.minF || 0}" ${p.maxF > 0 ? `max="${p.maxF}"` : ''}
             oninput="SASP.updateCharge(this.dataset.pid,'fine',this.value)">
           <span class="chip-unit">$</span>
         </div>`
@@ -768,7 +768,12 @@ const SASP = (() => {
         <div class="card-title">${_esc(p.title)} — ${_esc(p.subLabel)}</div>
         ${badges ? `<div class="card-badges">${badges}</div>` : ''}
         <div class="card-text">${_esc(p.text)}</div>
-        <div class="card-sentence">${jailChip}${fineChip}</div>
+        <div class="card-sentence">${p.orMode ? `
+          <div class="card-or-toggle">
+            <button class="card-or-btn${p.orChoice === 'jail' ? ' card-or-btn--active' : ''}" onclick="SASP.switchOrCard(${pid},'jail')">VAZBA</button>
+            <span class="card-or-sep">NEBO</span>
+            <button class="card-or-btn${p.orChoice === 'fine' ? ' card-or-btn--active' : ''}" onclick="SASP.switchOrCard(${pid},'fine')">POKUTA</button>
+          </div>${p.orChoice === 'jail' ? jailChip : fineChip}` : `${jailChip}${fineChip}`}</div>
         <button class="card-remove" onclick="SASP.removeCharge(${p.id})" title="Odstranit">✕</button>
       </div>`;
   }
@@ -832,7 +837,12 @@ const SASP = (() => {
         hasJ: s.hasJ || false,
         hasF: s.hasF || false,
         minJ: s.minJ || 0,
-        maxJ: s.maxJ || 0
+        maxJ: s.maxJ || 0,
+        minF: s.minF || 0,
+        maxF: s.maxF || 0,
+        orMode: !!(s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null && s.text.includes('nebo')),
+        orChoice: (s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null && s.text.includes('nebo'))
+                  ? (jVal > 0 ? 'jail' : 'fine') : null
       });
       Modal.close();
       Render.protocol();
@@ -1164,14 +1174,16 @@ const SASP = (() => {
   const ChargeModal = {
     _gi: null,
     _si: null,
+    _orChoice: null,   // 'jail' | 'fine' | null
 
     open(gi, si) {
       this._gi = gi;
       this._si = si;
       const s = _laws[gi].subs[si];
-      this._render(_laws[gi], s);
       const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
                    && s.text.includes('nebo');
+      this._orChoice = orMode ? 'jail' : null;
+      this._render(_laws[gi], s);
       const needsJail = s.hasJ && !s.isLife && s.fixedJail === null;
       const needsFine = s.hasF && s.fixedFine === null && (s.minF || 0) > 0;
       this._setConfirmEnabled(orMode ? false : (!needsJail && !needsFine));
@@ -1195,17 +1207,30 @@ const SASP = (() => {
       const s = _laws[this._gi].subs[this._si];
       const jEl = document.getElementById('cm_jail');
       const fEl = document.getElementById('cm_fine');
+      const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
+                   && s.text.includes('nebo');
+      // In OR mode force the unchosen side to zero
+      if (orMode && this._orChoice === 'jail' && fEl) fEl.value = '0';
+      if (orMode && this._orChoice === 'fine' && jEl) jEl.value = '0';
       const jVal = s.fixedJail !== null ? s.fixedJail
                  : (jEl ? parseInt(jEl.value) || 0 : 0);
       const fVal = s.fixedFine !== null ? s.fixedFine
                  : (fEl ? parseInt(fEl.value) || 0 : 0);
 
-      const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
-                   && s.text.includes('nebo');
-
-      // In OR mode, at least one must be filled
-      if (orMode && jVal === 0 && fVal === 0) {
-        this._setError('cm_jail', 'Vyplňte alespoň vazbu nebo pokutu.');
+      // In OR mode only the chosen side needs to be valid & filled
+      if (orMode) {
+        if (this._orChoice === 'jail') {
+          if (jVal === 0) { this._setError('cm_jail', 'Zadejte počet let.'); return; }
+          if (s.minJ > 0 && jVal < s.minJ) { this._setError('cm_jail', `Minimum je ${s.minJ} let (max. ${s.maxJ} let).`); return; }
+          if (s.maxJ > 0 && s.maxJ < 99 && jVal > s.maxJ) { this._setError('cm_jail', `Maximum je ${s.maxJ} let.`); return; }
+        } else {
+          const minF = s.minF || 0, maxF = s.maxF || 0;
+          if (fVal === 0) { this._setError('cm_fine', 'Zadejte výši pokuty.'); return; }
+          if (minF > 0 && fVal < minF) { this._setError('cm_fine', `Minimum je ${minF.toLocaleString('cs-CZ')} $ (max. ${maxF.toLocaleString('cs-CZ')} $).`); return; }
+          if (maxF > 0 && fVal > maxF) { this._setError('cm_fine', `Maximum je ${maxF.toLocaleString('cs-CZ')} $.`); return; }
+        }
+        this._clearError('cm_jail'); this._clearError('cm_fine');
+        Protocol.add(this._gi, this._si, jVal, fVal);
         return;
       }
 
@@ -1284,8 +1309,10 @@ const SASP = (() => {
       }
 
       if (orMode) {
-        // At least one filled and whatever is filled must be in range
-        this._setConfirmEnabled((jFilled || fFilled) && jOk && fOk);
+        // Only the active choice needs to be filled and valid
+        const activeFilled = this._orChoice === 'jail' ? jFilled : fFilled;
+        const activeOk     = this._orChoice === 'jail' ? jOk     : fOk;
+        this._setConfirmEnabled(activeFilled && activeOk);
       } else {
         // Both must be filled (if required) and in range
         const jReq = s.hasJ && !s.isLife && s.fixedJail === null;
@@ -1300,11 +1327,12 @@ const SASP = (() => {
       const el = document.getElementById(inputId);
       if (!el) return;
       el.classList.add('cm-input-error');
-      let err = el.parentElement.querySelector('.cm-error');
+      const field = el.closest('.cm-field') || el.parentElement;
+      let err = field.querySelector(':scope > .cm-error');
       if (!err) {
         err = document.createElement('div');
         err.className = 'cm-error';
-        el.parentElement.appendChild(err);
+        field.appendChild(err);
       }
       err.textContent = msg;
       this._setConfirmEnabled(false);
@@ -1314,7 +1342,8 @@ const SASP = (() => {
       const el = document.getElementById(inputId);
       if (!el) return;
       el.classList.remove('cm-input-error');
-      const err = el.parentElement?.querySelector('.cm-error');
+      const field = el.closest('.cm-field') || el.parentElement;
+      const err = field?.querySelector(':scope > .cm-error');
       if (err) err.remove();
     },
 
@@ -1359,6 +1388,8 @@ const SASP = (() => {
     },
 
     _render(law, s) {
+      const orMode = s.hasJ && s.hasF && s.fixedJail === null && s.fixedFine === null
+                   && s.text.includes('nebo');
       const range = s.isLife && s.minJ > 0 ? `${s.minJ} let – DOŽIVOTÍ`
                   : s.isLife ? 'DOŽIVOTÍ'
                   : (s.hasJ && s.minJ > 0 && s.maxJ > 0) ? `${s.minJ}–${s.maxJ} let` : '';
@@ -1373,19 +1404,19 @@ const SASP = (() => {
 
       if (s.hasJ) {
         if (s.fixedJail !== null) {
-          inputsHtml += `<div class="cm-field">
+          inputsHtml += `<div class="cm-field" id="cm_jail_wrap">
             <label class="cm-label">VAZBA</label>
             <div class="cm-fixed jail-color">${s.fixedJail}<span class="cm-unit"> let</span></div>
           </div>`;
         } else if (s.isLife && s.minJ === 0) {
-          inputsHtml += `<div class="cm-field">
+          inputsHtml += `<div class="cm-field" id="cm_jail_wrap">
             <label class="cm-label">VAZBA</label>
             <div class="cm-fixed" style="color:var(--danger)">DOŽIVOTÍ</div>
           </div>`;
         } else {
           const ph = range ? range : 'zadejte počet let';
           const maxAttr = s.maxJ > 0 && !s.isLife ? `max="${s.maxJ}"` : '';
-          inputsHtml += `<div class="cm-field">
+          inputsHtml += `<div class="cm-field" id="cm_jail_wrap">
             <label class="cm-label">VAZBA (roky)${range ? ` <span class="cm-range-hint">${range}</span>` : ''}</label>
             <input type="number" id="cm_jail" class="cm-input cm-input-jail"
               placeholder="${ph}" min="${s.minJ}" ${maxAttr} autocomplete="off">
@@ -1398,13 +1429,13 @@ const SASP = (() => {
         const maxF = s.maxF || 0;
         const fRange = maxF > 0 ? `${minF.toLocaleString('cs-CZ')}–${maxF.toLocaleString('cs-CZ')} $` : '';
         if (s.fixedFine !== null) {
-          inputsHtml += `<div class="cm-field">
+          inputsHtml += `<div class="cm-field" id="cm_fine_wrap"${orMode ? ' style="display:none"' : ''}>
             <label class="cm-label">POKUTA</label>
             <div class="cm-fixed fine-color">${s.fixedFine.toLocaleString('cs-CZ')}<span class="cm-unit"> $</span></div>
           </div>`;
         } else {
           const fPh = fRange ? fRange : 'zadejte výši pokuty';
-          inputsHtml += `<div class="cm-field">
+          inputsHtml += `<div class="cm-field" id="cm_fine_wrap"${orMode ? ' style="display:none"' : ''}>
             <label class="cm-label">POKUTA ($)${fRange ? ` <span class="cm-range-hint cm-range-hint--fine">${fRange}</span>` : ''}</label>
             <input type="number" id="cm_fine" class="cm-input cm-input-fine"
               placeholder="${fPh}" min="${minF}" ${maxF > 0 ? `max="${maxF}"` : ''} autocomplete="off">
@@ -1412,10 +1443,50 @@ const SASP = (() => {
         }
       }
 
+      if (orMode) {
+        inputsHtml = `<div class="cm-or-toggle">
+          <button class="cm-or-btn cm-or-btn--active" id="cm_or_jail" onclick="SASP._cmOrSwitch('jail')">VAZBA</button>
+          <span class="cm-or-sep">NEBO</span>
+          <button class="cm-or-btn" id="cm_or_fine" onclick="SASP._cmOrSwitch('fine')">POKUTA</button>
+        </div>` + inputsHtml;
+      }
+
       document.getElementById('cm_lawTitle').textContent = law.title;
       document.getElementById('cm_subLabel').textContent = s.label + ' — ' + s.text;
       document.getElementById('cm_badges').innerHTML = badges;
       document.getElementById('cm_inputs').innerHTML = inputsHtml;
+    },
+
+    _cmOrSwitch(choice) {
+      if (this._orChoice === null) return;
+      this._orChoice = choice;
+      const s = _laws[this._gi].subs[this._si];
+      const jWrap = document.getElementById('cm_jail_wrap');
+      const fWrap = document.getElementById('cm_fine_wrap');
+      const jBtn  = document.getElementById('cm_or_jail');
+      const fBtn  = document.getElementById('cm_or_fine');
+      if (jWrap) jWrap.style.display = choice === 'jail' ? '' : 'none';
+      if (fWrap) fWrap.style.display = choice === 'fine' ? '' : 'none';
+      // Zero-out and clear errors on the hidden side
+      const offEl = document.getElementById(choice === 'jail' ? 'cm_fine' : 'cm_jail');
+      if (offEl) { offEl.value = ''; this._clearError(choice === 'jail' ? 'cm_fine' : 'cm_jail'); }
+      // Pre-fill active side with minimum if currently empty or zero
+      const activeEl = document.getElementById(choice === 'jail' ? 'cm_jail' : 'cm_fine');
+      if (activeEl) {
+        const curVal = parseInt(activeEl.value) || 0;
+        if (curVal === 0) {
+          const minVal = choice === 'jail' ? (s.minJ || 0) : (s.minF || 0);
+          if (minVal > 0) {
+            activeEl.value = minVal;
+            activeEl.dispatchEvent(new Event('input', { bubbles: true }));
+          }
+        }
+        this._clearError(choice === 'jail' ? 'cm_jail' : 'cm_fine');
+        activeEl.focus();
+      }
+      if (jBtn) jBtn.classList.toggle('cm-or-btn--active', choice === 'jail');
+      if (fBtn) fBtn.classList.toggle('cm-or-btn--active', choice === 'fine');
+      this._updateConfirmState();
     }
   };
 
@@ -1559,7 +1630,7 @@ const SASP = (() => {
         if (suspect.firstName || suspect.lastName)
           out += '  Jméno: ' + (suspect.firstName || '') + ' ' + (suspect.lastName || '') + '\n';
         if (suspect.birth)
-          out += '  Datum narození: ' + suspect.birth + '\n';
+          out += '  Datum narození: ' + _normBirth(suspect.birth) + '\n';
       }
       out += '\n════════════════════════════════════════\n';
 
@@ -1787,6 +1858,12 @@ const SASP = (() => {
       if (!suspect.firstName || !suspect.lastName || !suspect.birth) {
         UI.toast('⚠ Vyplňte Jméno, Příjmení a Datum narození suspecta!');
         document.getElementById('suspectFirst')?.focus();
+        return;
+      }
+      if (!_validBirth(suspect.birth)) {
+        UI.toast('⚠ Datum narození není v platném formátu (např. 01.01.2001)');
+        const birthEl = document.getElementById('suspectBirth');
+        if (birthEl) { birthEl.classList.add('suspect-input--error'); birthEl.focus(); }
         return;
       }
       const text = Clip._buildText();
@@ -2078,13 +2155,56 @@ const SASP = (() => {
         if (input) input.classList.toggle('input-error', !valid);
         if (valid) { p.jail = val; p.isLife = p.isLifeFixed || val >= 99; }
       } else if (field === 'fine') {
-        p.fine = val;
+        if (p.orMode && p.orChoice !== 'fine') return; // OR mode safeguard
+        const minF = p.minF || 0;
+        const maxF = p.maxF || 0;
+        const valid = val === 0 || ((minF <= 0 || val >= minF) && (maxF <= 0 || val <= maxF));
+        if (input) input.classList.toggle('input-error', !valid && val > 0);
+        if (valid || val === 0) p.fine = val;
       }
       _updateTotals();
       _checkSaveBtn();
-    }
+    },
+
+    switchOrCard(pid, choice) {
+      const p = _protocol.find(x => String(x.id) === String(pid));
+      if (!p || !p.orMode) return;
+      p.orChoice = choice;
+      if (choice === 'jail') {
+        p.fine = 0;
+        if (p.jail === 0 && p.minJ > 0) p.jail = p.minJ;
+      } else {
+        p.jail = 0;
+        if (p.fine === 0 && p.minF > 0) p.fine = p.minF;
+      }
+      _updateTotals();
+      Render.protocol();
+    },
+
+    _cmOrSwitch(choice) { ChargeModal._cmOrSwitch(choice); }
   };
 })();
+
+function _validBirth(val) {
+  if (!val) return false;
+  const m = val.trim().match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{2}|\d{4})$/);
+  if (!m) return false;
+  const d = parseInt(m[1], 10);
+  const mo = parseInt(m[2], 10);
+  return d >= 1 && d <= 31 && mo >= 1 && mo <= 12;
+}
+
+function _normBirth(val) {
+  if (!val) return val;
+  const m = val.trim().match(/^(\d{1,2})[.\/](\d{1,2})[.\/](\d{2}|\d{4})$/);
+  if (!m) return val;
+  const d  = m[1].padStart(2, '0');
+  const mo = m[2].padStart(2, '0');
+  const yr = m[3].length === 2
+    ? (parseInt(m[3], 10) <= 30 ? '20' : '19') + m[3]
+    : m[3];
+  return `${d}.${mo}.${yr}`;
+}
 
 /* ============================================================
    INIT — DOMContentLoaded
@@ -2136,6 +2256,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Suspect inputs — recheck save button on every keystroke
   ['suspectFirst', 'suspectLast', 'suspectBirth'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', () => SASP.checkSaveBtn());
+  });
+
+  // Birth date live validation
+  document.getElementById('suspectBirth')?.addEventListener('input', function () {
+    const val = this.value.trim();
+    const valid = val === '' || _validBirth(val);
+    this.classList.toggle('suspect-input--error', !valid);
   });
   document.getElementById('historyBtn')
     ?.addEventListener('click', () => SASP.openHistory());
