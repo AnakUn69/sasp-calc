@@ -60,15 +60,20 @@ const SASP = (() => {
         login.style.display = 'none';
         const ov       = document.getElementById('welcomeOverlay');
         const txt      = document.getElementById('welcomeText');
-        const fullText = `Vítejte strážníku ${firstName} ${lastName}`;
+        const fullText = `Vítejte strážníku [${firstName} ${lastName}]`;
         txt.textContent = '';
         txt.classList.add('welcome-cursor');
         ov.style.display = 'flex';
         void ov.offsetWidth;
         ov.classList.add('welcome-in');
         let i = 0;
+        let built = '';
+        const _sc = c => (c === '[' || c === ']')
+          ? `<span class="welcome-bracket">${c}</span>`
+          : c.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         const typeId = setInterval(() => {
-          txt.textContent += fullText[i];
+          built += _sc(fullText[i]);
+          txt.innerHTML = built;
           Audio.keyClick(0.10);
           i++;
           if (i >= fullText.length) {
@@ -2098,6 +2103,27 @@ document.addEventListener('DOMContentLoaded', () => {
   // Login
   document.getElementById('loginBtn')
     .addEventListener('click', () => SASP.login());
+
+  // Logout
+  document.getElementById('logoutBtn')
+    ?.addEventListener('click', () => {
+      const app   = document.getElementById('mainApp');
+      const login = document.getElementById('loginOverlay');
+      app.style.transition   = 'opacity 0.35s ease';
+      app.style.opacity      = '0';
+      setTimeout(() => {
+        app.style.display    = 'none';
+        app.style.opacity    = '';
+        app.style.transition = '';
+        login.style.display  = 'flex';
+        login.style.opacity  = '0';
+        login.style.transition = 'opacity 0.35s ease';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => { login.style.opacity = '1'; });
+        });
+        setTimeout(() => { login.style.transition = ''; }, 400);
+      }, 350);
+    });
 
   // Search
   document.getElementById('searchInput')
