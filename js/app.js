@@ -930,8 +930,8 @@ const SASP = (() => {
       if (totalF > 0) out += '  |  Pokuty: ' + totalF.toLocaleString('cs-CZ') + ' $';
       out += '\n';
       if (needSZ) out += ' [SZ]  PŘÍTOMNOST STÁTNÍHO ZÁSTUPCE NUTNÁ\n';
-      if (hasZP)  out += ' [ZP]  ODEBRAT ZBROJNÍ PRŮKAZ\n';
-      if (hasRP)  out += ' [RP]  ODEBRAT ŘIDIČSKÝ PRŮKAZ\n';
+      if (hasZP)  out += ' [ZP]  BYL ODEBRÁN ZBROJNÍ PRŮKAZ\n';
+      if (hasRP)  out += ' [RP]  BYL ODEBRÁN ŘIDIČSKÝ PRŮKAZ\n';
       out += '════════════════════════════════════════\n';
       out += ' AUTORIZOVAL: ' + (officer.firstName || '—') + ' ' + (officer.lastName || '') +
              ' (' + (officer.badge || '—') + ')';
