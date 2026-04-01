@@ -16,6 +16,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
       referrerpolicy="no-referrer"
     />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
   <body>
     <!-- ══ BOOT OVERLAY ════════════════════════════════════════ -->
@@ -219,6 +220,13 @@
                 title="O aplikaci"
               >
                 <i class="fa-solid fa-circle-info"></i>
+              </button>
+              <button
+                class="admin-trigger"
+                id="changelogBtn"
+                title="Změny v této verzi"
+              >
+              <i class="fa-solid fa-code-compare"></i>              
               </button>
               <button
                 class="admin-trigger"
@@ -463,31 +471,48 @@
           <button id="helpClose" class="admin-close">✕</button>
         </div>
         <div class="info-modal-body help-body">
+
           <div class="help-section">
             <div class="help-section-title"><i class="fa-solid fa-magnifying-glass"></i> Základní ovládání</div>
             <div class="help-section-content">
               <p>V levém panelu se nachází <strong>trestní zákoník</strong> rozdělený do kategorií. Pomocí záložek nebo <strong>vyhledávacího pole</strong> filtrujte paragrafy.</p>
-              <p>Rozbalte zákon kliknutím na jeho název. Pro každou sub-položku zadejte délku trestu (let) a výši pokuty ($), poté klikněte na <strong>+</strong> pro přidání do protokolu.</p>
+              <p>Rozbalte zákon kliknutím na jeho název. <strong>Kliknutím kdekoliv na řádek sub-položky</strong> se okamžitě otevře modal pro zadání trestu — není potřeba hledat žádné tlačítko.</p>
             </div>
           </div>
+
           <div class="help-section">
             <div class="help-section-title"><i class="fa-solid fa-clipboard"></i> Protokol případu</div>
             <div class="help-section-content">
-              <p>V pravém panelu vyplňte <strong>identitu suspecta</strong> (jméno, příjmení, datum narození). Přidané paragrafy se zobrazují jako karty — délku trestu a pokutu lze editovat přímo v kartě.</p>
-              <p>Tlačítko <strong>ULOŽIT A ZKOPÍROVAT</strong> uloží protokol do historie a zkopíruje naformátovaný text do schránky. Minulé protokoly jsou přístupné přes tlačítko <strong>HISTORIE</strong>.</p>
+              <p>V pravém panelu nejprve vyplňte <strong>identitu suspecta</strong> (jméno, příjmení, datum narození). Přidané paragrafy se zobrazují jako karty — délku trestu a pokutu lze editovat přímo v kartě.</p>
+              <p>Tlačítko <strong>ULOŽIT A ZKOPÍROVAT</strong> se aktivuje automaticky, jakmile jsou splněny všechny podmínky:</p>
+              <ul class="help-list">
+                <li>Protokol obsahuje alespoň jeden záznam</li>
+                <li>Vyplněno jméno, příjmení a datum narození suspecta</li>
+                <li>Žádná zadaná hodnota trestu nebo pokuty není mimo povolený rozsah</li>
+              </ul>
+              <p>Po uložení se protokol zapíše do <strong>HISTORIE</strong> a naformátovaný text se zkopíruje do schránky.</p>
             </div>
           </div>
+
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-clock-rotate-left"></i> Historie protokolů</div>
+            <div class="help-section-content">
+              <p>Minulé protokoly jsou přístupné přes tlačítko <strong>HISTORIE</strong> v pravém panelu. Maximum uložených protokolů je <strong>50</strong>. Každý záznam lze zobrazit v detailu nebo zkopírovat do schránky.</p>
+            </div>
+          </div>
+
           <div class="help-section">
             <div class="help-section-title"><i class="fa-solid fa-gear"></i> Admin panel <span class="help-shortcut">Ctrl+Shift+A</span></div>
             <div class="help-section-content">
               <p>Admin panel otevřete tlačítkem <i class="fa-solid fa-gear" style="color:var(--accent)"></i> v levém panelu nebo zkratkou <strong>Ctrl+Shift+A</strong>.</p>
               <ul class="help-list">
-                <li><strong>Správa zákonů</strong> — přidávání, editace a mazání paragrafů a jejich sub-položek.</li>
+                <li><strong>Správa zákonů</strong> — přidávání, editace a mazání paragrafů a jejich sub-položek. Tlačítko <i class="fa-solid fa-plus" style="color:var(--fine)"></i> v záhlaví kategorie přidá nový zákon, tlačítko <i class="fa-solid fa-plus" style="color:var(--fine)"></i> vedle názvu zákona přidá novou sub-položku.</li>
                 <li><strong>Export / Import</strong> — stažení zákoníku jako <code>laws.json</code>, import vlastního souboru nebo reset na výchozí data.</li>
                 <li><strong>Nastavení</strong> — přeskočení boot sekvence a automatické přihlášení (dostupné také přes tlačítko <i class="fa-solid fa-sliders" style="color:var(--info)"></i> v hlavním panelu).</li>
               </ul>
             </div>
           </div>
+
           <div class="help-section">
             <div class="help-section-title"><i class="fa-solid fa-database"></i> Lokální úložiště (localStorage)</div>
             <div class="help-section-content">
@@ -501,6 +526,7 @@
               <p>Pro smazání dat otevřete <strong>Nástroje pro vývojáře</strong> (F12) → záložka <strong>Application</strong> → <strong>Local Storage</strong> a odstraňte příslušné klíče. Nebo použijte <strong>Reset na výchozí</strong> v Admin panelu → Export/Import.</p>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -513,6 +539,21 @@
           <button id="settingsClose" class="admin-close">✕</button>
         </div>
         <div class="info-modal-body" id="settingsModalBody"></div>
+      </div>
+    </div>
+
+    <!-- ══ README MODAL ════════════════════════════════════════ -->
+    <div id="readmeOverlay" style="display: none">
+      <div class="info-modal info-modal--readme">
+        <div class="info-modal-header info-modal-header--readme">
+          <span><i class="fa-solid fa-list-check"></i>&nbsp; DOKUMENTACE</span>
+          <button id="readmeClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body readme-body">
+          <div id="readmeContent" class="readme-content">
+            <div class="readme-loading"><i class="fa-solid fa-spinner fa-spin"></i>&nbsp; Načítám&hellip;</div>
+          </div>
+        </div>
       </div>
     </div>
 

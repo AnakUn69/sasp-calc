@@ -1617,6 +1617,29 @@ const SASP = (() => {
     openHelp()   { document.getElementById('helpOverlay').style.display = 'flex'; },
     closeHelp()  { document.getElementById('helpOverlay').style.display = 'none'; },
 
+    /* Readme */
+    openReadme() {
+      const overlay = document.getElementById('readmeOverlay');
+      overlay.style.display = 'flex';
+      const content = document.getElementById('readmeContent');
+      if (content.dataset.loaded) return;
+      fetch('changelog/README.md')
+        .then(r => r.text())
+        .then(md => {
+          content.innerHTML = typeof marked !== 'undefined'
+            ? marked.parse(md)
+            : '<pre style="white-space:pre-wrap;color:#999">' + md.replace(/</g, '&lt;') + '</pre>';
+          content.dataset.loaded = '1';
+          // open links externally
+          content.querySelectorAll('a[href]').forEach(a => {
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener noreferrer');
+          });
+        })
+        .catch(() => { content.innerHTML = '<p style="color:var(--danger);padding:20px">Nepodařilo se načíst changelog/README.md.</p>'; });
+    },
+    closeReadme() { document.getElementById('readmeOverlay').style.display = 'none'; },
+
     /* Quick Settings */
     openSettings()             { QuickSettings.open(); },
     closeSettings()            { QuickSettings.close(); },
@@ -1875,6 +1898,23 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('clearBtn')
     .addEventListener('click', () => SASP.clearProtocol());
 
+  // Click-outside closes info modals
+  ['aboutOverlay', 'helpOverlay', 'settingsOverlay', 'readmeOverlay'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', e => {
+      if (e.target.id === id) {
+        if (id === 'aboutOverlay')    SASP.closeAbout();
+        if (id === 'helpOverlay')     SASP.closeHelp();
+        if (id === 'settingsOverlay') SASP.closeSettings();
+        if (id === 'readmeOverlay')   SASP.closeReadme();
+      }
+    });
+  });
+
+  document.getElementById('readmeClose')
+    ?.addEventListener('click', () => SASP.closeReadme());
+  document.getElementById('changelogBtn')
+    ?.addEventListener('click', () => SASP.openReadme());
+
   // About / Help / Quick Settings — main app
   document.getElementById('aboutBtn')
     ?.addEventListener('click', () => SASP.openAbout());
@@ -1954,6 +1994,7 @@ document.addEventListener('DOMContentLoaded', () => {
       SASP.closeAbout();
       SASP.closeHelp();
       SASP.closeSettings();
+      SASP.closeReadme();
       SASP.closeAdmin();
       SASP.modalClose();
       SASP.inputDialogClose();

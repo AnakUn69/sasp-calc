@@ -1,5 +1,5 @@
 # 🛡 SASP MDT — Changelog
-
+_1.4.2026_
 
 ### ✨ Nové funkce
 
@@ -57,3 +57,5 @@ Tlačítko je defaultně disabled a aktivuje se teprve když jsou splněny všec
 Po kliknutí na řádek paragrafu se focus automaticky přesune do prvního inputu modalu.
 
 ---
+
+-_AnakUn 1.4.2026_
