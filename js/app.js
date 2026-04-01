@@ -769,8 +769,7 @@ const SASP = (() => {
     _render() {
       const wrap = document.getElementById('adminContent');
       if (this._tab === 'laws') wrap.innerHTML = this._renderLaws();
-      else if (this._tab === 'export') wrap.innerHTML = this._renderExport();
-      else wrap.innerHTML = this._renderSettings();
+      else wrap.innerHTML = this._renderExport();
       _spinify(wrap);
     },
 
@@ -954,7 +953,10 @@ const SASP = (() => {
       try { settings = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}'); } catch (e) {}
       const skipIntroChecked = settings.skipIntro ? 'checked' : '';
       const skipLoginChecked = settings.skipLogin ? 'checked' : '';
-      const stored = localStorage.getItem('sasp_officer_v1');
+      const crtLevel        = settings.crtLevel !== undefined ? Number(settings.crtLevel) : 2;
+      const crtOn           = crtLevel > 0;
+      const vignetteChecked = settings.vignetteOff ? '' : 'checked';
+      const stored          = localStorage.getItem('sasp_officer_v1');
       let savedName = '— není uložené přihlašovací udaje —';
       try {
         const c = JSON.parse(stored || '{}');
@@ -984,6 +986,40 @@ const SASP = (() => {
               <label class="settings-toggle">
                 <input type="checkbox" id="settingSkipLogin" ${skipLoginChecked}
                   onchange="SASP.adminSaveSetting('skipLogin', this.checked)">
+                <span class="settings-toggle-track"></span>
+              </label>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title">Vizuální efekty</div>
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">CRT efekt (scanlines)</div>
+                <div class="settings-item-desc">Retro monitor efekt — horizontální scanlines a jemné problikávání obrazovky.</div>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" id="settingCrt" ${crtOn ? 'checked' : ''}
+                  onchange="SASP.adminSaveSetting('crtLevel', this.checked ? 2 : 0, this.checked)">
+                <span class="settings-toggle-track"></span>
+              </label>
+            </div>
+            ${crtOn ? `<div class="settings-item settings-item--sub">
+              <div class="settings-item-label" style="font-size:12px;color:var(--text-dim);letter-spacing:1px">Intenzita CRT</div>
+              <div class="settings-segmented">
+                <button class="seg-btn ${crtLevel === 1 ? 'active' : ''}" onclick="SASP.adminSaveSetting('crtLevel', 1, true)">Lehký</button>
+                <button class="seg-btn ${crtLevel === 2 ? 'active' : ''}" onclick="SASP.adminSaveSetting('crtLevel', 2, true)">Střední</button>
+                <button class="seg-btn ${crtLevel === 3 ? 'active' : ''}" onclick="SASP.adminSaveSetting('crtLevel', 3, true)">Silný</button>
+                <button class="seg-btn ${crtLevel === 4 ? 'active' : ''}" onclick="SASP.adminSaveSetting('crtLevel', 4, true)">Ultra</button>
+              </div>
+            </div>` : ''}
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">Vignette (ztmavení okrajů)</div>
+                <div class="settings-item-desc">Tmavý radial gradient na okrajích obrazovky — klasický efekt starých monitorů.</div>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" id="settingVignette" ${vignetteChecked}
+                  onchange="SASP.adminSaveSetting('vignetteOff', !this.checked, this.checked)">
                 <span class="settings-toggle-track"></span>
               </label>
             </div>
@@ -1251,6 +1287,12 @@ const SASP = (() => {
     }
   };
 
+  // ── Visual effects helper ─────────────────────────────────
+  function _applyVisual(key, val) {
+    if (key === 'crtLevel')    document.body.setAttribute('data-crt', val);
+    if (key === 'vignetteOff') document.body.classList.toggle('no-vignette', !!val);
+  }
+
   // ── QuickSettings ──────────────────────────────────────────
   const QuickSettings = {
     open() {
@@ -1262,12 +1304,15 @@ const SASP = (() => {
       document.getElementById('settingsOverlay').style.display = 'none';
     },
 
-    save(key, value) {
+    save(key, value, displayOn) {
       let settings = {};
       try { settings = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}'); } catch (e) {}
       settings[key] = value;
       localStorage.setItem('sasp_settings_v1', JSON.stringify(settings));
-      UI.toast(value ? '\u2714 Nastavení uloženo: zapnuto' : '\u2714 Nastavení uloženo: vypnuto');
+      _applyVisual(key, value);
+      const shown = displayOn !== undefined ? displayOn : value;
+      UI.toast(shown ? '\u2714 Nastavení uloženo: zapnuto' : '\u2714 Nastavení uloženo: vypnuto');
+      if (key === 'crtLevel') this._render();  // update segmented buttons
       // keep admin panel in sync if open
       if (document.getElementById('adminOverlay').style.display !== 'none') {
         Admin._render();
@@ -1279,6 +1324,9 @@ const SASP = (() => {
       try { settings = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}'); } catch (e) {}
       const skipIntroChecked = settings.skipIntro ? 'checked' : '';
       const skipLoginChecked = settings.skipLogin ? 'checked' : '';
+      const crtLevel  = settings.crtLevel !== undefined ? Number(settings.crtLevel) : 2;
+      const crtOn     = crtLevel > 0;
+      const vignetteChecked = settings.vignetteOff ? '' : 'checked';
       const stored = localStorage.getItem('sasp_officer_v1');
       let savedName = '\u2014 nejsou uloženy přihlašovací údaje \u2014';
       try {
@@ -1309,6 +1357,40 @@ const SASP = (() => {
               <label class="settings-toggle">
                 <input type="checkbox" ${skipLoginChecked}
                   onchange="SASP.quickSaveSetting('skipLogin', this.checked)">
+                <span class="settings-toggle-track"></span>
+              </label>
+            </div>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title">Vizuální efekty</div>
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">CRT efekt (scanlines)</div>
+                <div class="settings-item-desc">Retro monitor efekt — horizontální scanlines a jemné problikávání obrazovky.</div>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" ${crtOn ? 'checked' : ''}
+                  onchange="SASP.quickSaveSetting('crtLevel', this.checked ? 2 : 0, this.checked)">
+                <span class="settings-toggle-track"></span>
+              </label>
+            </div>
+            ${crtOn ? `<div class="settings-item settings-item--sub">
+              <div class="settings-item-label" style="font-size:12px;color:var(--text-dim);letter-spacing:1px">Intenzita CRT</div>
+              <div class="settings-segmented">
+                <button class="seg-btn ${crtLevel === 1 ? 'active' : ''}" onclick="SASP.quickSaveSetting('crtLevel', 1, true)">Lehký</button>
+                <button class="seg-btn ${crtLevel === 2 ? 'active' : ''}" onclick="SASP.quickSaveSetting('crtLevel', 2, true)">Střední</button>
+                <button class="seg-btn ${crtLevel === 3 ? 'active' : ''}" onclick="SASP.quickSaveSetting('crtLevel', 3, true)">Silný</button>
+                <button class="seg-btn ${crtLevel === 4 ? 'active' : ''}" onclick="SASP.quickSaveSetting('crtLevel', 4, true)">Ultra</button>
+              </div>
+            </div>` : ''}
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">Vignette (ztmavení okrajů)</div>
+                <div class="settings-item-desc">Tmavý radial gradient na okrajích obrazovky — klasický efekt starých monitorů.</div>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" ${vignetteChecked}
+                  onchange="SASP.quickSaveSetting('vignetteOff', !this.checked, this.checked)">
                 <span class="settings-toggle-track"></span>
               </label>
             </div>
@@ -1840,12 +1922,15 @@ const SASP = (() => {
       }
     },
     adminReset() { Data.reset(); },
-    adminSaveSetting(key, value) {
+    adminSaveSetting(key, value, displayOn) {
       let settings = {};
       try { settings = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}'); } catch (e) {}
       settings[key] = value;
       localStorage.setItem('sasp_settings_v1', JSON.stringify(settings));
-      UI.toast(value ? '✔ Nastavení uloženo: zapnuto' : '✔ Nastavení uloženo: vypnuto');
+      _applyVisual(key, value);
+      const shown = displayOn !== undefined ? displayOn : value;
+      UI.toast(shown ? '✔ Nastavení uloženo: zapnuto' : '✔ Nastavení uloženo: vypnuto');
+      if (key === 'crtLevel') Admin._render();  // update segmented buttons
     },
 
     /* updateCharge — real-time inline editing of protocol card values */
@@ -1873,6 +1958,14 @@ const SASP = (() => {
    INIT — DOMContentLoaded
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+  // Apply saved visual settings immediately
+  try {
+    const vs = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}');
+    const crtLevel = vs.crtLevel !== undefined ? Number(vs.crtLevel) : 2;
+    document.body.setAttribute('data-crt', crtLevel);
+    if (vs.vignetteOff) document.body.classList.add('no-vignette');
+  } catch (e) {}
+
   SASP.init();
 
   // Login

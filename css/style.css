@@ -45,12 +45,55 @@ html, body {
 .crt-overlay {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 9999;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0,0,0,0.08) 3px
-  );
+}
+
+/* Default / medium (no data-crt attribute or data-crt="2") */
+body:not([data-crt]) .crt-overlay,
+body[data-crt="2"] .crt-overlay {
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.18) 3px);
+  animation: crt-flicker 6s infinite;
+}
+
+/* Level 0 — off */
+body[data-crt="0"] .crt-overlay { display: none; }
+
+/* Level 1 — light */
+body[data-crt="1"] .crt-overlay {
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.09) 3px);
+  animation: crt-flicker 10s infinite;
+}
+
+/* Level 3 — heavy */
+body[data-crt="3"] .crt-overlay {
+  background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.30) 2px);
+  animation: crt-flicker 2s infinite;
+}
+
+/* Level 4 — ultra */
+body[data-crt="4"] .crt-overlay {
+  background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.50) 2px);
+  animation: crt-flicker-ultra 1s infinite;
+}
+
+@keyframes crt-flicker-ultra {
+  0%   { opacity: 1; }
+  10%  { opacity: 0.92; }
+  20%  { opacity: 1; }
+  45%  { opacity: 0.85; }
+  46%  { opacity: 1; }
+  70%  { opacity: 0.90; }
+  71%  { opacity: 1; }
+  90%  { opacity: 0.88; }
+  91%  { opacity: 1; }
+}
+
+@keyframes crt-flicker {
+  0%   { opacity: 1; }
+  88%  { opacity: 1; }
+  89%  { opacity: 0.88; }
+  90%  { opacity: 1; }
+  93%  { opacity: 0.93; }
+  94%  { opacity: 1; }
 }
 
 body::after {
@@ -58,6 +101,10 @@ body::after {
   position: fixed; inset: 0;
   background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.65) 100%);
   pointer-events: none; z-index: 9000;
+}
+
+body.no-vignette::after {
+  display: none;
 }
 
 /* ============================================================
@@ -2417,6 +2464,42 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   box-shadow: 0 0 8px rgba(255,204,0,0.5);
 }
 
+.settings-item--sub {
+  padding: 2px 0 10px;
+  align-items: center;
+}
+
+.settings-segmented {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.seg-btn {
+  background: #111;
+  border: 1px solid var(--border-bright);
+  color: var(--text-dim);
+  font-family: var(--font);
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 5px 13px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+
+.seg-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.seg-btn.active {
+  background: rgba(255,204,0,0.12);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ============================================================
    USER BAR (logged-in user display)
    ============================================================ */
@@ -2488,7 +2571,7 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   animation: modalIn 0.25s ease forwards;
 }
 
-.info-modal--narrow { max-width: 520px; }
+.info-modal--narrow { max-width: 700px; }
 
 .info-modal-header {
   display: flex;
