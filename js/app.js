@@ -174,6 +174,7 @@ const SASP = (() => {
             </div>
             <div class="history-entry-actions">
               <button class="admin-btn btn-edit" onclick="SASP.historyView('${e.id}')">ZOBRAZIT</button>
+              <button class="admin-btn btn-load" onclick="SASP.historyLoad('${e.id}')">NAČÍST</button>
               <button class="admin-btn btn-del"  onclick="SASP.historyDelete('${e.id}')">SMAZAT</button>
             </div>
           </div>`;
@@ -261,6 +262,10 @@ const SASP = (() => {
         <button class="action-btn save-btn hv-copy-btn" onclick="SASP.historyCopy('${id}')">
           <span class="btn-ic"><i class="fa-solid fa-copy"></i></span>
           <span class="btn-lbl">ZKOPÍROVAT PROTOKOL</span>
+        </button>
+        <button class="action-btn hv-load-btn" onclick="SASP.historyLoad('${id}')">
+          <span class="btn-ic"><i class="fa-solid fa-file-import"></i></span>
+          <span class="btn-lbl">NAČÍST DO AKTIVNÍHO PROTOKOLU</span>
         </button>`;
     },
 
@@ -308,6 +313,32 @@ const SASP = (() => {
       out += ' AUTORIZOVAL: ' + (off.firstName || '—') + ' ' + (off.lastName || '') + ' (' + (off.badge || '—') + ')';
       out += '\n════════════════════════════════════════';
       return out;
+    },
+
+    load(id) {
+      const entry = this._list().find(e => e.id === id);
+      if (!entry) { UI.toast('Protokol nenalezen'); return; }
+      Modal.confirm(
+        '<i class="fa-solid fa-file-import"></i>',
+        'NAČÍST PROTOKOL',
+        'Aktuální protokol bude <span class="modal-highlight">nahrazen</span> daty z historie.<br><span class="modal-accent">Pokračovat?</span>',
+        () => {
+          _protocol = JSON.parse(JSON.stringify(entry.protocol));
+          // restore suspect fields
+          const sus = entry.suspect;
+          const fEl = document.getElementById('suspectFirst');
+          const lEl = document.getElementById('suspectLast');
+          const bEl = document.getElementById('suspectBirth');
+          if (fEl) fEl.value = sus.firstName || '';
+          if (lEl) lEl.value = sus.lastName  || '';
+          if (bEl) { bEl.value = sus.birth || ''; bEl.classList.remove('suspect-input--error'); }
+          _updateTotals();
+          Render.protocol();
+          _checkSaveBtn();
+          this.close();
+          UI.toast('✔ Protokol načten z historie');
+        }
+      );
     },
 
     delete(id) {
@@ -1873,6 +1904,7 @@ const SASP = (() => {
     openHistory()   { ProtocolHistory.open(); },
     closeHistory()  { ProtocolHistory.close(); },
     historyView(id) { ProtocolHistory.view(id); },
+    historyLoad(id) { ProtocolHistory.load(id); },
     historyDelete(id) { ProtocolHistory.delete(id); },
     historyBack() { ProtocolHistory._renderList(); },
     historyCopy(id) {

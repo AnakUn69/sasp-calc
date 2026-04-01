@@ -1887,6 +1887,8 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
 
 .btn-edit { background: rgba(0,170,255,0.1); color: var(--info); border: 1px solid rgba(0,170,255,0.3); }
 .btn-edit:hover { background: rgba(0,170,255,0.2); }
+.btn-load { background: rgba(0,255,136,0.08); color: var(--fine); border: 1px solid rgba(0,255,136,0.25); }
+.btn-load:hover { background: rgba(0,255,136,0.18); }
 .btn-del  { background: rgba(255,51,51,0.1); color: var(--danger); border: 1px solid rgba(255,51,51,0.3); }
 .btn-del:hover  { background: rgba(255,51,51,0.2); }
 .btn-add  { background: rgba(0,255,136,0.1); color: var(--fine); border: 1px solid rgba(0,255,136,0.3); }
@@ -2587,6 +2589,17 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   margin-top: 2px;
 }
 
+.hv-load-btn {
+  margin-top: 8px;
+  background: rgba(0,170,255,0.07);
+  color: var(--info);
+  border: 1px solid rgba(0,170,255,0.25);
+}
+.hv-load-btn:hover {
+  background: rgba(0,170,255,0.15);
+  border-color: var(--info);
+  box-shadow: 0 0 16px rgba(0,170,255,0.2);
+}
 
 /* ============================================================
    ADMIN SETTINGS TAB
