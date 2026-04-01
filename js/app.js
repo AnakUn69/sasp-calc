@@ -228,7 +228,7 @@ const SASP = (() => {
       return '';
     })();
 
-    const jDisabled = s.hasJ ? '' : 'disabled';
+    const jDisabled = (s.hasJ && !(s.isLife && s.minJ === 0)) ? '' : 'disabled';
     const fDisabled = s.hasF ? '' : 'disabled';
     const jRO = s.fixedJail !== null ? 'readonly' : '';
     const fRO = s.fixedFine !== null ? 'readonly' : '';
@@ -245,7 +245,7 @@ const SASP = (() => {
         ${badges ? `<div class="sub-badges">${badges}</div>` : ''}
         <div class="sub-inputs">
           <input type="number" class="sub-input jail" id="j_${gi}_${si}"
-            placeholder="LET" min="0"
+            placeholder="LET" min="${s.minJ}" max="${s.isLife ? '' : s.maxJ || ''}"
             ${jVal} ${jDisabled} ${jRO}>
           <input type="number" class="sub-input fine" id="f_${gi}_${si}"
             placeholder="$" min="0"
@@ -290,10 +290,11 @@ const SASP = (() => {
       const jVal = parseInt(jEl.value) || 0;
       const fVal = parseInt(fEl.value) || 0;
 
-      // Validate min jail
-      if (s.hasJ && !s.isLife && s.minJ > 0 && jVal > 0 && jVal < s.minJ) {
+      // Validate min jail (applies to all crimes incl. isLife where minJ > 0)
+      if (s.hasJ && s.minJ > 0 && jVal > 0 && jVal < s.minJ) {
+        const maxLabel = s.isLife ? 'doživotí' : `${s.maxJ} let`;
         Modal.info('<i class="fa-solid fa-ban"></i>', 'PODMINIMÁLNÍ TREST',
-          `Zákon neumožňuje udělit méně než ${s.minJ} let. Zadejte hodnotu od ${s.minJ} do ${s.maxJ} let.`);
+          `Zákon neumožňuje udělit méně než ${s.minJ} let. Zadejte hodnotu od ${s.minJ} do ${maxLabel}.`);
         return;
       }
 
