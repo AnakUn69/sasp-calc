@@ -108,6 +108,105 @@ body.no-vignette::after {
 }
 
 /* ============================================================
+   SPLASH SCREEN
+   ============================================================ */
+#splashOverlay {
+  position: fixed; inset: 0;
+  background: #000;
+  z-index: 110000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#splashOverlay.splash-in  { opacity: 1; }
+#splashOverlay.splash-out { opacity: 0; }
+
+.splash-logo-wrap {
+  perspective: 700px;
+  flex-shrink: 0;
+}
+
+.splash-logo-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 40px rgba(255,204,0,0.5));
+  animation: loginLogoSpin3D 4s linear infinite;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.splash-dept {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: rgba(255,204,0,0.45);
+  text-transform: uppercase;
+}
+
+.splash-title {
+  font-size: 64px;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(255,204,0,0.4);
+  line-height: 1;
+}
+
+.splash-sub {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #333;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.splash-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  padding: 18px 48px;
+  cursor: pointer;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.25s;
+}
+
+.splash-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+
+.splash-btn span { position: relative; z-index: 1; }
+.splash-btn:hover { color: #000; box-shadow: 0 0 40px rgba(255,204,0,0.3); }
+.splash-btn:hover::before { transform: scaleX(1); }
+
+.splash-btn-icon { font-size: 16px; }
+
+/* ============================================================
    BOOT SCREEN
    ============================================================ */
 #bootOverlay {

@@ -47,6 +47,7 @@ const SASP = (() => {
       let count = 0;
       const id = setInterval(() => {
         pwField.value += '●';
+        Audio.keyClick();
         if (++count >= 8) { clearInterval(id); setTimeout(() => this._transition(firstName, lastName, cb), 400); }
       }, 80);
     },
@@ -68,6 +69,7 @@ const SASP = (() => {
         let i = 0;
         const typeId = setInterval(() => {
           txt.textContent += fullText[i];
+          Audio.keyClick(0.10);
           i++;
           if (i >= fullText.length) {
             clearInterval(typeId);
@@ -83,7 +85,7 @@ const SASP = (() => {
               }, 300);
             }, 1600);
           }
-        }, 55);
+        }, 75);
       }, 450);
     }
   };
@@ -318,6 +320,106 @@ const SASP = (() => {
     }
   };
 
+  // ── Audio ─────────────────────────────────────────────────
+  const Audio = {
+    _ctx: null,
+    _get() {
+      if (!this._ctx) this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+      return this._ctx;
+    },
+
+    // Mechanical keyboard click
+    keyClick(volume = 0.07) {
+      try {
+        const ctx  = this._get();
+        const now  = ctx.currentTime;
+        const sr   = ctx.sampleRate;
+
+        // Sharp noise transient (key down)
+        const clickLen = Math.floor(sr * 0.008);
+        const clickBuf = ctx.createBuffer(1, clickLen, sr);
+        const cd = clickBuf.getChannelData(0);
+        for (let i = 0; i < clickLen; i++) {
+          cd[i] = (Math.random() * 2 - 1) * (1 - i / clickLen);
+        }
+        const cSrc = ctx.createBufferSource();
+        cSrc.buffer = clickBuf;
+        const cGain = ctx.createGain();
+        cGain.gain.setValueAtTime(volume * 1.4, now);
+        cSrc.connect(cGain); cGain.connect(ctx.destination);
+        cSrc.start(now);
+
+        // Body resonance — short filtered noise tail
+        const tailLen = Math.floor(sr * 0.06);
+        const tailBuf = ctx.createBuffer(1, tailLen, sr);
+        const td = tailBuf.getChannelData(0);
+        for (let i = 0; i < tailLen; i++) {
+          td[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / tailLen, 4);
+        }
+        const tSrc = ctx.createBufferSource();
+        tSrc.buffer = tailBuf;
+        const filter = ctx.createBiquadFilter();
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1800, now);
+        filter.Q.setValueAtTime(1.2, now);
+        const tGain = ctx.createGain();
+        tGain.gain.setValueAtTime(volume * 0.55, now);
+        tGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.06);
+        tSrc.connect(filter); filter.connect(tGain); tGain.connect(ctx.destination);
+        tSrc.start(now + 0.006);
+      } catch (e) {}
+    },
+
+    // Boot startup sweep
+    bootStartup() {
+      try {
+        const ctx = this._get();
+        const now = ctx.currentTime;
+
+        // Low noise burst at the very start
+        const noiseLen = Math.floor(ctx.sampleRate * 0.18);
+        const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
+        const nd = noiseBuf.getChannelData(0);
+        for (let i = 0; i < noiseLen; i++) nd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / noiseLen, 3);
+        const nSrc  = ctx.createBufferSource();
+        nSrc.buffer = noiseBuf;
+        const nGain = ctx.createGain();
+        nGain.gain.setValueAtTime(0.22, now);
+        nSrc.connect(nGain);
+        nGain.connect(ctx.destination);
+        nSrc.start(now);
+
+        // Rising frequency sweep  80 Hz → 520 Hz
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(80, now + 0.05);
+        osc.frequency.exponentialRampToValueAtTime(520, now + 1.4);
+        gain.gain.setValueAtTime(0.0, now);
+        gain.gain.linearRampToValueAtTime(0.13, now + 0.12);
+        gain.gain.linearRampToValueAtTime(0.10, now + 1.2);
+        gain.gain.linearRampToValueAtTime(0.0,  now + 1.7);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + 0.05);
+        osc.stop(now + 1.8);
+
+        // Final confirmation beep
+        const beep  = ctx.createOscillator();
+        const bGain = ctx.createGain();
+        beep.type = 'sine';
+        beep.frequency.setValueAtTime(880, now + 4.0);
+        bGain.gain.setValueAtTime(0.0,  now + 4.0);
+        bGain.gain.linearRampToValueAtTime(0.14, now + 4.06);
+        bGain.gain.linearRampToValueAtTime(0.0,  now + 4.35);
+        beep.connect(bGain);
+        bGain.connect(ctx.destination);
+        beep.start(now + 4.0);
+        beep.stop(now + 4.4);
+      } catch (e) {}
+    }
+  };
+
   // ── Boot ──────────────────────────────────────────────────
   const Boot = {
     LINES: [
@@ -359,6 +461,31 @@ const SASP = (() => {
         if (settings.skipIntro) { Boot._toLogin(); return; }
       } catch (e) {}
 
+      // Show splash screen — button click = user gesture = AudioContext unlocked
+      Boot._showSplash();
+    },
+
+    _showSplash() {
+      const splash = document.getElementById('splashOverlay');
+      splash.style.display = 'flex';
+      void splash.offsetWidth;
+      splash.classList.add('splash-in');
+
+      document.getElementById('splashStartBtn').addEventListener('click', () => {
+        splash.classList.add('splash-out');
+        setTimeout(() => {
+          splash.style.display = 'none';
+          splash.classList.remove('splash-in', 'splash-out');
+          Boot._runBoot();
+        }, 600);
+      }, { once: true });
+    },
+
+    _runBoot() {
+      const bootEl = document.getElementById('bootOverlay');
+      bootEl.style.display = 'flex';
+      void bootEl.offsetWidth;
+      Audio.bootStartup();
       const wrap = document.getElementById('bootLines');
       this.LINES.forEach(l => {
         setTimeout(() => {

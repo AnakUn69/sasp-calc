@@ -19,8 +19,24 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
   <body>
+    <!-- ══ SPLASH OVERLAY ══════════════════════════════════════ -->
+    <div id="splashOverlay" style="display:none">
+      <div class="splash-logo-wrap">
+        <img src="assets/sasp_logo.png" alt="SASP" class="splash-logo-img" />
+      </div>
+      <div class="splash-content">
+        <div class="splash-dept">SAN ANDREAS STATE POLICE</div>
+        <div class="splash-title">MDT TERMINÁL</div>
+        <div class="splash-sub">MOBILE DATA TERMINAL · OS v3.2.1 · CLASSIFIED</div>
+        <button id="splashStartBtn" class="splash-btn">
+          <span class="splash-btn-icon"><i class="fa-solid fa-power-off"></i></span>
+          <span>SPUSTIT TERMINÁL</span>
+        </button>
+      </div>
+    </div>
+
     <!-- ══ BOOT OVERLAY ════════════════════════════════════════ -->
-    <div id="bootOverlay">
+    <div id="bootOverlay" style="display:none">
       <div class="boot-container">
         <div class="boot-header">
           <span class="boot-logo">SASP</span>
