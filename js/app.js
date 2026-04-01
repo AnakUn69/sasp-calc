@@ -179,41 +179,128 @@ const SASP = (() => {
       document.getElementById('historyListWrap').style.display = 'none';
       const detail = document.getElementById('historyDetail');
       detail.style.display = 'block';
+
       const dt  = new Date(entry.timestamp);
       const dts = dt.toLocaleDateString('cs-CZ') + ' | ' + dt.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
-      let lines = [];
-      lines.push('════════════════════════════════════════');
-      lines.push('          SASP  PROTOKOL  PŘÍPADU');
-      lines.push('   Datum: ' + dts);
-      lines.push('════════════════════════════════════════');
-      lines.push('');
-      lines.push(' ZASAHUJÍCÍ STRÁŽNÍK');
-      lines.push('  Badge: ' + (entry.officer.badge || '—'));
-      lines.push('  Jméno: ' + (entry.officer.firstName || '—') + ' ' + (entry.officer.lastName || ''));
       const sus = entry.suspect;
+      const off = entry.officer;
+      const hasZP  = entry.protocol.some(p => p.removeZP);
+      const hasRP  = entry.protocol.some(p => p.removeRP);
+      const needSZ = entry.totals.hasLife || entry.protocol.some(p => !p.isLife && p.jail > 20);
+
+      const chargesHtml = entry.protocol.map(p => {
+        const badges = [
+          p.isLife   ? '<span class="badge badge-life">DOŽIVOTÍ</span>' : '',
+          p.removeZP ? '<span class="badge badge-zp">ODEBRAT ZP</span>' : '',
+          p.removeRP ? '<span class="badge badge-rp">ODEBRAT ŘP</span>' : ''
+        ].filter(Boolean).join('');
+        const jStr = p.isLife ? (p.jail > 0 ? p.jail + ' LET – DOŽIVOTÍ' : 'DOŽIVOTÍ') : (p.hasJ && p.jail > 0 ? p.jail + ' LET' : '');
+        const fStr = p.hasF && p.fine > 0 ? p.fine.toLocaleString('cs-CZ') + ' $' : '';
+        const sentenceHtml = (jStr || fStr) ? `
+          <div class="hv-card-sentence">
+            ${jStr ? `<div class="hv-chip hv-chip-jail"><span class="chip-lbl">VAZBA</span><span class="hv-chip-val jail-color">${_esc(jStr)}</span></div>` : ''}
+            ${fStr ? `<div class="hv-chip hv-chip-fine"><span class="chip-lbl">POKUTA</span><span class="hv-chip-val fine-color">${_esc(fStr)}</span></div>` : ''}
+          </div>` : '';
+        return `
+          <div class="hv-card">
+            <div class="hv-card-title">${_esc(p.title)} — ${_esc(p.subLabel)}</div>
+            ${badges ? `<div class="card-badges">${badges}</div>` : ''}
+            <div class="hv-card-text">${_esc(p.text)}</div>
+            ${sentenceHtml}
+          </div>`;
+      }).join('');
+
+      const alertHtml = needSZ ? `
+        <div class="court-alert" style="margin: 0 0 12px;">
+          <i class="fa-solid fa-scale-balanced"></i>PŘÍTOMNOST STÁTNÍHO ZÁSTUPCE NUTNÁ
+        </div>` : '';
+
+      const flagsHtml = (hasZP || hasRP) ? `
+        <div class="hv-flags">
+          ${hasZP ? '<span class="hv-flag badge-zp"><i class="fa-solid fa-id-card"></i> BYL ODEBRÁN ZBROJNÍ PRŮKAZ</span>' : ''}
+          ${hasRP ? '<span class="hv-flag badge-rp"><i class="fa-solid fa-car"></i> BYL ODEBRÁN ŘIDIČSKÝ PRŮKAZ</span>' : ''}
+        </div>` : '';
+
+      document.getElementById('historyDetailContent').innerHTML = `
+        <div class="hv-meta">
+          <div class="hv-meta-row">
+            <span class="hv-meta-lbl"><i class="fa-solid fa-calendar"></i> DATUM</span>
+            <span class="hv-meta-val">${_esc(dts)}</span>
+          </div>
+          <div class="hv-meta-row">
+            <span class="hv-meta-lbl"><i class="fa-solid fa-shield-halved"></i> STRÁŽNÍK</span>
+            <span class="hv-meta-val">${_esc(off.firstName || '—')} ${_esc(off.lastName || '')} <span class="hv-badge-no">${_esc(off.badge || '')}</span></span>
+          </div>
+          ${(sus.firstName || sus.lastName || sus.birth) ? `
+          <div class="hv-meta-row">
+            <span class="hv-meta-lbl"><i class="fa-solid fa-user"></i> SUSPECT</span>
+            <span class="hv-meta-val">${_esc((sus.firstName || '') + ' ' + (sus.lastName || '')).trim() || '—'}${sus.birth ? ' <span class="hv-meta-dim">nar. ' + _esc(sus.birth) + '</span>' : ''}</span>
+          </div>` : ''}
+        </div>
+        ${alertHtml}
+        <div class="hv-charges">${chargesHtml}</div>
+        <div class="hv-totals">
+          <div class="hv-total-item">
+            <span class="total-label">VAZBA</span>
+            <span class="total-value jail-color">${_esc(entry.totals.jail.toString().toUpperCase())}</span>
+          </div>
+          <span class="total-divider">|</span>
+          <div class="hv-total-item">
+            <span class="total-label">POKUTY</span>
+            <span class="total-value fine-color">${entry.totals.fine > 0 ? entry.totals.fine.toLocaleString('cs-CZ') + ' $' : '0 $'}</span>
+          </div>
+        </div>
+        ${flagsHtml}
+        <button class="action-btn save-btn hv-copy-btn" onclick="SASP.historyCopy('${id}')">
+          <span class="btn-ic"><i class="fa-solid fa-copy"></i></span>
+          <span class="btn-lbl">ZKOPÍROVAT PROTOKOL</span>
+        </button>`;
+    },
+
+    _buildEntryText(entry) {
+      const dt  = new Date(entry.timestamp);
+      const dts = dt.toLocaleDateString('cs-CZ') + ' | ' + dt.toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' });
+      const off = entry.officer;
+      const sus = entry.suspect;
+      let totalJ = 0, hasLife = false;
+      entry.protocol.forEach(p => { if (p.isLife) hasLife = true; else totalJ += p.jail; });
+      const totalF = entry.protocol.reduce((a, b) => a + b.fine, 0);
+      const hasZP  = entry.protocol.some(p => p.removeZP);
+      const hasRP  = entry.protocol.some(p => p.removeRP);
+      const needSZ = entry.totals.hasLife || entry.protocol.some(p => !p.isLife && p.jail > 20);
+
+      let out = '';
+      out += '════════════════════════════════════════\n';
+      out += '          SASP  PROTOKOL  PŘÍPADU\n';
+      out += '   Datum: ' + dts + '\n';
+      out += '════════════════════════════════════════\n';
+      out += '\n ZASAHUJÍCÍ STRÁŽNÍK\n';
+      out += '  Badge: ' + (off.badge || '—') + '\n';
+      out += '  Jméno: ' + (off.firstName || '—') + ' ' + (off.lastName || '') + '\n';
       if (sus.firstName || sus.lastName || sus.birth) {
-        lines.push('');
-        lines.push(' IDENTITA SUSPECTA');
-        if (sus.firstName || sus.lastName) lines.push('  Jméno: ' + sus.firstName + ' ' + sus.lastName);
-        if (sus.birth) lines.push('  Datum narození: ' + sus.birth);
+        out += '\n IDENTITA SUSPECTA\n';
+        if (sus.firstName || sus.lastName) out += '  Jméno: ' + (sus.firstName || '') + ' ' + (sus.lastName || '') + '\n';
+        if (sus.birth) out += '  Datum narození: ' + sus.birth + '\n';
       }
-      lines.push('');
-      lines.push('════════════════════════════════════════');
+      out += '\n════════════════════════════════════════\n';
       entry.protocol.forEach(p => {
-        lines.push('');
-        lines.push(' ' + p.title + ' — ' + p.subLabel);
-        lines.push(' ' + p.text);
+        out += '\n ' + p.title + ' — ' + p.subLabel + '\n';
+        out += ' ' + p.text + '\n';
         const jStr = p.isLife ? 'DOŽIVOTÍ' : (p.jail > 0 ? p.jail + ' let' : '');
         const fStr = p.fine > 0 ? p.fine.toLocaleString('cs-CZ') + ' $' : '';
-        if (jStr || fStr) lines.push(' ► ' + [jStr, fStr].filter(Boolean).join('  |  Pokuta: '));
+        if (jStr || fStr) out += ' ► ' + [jStr, fStr].filter(Boolean).join('  |  Pokuta: ') + '\n';
       });
-      lines.push('');
-      lines.push('════════════════════════════════════════');
-      lines.push(' CELKEM: ' + entry.totals.jail);
-      if (entry.totals.fine > 0) lines.push(' Pokuty: ' + entry.totals.fine.toLocaleString('cs-CZ') + ' $');
-      lines.push(' AUTORIZOVAL: ' + (entry.officer.firstName || '—') + ' ' + (entry.officer.lastName || '') + ' (' + (entry.officer.badge || '—') + ')');
-      lines.push('════════════════════════════════════════');
-      document.getElementById('historyDetailContent').textContent = lines.join('\n');
+      out += '\n════════════════════════════════════════\n';
+      out += ' CELKEM: ' + (hasLife ? 'DOŽIVOTÍ' : totalJ + ' let');
+      if (totalF > 0) out += '  |  Pokuty: ' + totalF.toLocaleString('cs-CZ') + ' $';
+      out += '\n';
+      if (needSZ) out += ' [SZ]  PŘÍTOMNOST STÁTNÍHO ZÁSTUPCE NUTNÁ\n';
+      if (hasZP)  out += ' [ZP]  BYL ODEBRÁN ZBROJNÍ PRŮKAZ\n';
+      if (hasRP)  out += ' [RP]  BYL ODEBRÁN ŘIDIČSKÝ PRŮKAZ\n';
+      out += '════════════════════════════════════════\n';
+      out += ' AUTORIZOVAL: ' + (off.firstName || '—') + ' ' + (off.lastName || '') + ' (' + (off.badge || '—') + ')';
+      out += '\n════════════════════════════════════════';
+      return out;
     },
 
     delete(id) {
@@ -883,6 +970,72 @@ const SASP = (() => {
     }
   };
 
+  // ── QuickSettings ──────────────────────────────────────────
+  const QuickSettings = {
+    open() {
+      this._render();
+      document.getElementById('settingsOverlay').style.display = 'flex';
+    },
+
+    close() {
+      document.getElementById('settingsOverlay').style.display = 'none';
+    },
+
+    save(key, value) {
+      let settings = {};
+      try { settings = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}'); } catch (e) {}
+      settings[key] = value;
+      localStorage.setItem('sasp_settings_v1', JSON.stringify(settings));
+      UI.toast(value ? '\u2714 Nastavení uloženo: zapnuto' : '\u2714 Nastavení uloženo: vypnuto');
+      // keep admin panel in sync if open
+      if (document.getElementById('adminOverlay').style.display !== 'none') {
+        Admin._render();
+      }
+    },
+
+    _render() {
+      let settings = {};
+      try { settings = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}'); } catch (e) {}
+      const skipIntroChecked = settings.skipIntro ? 'checked' : '';
+      const skipLoginChecked = settings.skipLogin ? 'checked' : '';
+      const stored = localStorage.getItem('sasp_officer_v1');
+      let savedName = '\u2014 nejsou uloženy přihlašovací údaje \u2014';
+      try {
+        const c = JSON.parse(stored || '{}');
+        if (c.badge && c.firstName) savedName = `${c.firstName} ${c.lastName} (${c.badge})`;
+      } catch (e) {}
+      document.getElementById('settingsModalBody').innerHTML = `
+        <div class="settings-panel quick-settings-body">
+          <div class="settings-group">
+            <div class="settings-group-title">Spouštění aplikace</div>
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">Přeskočit intro (boot screen)</div>
+                <div class="settings-item-desc">Přeskočí načítací sekvenci a rovnou zobrazí přihlašovací obrazovku.</div>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" ${skipIntroChecked}
+                  onchange="SASP.quickSaveSetting('skipIntro', this.checked)">
+                <span class="settings-toggle-track"></span>
+              </label>
+            </div>
+            <div class="settings-item">
+              <div>
+                <div class="settings-item-label">Přeskočit přihlašování (auto-login)</div>
+                <div class="settings-item-desc">Při spouštění použije uložené údaje a přeskočí rovnou do terminálu.<br>
+                  <span class="settings-saved-creds">⧮ Uložené údaje: ${_esc(savedName)}</span></div>
+              </div>
+              <label class="settings-toggle">
+                <input type="checkbox" ${skipLoginChecked}
+                  onchange="SASP.quickSaveSetting('skipLogin', this.checked)">
+                <span class="settings-toggle-track"></span>
+              </label>
+            </div>
+          </div>
+        </div>`;
+    }
+  };
+
   // ── Clipboard ─────────────────────────────────────────────
   const Clip = {
     _buildText() {
@@ -1056,6 +1209,18 @@ const SASP = (() => {
     historyView(id) { ProtocolHistory.view(id); },
     historyDelete(id) { ProtocolHistory.delete(id); },
     historyBack() { ProtocolHistory._renderList(); },
+    historyCopy(id) {
+      const entry = ProtocolHistory._list().find(e => e.id === id);
+      if (!entry) { UI.toast('Protokol nenalezen'); return; }
+      const text = ProtocolHistory._buildEntryText(entry);
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text)
+          .then(() => UI.toast('✓ Protokol zkopírován!'))
+          .catch(() => { Clip._fallback(text); UI.toast('✓ Protokol zkopírován!'); });
+      } else {
+        Clip._fallback(text); UI.toast('✓ Protokol zkopírován!');
+      }
+    },
     clearProtocol() {
       if (_protocol.length === 0) return;
       if (confirm('Vymazat celý protokol? Aktuální případ bude ztracen.')) {
@@ -1063,6 +1228,19 @@ const SASP = (() => {
         Render.protocol();
       }
     },
+
+    /* About */
+    openAbout()  { document.getElementById('aboutOverlay').style.display = 'flex'; },
+    closeAbout() { document.getElementById('aboutOverlay').style.display = 'none'; },
+
+    /* Help */
+    openHelp()   { document.getElementById('helpOverlay').style.display = 'flex'; },
+    closeHelp()  { document.getElementById('helpOverlay').style.display = 'none'; },
+
+    /* Quick Settings */
+    openSettings()             { QuickSettings.open(); },
+    closeSettings()            { QuickSettings.close(); },
+    quickSaveSetting(key, val) { QuickSettings.save(key, val); },
 
     /* Modal */
     modalYes()   { Modal.yes(); },
@@ -1247,6 +1425,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('clearBtn')
     .addEventListener('click', () => SASP.clearProtocol());
 
+  // About / Help / Quick Settings — main app
+  document.getElementById('aboutBtn')
+    ?.addEventListener('click', () => SASP.openAbout());
+  document.getElementById('aboutClose')
+    ?.addEventListener('click', () => SASP.closeAbout());
+  document.getElementById('helpBtn')
+    ?.addEventListener('click', () => SASP.openHelp());
+  document.getElementById('helpClose')
+    ?.addEventListener('click', () => SASP.closeHelp());
+  document.getElementById('settingsBtn')
+    ?.addEventListener('click', () => SASP.openSettings());
+  document.getElementById('settingsClose')
+    ?.addEventListener('click', () => SASP.closeSettings());
+
+  // About / Help — login screen
+  document.getElementById('loginAboutBtn')
+    ?.addEventListener('click', () => SASP.openAbout());
+  document.getElementById('loginHelpBtn')
+    ?.addEventListener('click', () => SASP.openHelp());
+
   // Admin
   document.getElementById('adminBtn')
     ?.addEventListener('click', () => SASP.openAdmin());
@@ -1271,6 +1469,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Escape → close modals
     if (e.key === 'Escape') {
+      SASP.closeAbout();
+      SASP.closeHelp();
+      SASP.closeSettings();
       SASP.closeAdmin();
       SASP.modalClose();
       SASP.closeHistory();

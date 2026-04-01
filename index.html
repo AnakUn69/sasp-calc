@@ -98,7 +98,7 @@
             <div class="login-dept">SAN ANDREAS STATE POLICE</div>
             <h1 class="login-title" data-text="MDT TERMINÁL">MDT TERMINÁL</h1>
             <div class="login-version">
-              MOBILE DATA TERMINAL · OS v3.2.1 · CLASSIFI ED
+              MOBILE DATA TERMINAL · OS v3.2.1 · CLASSIFIED
             </div>
           </div>
         </div>
@@ -152,6 +152,10 @@
           <span>NATHANIEL HARTMAN</span>
           <span class="lf-sep">|</span>
           <span class="lf-warn">NEOPRÁVNĚNÝ PŘÍSTUP JE TRESTNÝ ČIN</span>
+          <span class="lf-sep">·</span>
+          <button class="lf-link" id="loginAboutBtn">O APLIKACI</button>
+          <span class="lf-sep">·</span>
+          <button class="lf-link" id="loginHelpBtn">NÁPOVĚDA</button>
         </div>
       </div>
 
@@ -197,15 +201,36 @@
             <div class="header-controls">
               <button
                 class="admin-trigger"
+                id="settingsBtn"
+                title="Nastavení"
+              >
+                <i class="fa-solid fa-sliders"></i>
+              </button>
+              <button
+                class="admin-trigger"
+                id="helpBtn"
+                title="Nápověda"
+              >
+                <i class="fa-solid fa-circle-question"></i>
+              </button>
+              <button
+                class="admin-trigger"
+                id="aboutBtn"
+                title="O aplikaci"
+              >
+                <i class="fa-solid fa-circle-info"></i>
+              </button>
+              <button
+                class="admin-trigger"
                 id="adminBtn"
                 title="Admin panel (Ctrl+Shift+A)"
               >
-                ⚙
+                <i class="fa-solid fa-gear"></i>
               </button>
-              <div class="header-status">
+            </div>
+             <div class="header-status">
                 <span class="status-dot"></span>ONLINE
               </div>
-            </div>
           </div>
 
           <div class="search-bar">
@@ -345,9 +370,114 @@
           </div>
           <div id="historyDetail" style="display: none">
             <button class="history-back-btn" onclick="SASP.historyBack()"><i class="fa-solid fa-arrow-left"></i>&nbsp; ZPĚT NA SEZNAM</button>
-            <pre id="historyDetailContent" class="history-detail-content"></pre>
+            <div id="historyDetailContent" class="history-detail-view"></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- ══ ABOUT MODAL ════════════════════════════════════════ -->
+    <div id="aboutOverlay" style="display: none">
+      <div class="info-modal info-modal--narrow">
+        <div class="info-modal-header">
+          <span><i class="fa-solid fa-circle-info"></i>&nbsp; O APLIKACI</span>
+          <button id="aboutClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body about-body">
+          <div class="about-shield">
+            <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 4 L96 22 L96 58 C96 82 74 104 50 116 C26 104 4 82 4 58 L4 22 Z"
+                fill="none" stroke="#ffcc00" stroke-width="3.5"/>
+              <path d="M50 16 L84 30 L84 58 C84 76 68 94 50 104 C32 94 16 76 16 58 L16 30 Z"
+                fill="rgba(255,204,0,0.05)" stroke="#ffcc00" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <text x="50" y="62" text-anchor="middle" fill="#ffcc00"
+                font-family="JetBrains Mono,monospace" font-weight="800" font-size="18" letter-spacing="2">SASP</text>
+            </svg>
+          </div>
+          <div class="about-title">SASP MDT</div>
+          <div class="about-sub">Penal Code Terminal</div>
+          <div class="about-version">OS v3.2.1 · Zákoník 2026.1</div>
+          <div class="about-desc">
+            Nástroj pro správu trestních protokolů na GenK FiveM RP.
+            Umožňuje vyhledávání v trestním zákoníku, sestavování protokolů k případu,
+            ukládání do historie a kopírování do schránky.
+          </div>
+          <div class="about-authors-title">AUTOŘI</div>
+          <div class="about-authors">
+            <a class="about-author-link" href="https://github.com/MMaverick149" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-github"></i> MMaverick149
+            </a>
+            <a class="about-author-link" href="https://github.com/AnakUn69" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-github"></i> AnakUn
+            </a>
+          </div>
+          <div class="about-madewith">
+            <span class="about-madewith-label">Made with</span>
+            <img src="assets/heddiL.webp" alt="heddiL" class="about-madewith-img" />
+          </div>
+          <div class="about-footer">© 2026 SASP · San Andreas State Police · Všechna práva vyhrazena</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ HELP MODAL ═════════════════════════════════════════ -->
+    <div id="helpOverlay" style="display: none">
+      <div class="info-modal">
+        <div class="info-modal-header info-modal-header--help">
+          <span><i class="fa-solid fa-circle-question"></i>&nbsp; NÁPOVĚDA</span>
+          <button id="helpClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body help-body">
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-magnifying-glass"></i> Základní ovládání</div>
+            <div class="help-section-content">
+              <p>V levém panelu se nachází <strong>trestní zákoník</strong> rozdělený do kategorií. Pomocí záložek nebo <strong>vyhledávacího pole</strong> filtrujte paragrafy.</p>
+              <p>Rozbalte zákon kliknutím na jeho název. Pro každou sub-položku zadejte délku trestu (let) a výši pokuty ($), poté klikněte na <strong>+</strong> pro přidání do protokolu.</p>
+            </div>
+          </div>
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-clipboard"></i> Protokol případu</div>
+            <div class="help-section-content">
+              <p>V pravém panelu vyplňte <strong>identitu suspecta</strong> (jméno, příjmení, datum narození). Přidané paragrafy se zobrazují jako karty — délku trestu a pokutu lze editovat přímo v kartě.</p>
+              <p>Tlačítko <strong>ULOŽIT A ZKOPÍROVAT</strong> uloží protokol do historie a zkopíruje naformátovaný text do schránky. Minulé protokoly jsou přístupné přes tlačítko <strong>HISTORIE</strong>.</p>
+            </div>
+          </div>
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-gear"></i> Admin panel <span class="help-shortcut">Ctrl+Shift+A</span></div>
+            <div class="help-section-content">
+              <p>Admin panel otevřete tlačítkem <i class="fa-solid fa-gear" style="color:var(--accent)"></i> v levém panelu nebo zkratkou <strong>Ctrl+Shift+A</strong>.</p>
+              <ul class="help-list">
+                <li><strong>Správa zákonů</strong> — přidávání, editace a mazání paragrafů a jejich sub-položek.</li>
+                <li><strong>Export / Import</strong> — stažení zákoníku jako <code>laws.json</code>, import vlastního souboru nebo reset na výchozí data.</li>
+                <li><strong>Nastavení</strong> — přeskočení boot sekvence a automatické přihlášení (dostupné také přes tlačítko <i class="fa-solid fa-sliders" style="color:var(--info)"></i> v hlavním panelu).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="help-section">
+            <div class="help-section-title"><i class="fa-solid fa-database"></i> Lokální úložiště (localStorage)</div>
+            <div class="help-section-content">
+              <p>Aplikace ukládá veškerá data lokálně v prohlížeči — žádná data se neodesílají na server.</p>
+              <ul class="help-list">
+                <li><code>sasp_officer_v1</code> — přihlašovací údaje strážníka (badge, jméno)</li>
+                <li><code>sasp_laws_v3</code> — upravený zákoník (pokud byl editován v admin panelu)</li>
+                <li><code>sasp_protocol_history_v1</code> — uložené protokoly (max. 50)</li>
+                <li><code>sasp_settings_v1</code> — nastavení spouštění (skipIntro, skipLogin)</li>
+              </ul>
+              <p>Pro smazání dat otevřete <strong>Nástroje pro vývojáře</strong> (F12) → záložka <strong>Application</strong> → <strong>Local Storage</strong> a odstraňte příslušné klíče. Nebo použijte <strong>Reset na výchozí</strong> v Admin panelu → Export/Import.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ QUICK SETTINGS MODAL ══════════════════════════════ -->
+    <div id="settingsOverlay" style="display: none">
+      <div class="info-modal info-modal--narrow">
+        <div class="info-modal-header info-modal-header--settings">
+          <span><i class="fa-solid fa-sliders"></i>&nbsp; NASTAVENÍ</span>
+          <button id="settingsClose" class="admin-close">✕</button>
+        </div>
+        <div class="info-modal-body" id="settingsModalBody"></div>
       </div>
     </div>
 
