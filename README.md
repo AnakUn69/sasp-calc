@@ -196,8 +196,8 @@ Při kliknutí na `+` aplikace provádí následující kontroly:
 | Podminimální trest | `hasJ && !isLife && minJ > 0 && jVal < minJ` | Zablokování přidání + hláška |
 | Nadmaximální trest | `hasJ && maxJ > 0 && maxJ < 99 && jVal > maxJ` | Zablokování přidání + hláška |
 | Chybějící vazba | `hasJ && !isLife && jVal === 0 && !fixedJail` | Zablokování přidání + hláška |
-| Povinné odebrání dokladů | `removeZP || removeRP` | Potvrzovací dialog |
-| Přítomnost SZ | `isLife || jVal > 20` | Potvrzovací dialog |
+| Povinné odebrání dokladů | `removeZP \|\| removeRP` | Potvrzovací dialog |
+| Přítomnost SZ | `isLife \|\| jVal > 20` | Potvrzovací dialog |
 
 ```js
 // Zjednodušený rozhodovací model
