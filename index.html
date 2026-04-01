@@ -29,6 +29,9 @@
         <div id="bootLines" class="boot-lines"></div>
         <div class="boot-cursor">█</div>
       </div>
+      <div class="boot-logo-wrap">
+        <img src="assets/sasp_logo.png" alt="SASP" class="boot-logo-img" />
+      </div>
     </div>
 
     <!-- ══ LOGIN OVERLAY ═══════════════════════════════════════ -->
@@ -43,10 +46,18 @@
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp;</span
           >
           <span aria-hidden="true"
             >⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
@@ -64,35 +75,9 @@
 
         <!-- header row -->
         <div class="login-header-row">
-          <!-- shield SVG badge -->
+          <!-- shield badge -->
           <div class="login-shield">
-            <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d="M50 4 L96 22 L96 58 C96 82 74 104 50 116 C26 104 4 82 4 58 L4 22 Z"
-                fill="none"
-                stroke="#ffcc00"
-                stroke-width="3.5"
-              />
-              <path
-                d="M50 16 L84 30 L84 58 C84 76 68 94 50 104 C32 94 16 76 16 58 L16 30 Z"
-                fill="rgba(255,204,0,0.05)"
-                stroke="#ffcc00"
-                stroke-width="1.5"
-                stroke-dasharray="4 3"
-              />
-              <text
-                x="50"
-                y="62"
-                text-anchor="middle"
-                fill="#ffcc00"
-                font-family="JetBrains Mono,monospace"
-                font-weight="800"
-                font-size="18"
-                letter-spacing="2"
-              >
-                SASP
-              </text>
-            </svg>
+            <img src="assets/sasp_logo.png" alt="SASP" />
           </div>
 
           <div class="login-titles">
@@ -153,7 +138,7 @@
           <span>NATHANIEL HARTMAN</span>
           <span class="lf-sep">|</span>
           <span class="lf-warn">NEOPRÁVNĚNÝ PŘÍSTUP JE TRESTNÝ ČIN</span>
-          <span class="lf-sep">·</span>
+          <div class="lf-break"></div>
           <button class="lf-link" id="loginAboutBtn">O APLIKACI</button>
           <span class="lf-sep">·</span>
           <button class="lf-link" id="loginHelpBtn">NÁPOVĚDA</button>
@@ -168,10 +153,18 @@
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp;</span
           >
           <span aria-hidden="true"
             >⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
+            &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
             &nbsp;&nbsp;·&nbsp;&nbsp; ⚠ RESTRICTED ACCESS — LAW ENFORCEMENT ONLY
@@ -196,7 +189,7 @@
         <div id="leftPanel">
           <div class="panel-header">
             <div class="header-brand">
-              <span class="brand-dot"></span>
+              <img src="assets/sasp_logo.png" alt="SASP" class="brand-logo" />
               <span>TRESTNÍ ZÁKONÍK — SAN ANDREAS</span>
             </div>
             <div class="header-controls">
@@ -427,14 +420,7 @@
         </div>
         <div class="info-modal-body about-body">
           <div class="about-shield">
-            <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-              <path d="M50 4 L96 22 L96 58 C96 82 74 104 50 116 C26 104 4 82 4 58 L4 22 Z"
-                fill="none" stroke="#ffcc00" stroke-width="3.5"/>
-              <path d="M50 16 L84 30 L84 58 C84 76 68 94 50 104 C32 94 16 76 16 58 L16 30 Z"
-                fill="rgba(255,204,0,0.05)" stroke="#ffcc00" stroke-width="1.5" stroke-dasharray="4 3"/>
-              <text x="50" y="62" text-anchor="middle" fill="#ffcc00"
-                font-family="JetBrains Mono,monospace" font-weight="800" font-size="18" letter-spacing="2">SASP</text>
-            </svg>
+            <img src="assets/sasp_logo.png" alt="SASP" />
           </div>
           <div class="about-title">SASP MDT</div>
           <div class="about-sub">Penal Code Terminal</div>
