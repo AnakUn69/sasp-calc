@@ -3150,4 +3150,391 @@ input[type=number] { -moz-appearance: textfield; appearance: textfield; }
   padding: 20px 24px;
 }
 
+/* ============================================================
+   MDT THEME  (body[data-theme="mdt"])
+   Přepíše barevné proměnné, font, border-radius a hardcoded
+   barvy — bez změny layoutu nebo struktury HTML.
+   ============================================================ */
+
+/* ── CSS Variables override ── */
+body[data-theme="mdt"] {
+  --bg:           #0b1622;
+  --bg-panel:     #0e1d2e;
+  --bg-card:      #112338;
+  --bg-hover:     #162d47;
+  --accent:       #3b9eff;
+  --accent-dim:   rgba(59,158,255,0.15);
+  --info:         #00d4ff;
+  --fine:         #00e5a0;
+  --danger:       #ff4d6a;
+  --warning:      #ffaa33;
+  --muted:        #1e3a5a;
+  --text:         #d0e8ff;
+  --text-dim:     #4a7aa0;
+  --border:       #1a3050;
+  --border-bright:#2a4870;
+  --font:         'Inter', sans-serif;
+}
+
+/* ── Scrollbar ── */
+body[data-theme="mdt"] ::-webkit-scrollbar-thumb { background: #2a4870; }
+
+/* ── Global backgrounds that are hardcoded (not using vars) ── */
+body[data-theme="mdt"] #splashOverlay,
+body[data-theme="mdt"] #bootOverlay,
+body[data-theme="mdt"] #loginOverlay { background: #0b1622; }
+
+body[data-theme="mdt"] .login-content {
+  background: #0e1c2e;
+  border-color: #2a4870;
+  border-radius: 16px;
+}
+
+body[data-theme="mdt"] .login-cred-box {
+  background: #0b1622;
+  border-color: #1a3050;
+}
+
+body[data-theme="mdt"] .search-bar { background: #08121e; }
+
+body[data-theme="mdt"] .login-status-bar { border-color: #1a3050; }
+
+body[data-theme="mdt"] .law-header { background: #0e1a28; }
+body[data-theme="mdt"] .law-item.expanded .law-header,
+body[data-theme="mdt"] .law-header:hover { background: #122030; }
+body[data-theme="mdt"] .law-item:hover { border-color: #1e3a5a; }
+
+body[data-theme="mdt"] .sub-input {
+  background: #070f1a;
+  border-color: #1e3050;
+}
+
+body[data-theme="mdt"] .sub-input:disabled {
+  background: #070d15;
+  color: #2a4060;
+}
+
+body[data-theme="mdt"] .charge-modal-header,
+body[data-theme="mdt"] .history-header,
+body[data-theme="mdt"] .info-modal-header,
+body[data-theme="mdt"] .admin-header {
+  background: #070f1a;
+}
+
+body[data-theme="mdt"] .protocol-footer { background: #070f1a; }
+
+body[data-theme="mdt"] .settings-group { background: #070f1a; }
+body[data-theme="mdt"] .seg-btn { background: #0e1c2e; }
+
+body[data-theme="mdt"] .user-bar { background: #070f1a; }
+
+body[data-theme="mdt"] .history-entry,
+body[data-theme="mdt"] .hv-meta,
+body[data-theme="mdt"] .hv-card,
+body[data-theme="mdt"] .hv-totals,
+body[data-theme="mdt"] .hv-chip { background: #070f1a; }
+
+body[data-theme="mdt"] .history-entry:hover { background: #0e1a28; }
+
+body[data-theme="mdt"] .history-detail-content { background: #070f1a; }
+
+body[data-theme="mdt"] .cm-input { background: transparent; }
+body[data-theme="mdt"] .cm-input:focus { background: #070f1a; }
+body[data-theme="mdt"] .cm-input::placeholder { color: #1e3a5a; }
+
+body[data-theme="mdt"] .help-section { background: #070f1a; }
+
+body[data-theme="mdt"] .readme-content pre { background: #070f1a; }
+
+/* ── Glitch title colors ── */
+body[data-theme="mdt"] .login-title::before { text-shadow: 2px 0 #0050cc; color: #0050cc; }
+body[data-theme="mdt"] .login-title::after  { text-shadow: -2px 0 #00c8ff; color: #00c8ff; }
+
+/* ── Dept/sub labels ── */
+body[data-theme="mdt"] .login-dept  { color: rgba(59,158,255,0.5); }
+body[data-theme="mdt"] .splash-dept { color: rgba(59,158,255,0.45); }
+body[data-theme="mdt"] .splash-sub  { color: #1a3050; }
+body[data-theme="mdt"] .login-version { color: #1e3a5a; }
+
+/* ── Boot sequence ── */
+body[data-theme="mdt"] .boot-line.ok { color: #00e5a0; }
+body[data-theme="mdt"] .boot-sub     { color: #4a7aa0; }
+body[data-theme="mdt"] .boot-lines   { color: #3a6080; }
+
+/* ── Hover button text — modrá akcent, ne černý text ── */
+body[data-theme="mdt"] .splash-btn:hover,
+body[data-theme="mdt"] .login-btn:hover  { color: #fff; }
+
+body[data-theme="mdt"] .cat-tab.active   { color: #fff; }
+body[data-theme="mdt"] .cm-confirm-btn   { color: #fff; }
+body[data-theme="mdt"] .cm-confirm-btn:hover { background: #60b8ff; }
+body[data-theme="mdt"] .card-or-btn--active,
+body[data-theme="mdt"] .cm-or-btn--active { color: #fff; }
+
+body[data-theme="mdt"] .btn-save { color: #fff; }
+
+/* ── Status dot colors ── */
+body[data-theme="mdt"] .lst-green .lst-dot { background: #00e5a0; box-shadow: 0 0 6px #00e5a0; }
+body[data-theme="mdt"] .lst-green          { color: #00b880; }
+body[data-theme="mdt"] .lst-yellow .lst-dot { box-shadow: 0 0 6px #3b9eff; }
+
+/* ── Settings toggle checked state ── */
+body[data-theme="mdt"] .settings-toggle input:checked + .settings-toggle-track::before {
+  box-shadow: 0 0 8px rgba(59,158,255,0.5);
+}
+body[data-theme="mdt"] .settings-toggle-track { background: #1a3050; }
+
+/* ── warning/separator colors ── */
+body[data-theme="mdt"] .lf-warn { color: #ff4d6a; }
+body[data-theme="mdt"] .lf-sep  { color: #1e3a5a; }
+body[data-theme="mdt"] .lf-link { color: #2a5080; }
+body[data-theme="mdt"] .lf-link:hover { color: var(--accent); }
+
+/* ── misc separators ── */
+body[data-theme="mdt"] .boot-sub    { color: #1e3a5a; }
+body[data-theme="mdt"] .card-or-sep,
+body[data-theme="mdt"] .cm-or-sep   { color: #1e3a5a; }
+body[data-theme="mdt"] .about-footer { color: #1e3a5a; }
+
+/* ── Border radius overrides ── */
+body[data-theme="mdt"] .splash-btn,
+body[data-theme="mdt"] .login-btn,
+body[data-theme="mdt"] .cm-confirm-btn,
+body[data-theme="mdt"] .cm-cancel-btn { border-radius: 6px; }
+
+body[data-theme="mdt"] .charge-modal,
+body[data-theme="mdt"] .modal-box,
+body[data-theme="mdt"] .admin-modal,
+body[data-theme="mdt"] .history-modal,
+body[data-theme="mdt"] .info-modal { border-radius: 12px; overflow: hidden; }
+
+body[data-theme="mdt"] .law-item,
+body[data-theme="mdt"] .protocol-card  { border-radius: 8px; }
+
+body[data-theme="mdt"] .totals-row { border-radius: 8px; }
+
+body[data-theme="mdt"] .cat-tab { border-radius: 20px; }
+
+body[data-theme="mdt"] .badge { border-radius: 4px; }
+
+body[data-theme="mdt"] .sub-input,
+body[data-theme="mdt"] .cm-input,
+body[data-theme="mdt"] .edit-input,
+body[data-theme="mdt"] .export-textarea,
+body[data-theme="mdt"] .suspect-input { border-radius: 6px; }
+
+body[data-theme="mdt"] .search-bar { border-radius: 8px; }
+
+body[data-theme="mdt"] .settings-group { border-radius: 8px; }
+
+body[data-theme="mdt"] .history-entry,
+body[data-theme="mdt"] .hv-meta,
+body[data-theme="mdt"] .hv-card,
+body[data-theme="mdt"] .hv-chip,
+body[data-theme="mdt"] .hv-flag,
+body[data-theme="mdt"] .hv-totals { border-radius: 6px; }
+
+body[data-theme="mdt"] .history-back-btn { border-radius: 6px; }
+body[data-theme="mdt"] .history-detail-content { border-radius: 6px; }
+
+body[data-theme="mdt"] .about-author-link { border-radius: 6px; }
+body[data-theme="mdt"] .help-section { border-radius: 6px; overflow: hidden; }
+body[data-theme="mdt"] .help-shortcut { border-radius: 4px; }
+
+body[data-theme="mdt"] .action-btn,
+body[data-theme="mdt"] .admin-btn,
+body[data-theme="mdt"] .exp-btn,
+body[data-theme="mdt"] .add-btn { border-radius: 6px; }
+
+body[data-theme="mdt"] .admin-close,
+body[data-theme="mdt"] .history-back-btn { border-radius: 6px; }
+
+body[data-theme="mdt"] .seg-btn { border-radius: 6px; }
+
+body[data-theme="mdt"] .logout-btn { border-radius: 6px; }
+
+body[data-theme="mdt"] .toast { border-radius: 8px; }
+
+/* ── Top accent stripe on modals — blue instead of yellow ── */
+body[data-theme="mdt"] .charge-modal      { border-top-color: var(--accent); }
+body[data-theme="mdt"] .history-modal     { border-top-color: var(--accent); }
+
+/* ── Theme toggle button: highlight when MDT active ── */
+body[data-theme="mdt"] #themeBtn { color: var(--accent); border-color: var(--accent); }
+
+/* ── Drop-shadow filter overrides (logos / images) ── */
+body[data-theme="mdt"] .splash-logo-img {
+  filter: drop-shadow(0 0 40px rgba(59,158,255,0.5));
+}
+
+body[data-theme="mdt"] .boot-logo-img {
+  filter: drop-shadow(0 0 80px rgba(59,158,255,0.5)) drop-shadow(0 0 160px rgba(59,158,255,0.2));
+}
+
+body[data-theme="mdt"] .login-shield img {
+  filter: drop-shadow(0 0 18px rgba(59,158,255,0.4));
+  animation-name: shieldPulse-mdt;
+}
+
+@keyframes shieldPulse-mdt {
+  0%,100% { filter: drop-shadow(0 0 14px rgba(59,158,255,0.25)); }
+  50%      { filter: drop-shadow(0 0 30px rgba(59,158,255,0.5)); }
+}
+
+body[data-theme="mdt"] .brand-logo {
+  filter: drop-shadow(0 0 8px rgba(59,158,255,0.5));
+}
+
+body[data-theme="mdt"] .about-shield img {
+  filter: drop-shadow(0 0 16px rgba(59,158,255,0.3));
+}
+
+/* ── Text-shadow overrides ── */
+body[data-theme="mdt"] .splash-title {
+  text-shadow: 0 0 40px rgba(59,158,255,0.4);
+}
+
+body[data-theme="mdt"] .boot-logo {
+  text-shadow: 0 0 40px rgba(59,158,255,0.6), 0 0 80px rgba(59,158,255,0.25);
+}
+
+body[data-theme="mdt"] .login-title {
+  text-shadow: 0 0 40px rgba(59,158,255,0.4);
+}
+
+/* ── Box-shadow overrides ── */
+body[data-theme="mdt"] .login-content {
+  box-shadow:
+    0 0 0 1px rgba(59,158,255,0.08),
+    0 0 80px rgba(59,158,255,0.06),
+    0 40px 80px rgba(0,0,0,0.6);
+}
+
+body[data-theme="mdt"] .splash-btn:hover {
+  box-shadow: 0 0 40px rgba(59,158,255,0.3);
+}
+
+body[data-theme="mdt"] .login-btn:hover {
+  box-shadow: 0 0 40px rgba(59,158,255,0.3);
+}
+
+body[data-theme="mdt"] .cm-confirm-btn:hover {
+  box-shadow: 0 0 24px rgba(59,158,255,0.35);
+}
+
+body[data-theme="mdt"] .add-btn:hover {
+  box-shadow: 0 0 14px rgba(59,158,255,0.5);
+}
+
+body[data-theme="mdt"] .sub-row-clickable:hover .sub-add-trigger {
+  background: rgba(59,158,255,0.18);
+  box-shadow: 0 0 10px rgba(59,158,255,0.2);
+}
+
+body[data-theme="mdt"] .modal-box--input {
+  border-color: rgba(59,158,255,0.35);
+  box-shadow: 0 0 50px rgba(59,158,255,0.13);
+}
+
+body[data-theme="mdt"] .modal-yes--accent:hover {
+  background: #3b9eff !important;
+  box-shadow: 0 0 18px rgba(59,158,255,0.4) !important;
+}
+
+body[data-theme="mdt"] .about-author-link:hover {
+  background: rgba(59,158,255,0.14);
+  border-color: var(--accent);
+  box-shadow: 0 0 14px rgba(59,158,255,0.2);
+}
+
+/* ── Border-color overrides with hardcoded yellow ── */
+body[data-theme="mdt"] .cat-tab:hover { border-color: rgba(59,158,255,0.4); }
+
+body[data-theme="mdt"] .law-header { border-left-color: rgba(59,158,255,0.4); }
+
+body[data-theme="mdt"] .sub-row-clickable:hover { border-left-color: rgba(59,158,255,0.35); }
+
+body[data-theme="mdt"] .sub-add-trigger {
+  background: rgba(59,158,255,0.08);
+  border-color: rgba(59,158,255,0.25);
+}
+
+body[data-theme="mdt"] .cm-input { border-bottom-color: rgba(59,158,255,0.2); }
+
+body[data-theme="mdt"] .hv-card { border-left-color: rgba(59,158,255,0.35); }
+
+/* ── Num-spin button hover (charge modal) ── */
+body[data-theme="mdt"] .num-spin-btn:hover  { background: rgba(59,158,255,0.12); }
+body[data-theme="mdt"] .num-spin-btn:active { background: rgba(59,158,255,0.22); }
+
+/* ── Segmented button active state ── */
+body[data-theme="mdt"] .seg-btn.active { background: rgba(59,158,255,0.12); }
+
+/* ── Credential input focus glow ── */
+body[data-theme="mdt"] .cred-input.cred-editable:focus {
+  background: rgba(59,158,255,0.02);
+}
+
+/* ── About page accents ── */
+body[data-theme="mdt"] .about-sub  { color: rgba(59,158,255,0.5); }
+body[data-theme="mdt"] .about-author-link {
+  background: rgba(59,158,255,0.06);
+  border-color: rgba(59,158,255,0.25);
+}
+
+/* ── Readme rendered content ── */
+body[data-theme="mdt"] .readme-content h1 {
+  border-bottom-color: rgba(59,158,255,0.25);
+}
+body[data-theme="mdt"] .readme-content h2 {
+  border-bottom-color: rgba(59,158,255,0.15);
+}
+body[data-theme="mdt"] .readme-content code {
+  background: rgba(59,158,255,0.1);
+  border: 1px solid rgba(59,158,255,0.2);
+}
+body[data-theme="mdt"] .readme-content blockquote {
+  border-left-color: var(--accent);
+  background: rgba(59,158,255,0.04);
+}
+body[data-theme="mdt"] .readme-content th {
+  background: rgba(59,158,255,0.1);
+  border-color: rgba(59,158,255,0.2);
+}
+
+/* ── Help modal accents ── */
+body[data-theme="mdt"] .help-shortcut {
+  background: rgba(59,158,255,0.1);
+  border-color: rgba(59,158,255,0.3);
+  color: var(--accent);
+}
+body[data-theme="mdt"] .help-list code,
+body[data-theme="mdt"] .help-section-content code {
+  background: rgba(59,158,255,0.07);
+  border-color: rgba(59,158,255,0.2);
+  color: var(--accent);
+}
+
+/* ── Charge modal inputs & fixed display ── */
+body[data-theme="mdt"] .cm-input {
+  background: #070f1a;
+}
+body[data-theme="mdt"] .cm-input:focus {
+  background: #0b1622;
+}
+body[data-theme="mdt"] .cm-fixed {
+  background: #070f1a;
+  border-color: var(--border-bright);
+}
+
+/* ── Confirm button disabled state ── */
+body[data-theme="mdt"] .cm-confirm-btn:disabled {
+  background: #0e1c2e;
+  color: #2a4870;
+  border-color: #1a3050;
+}
+body[data-theme="mdt"] .cm-confirm-btn:disabled:hover {
+  background: #0e1c2e;
+  box-shadow: none;
+}
 

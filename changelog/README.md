@@ -2,6 +2,32 @@
 
 ---
 
+## Verze 2.4.2026 — MDT téma
+
+### ✨ Nové funkce
+
+#### Druhý vizuální styl — MDT téma
+Aplikace nyní podporuje dva přepínatelné vzhled bez reloadu stránky:
+
+- **Terminálový styl** (výchozí) — černozlatý CRT terminál s JetBrains Mono fontem
+- **MDT styl** — moderní tmavě modrý (navy) design s Inter fontem, zaoblenými rohy a modrým akcentem `#3b9eff`
+
+Přepínač je dostupný přímo v horním panelu jako ikona <i class="fa-solid fa-palette"></i> (vedle ostatních tlačítek). Preference se ukládá do `localStorage` a obnoví se po reloadu.
+
+**Změny v MDT stylu oproti terminálovému:**
+- Nový font **Inter** (Google Fonts) místo JetBrains Mono
+- Kompletní přebarvení — navy pozadí, modrý akcent, cyan/zelená/červená pro status barvy
+- Zaoblené rohy na všech prvcích: modaly 12px, kartičky 8px, taby 20px (pill), inputy/tlačítka 6px
+- Přebarvení všech glow efektů, drop-shadow filtrů, box-shadow a text-shadow z amberové na modrou
+- Přebarvení hardcoded barev panelů, header pozadí, inputů, status tečky, separátorů atd.
+- CRT efekty a vignette jsou zachovány a reagují na nastavení v Quick Settings i v MDT stylu
+
+---
+
+_AnakUn 2.4.2026_
+
+---
+
 ## Verze 1.4.2026 — aktualizace
 
 ### ✨ Nové funkce

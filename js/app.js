@@ -2239,6 +2239,23 @@ function _normBirth(val) {
 }
 
 /* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+function toggleTheme() {
+  const isDefault = !document.body.hasAttribute('data-theme');
+  if (isDefault) {
+    document.body.setAttribute('data-theme', 'mdt');
+  } else {
+    document.body.removeAttribute('data-theme');
+  }
+  try {
+    const s = JSON.parse(localStorage.getItem('sasp_settings_v1') || '{}');
+    s.theme = isDefault ? 'mdt' : 'default';
+    localStorage.setItem('sasp_settings_v1', JSON.stringify(s));
+  } catch (e) {}
+}
+
+/* ============================================================
    INIT — DOMContentLoaded
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
@@ -2248,6 +2265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const crtLevel = vs.crtLevel !== undefined ? Number(vs.crtLevel) : 2;
     document.body.setAttribute('data-crt', crtLevel);
     if (vs.vignetteOff) document.body.classList.add('no-vignette');
+    if (vs.theme === 'mdt') document.body.setAttribute('data-theme', 'mdt');
   } catch (e) {}
 
   SASP.init();
@@ -2339,6 +2357,10 @@ document.addEventListener('DOMContentLoaded', () => {
     ?.addEventListener('click', () => SASP.openAbout());
   document.getElementById('loginHelpBtn')
     ?.addEventListener('click', () => SASP.openHelp());
+
+  // Theme toggle
+  document.getElementById('themeBtn')
+    ?.addEventListener('click', () => toggleTheme());
 
   // Admin
   document.getElementById('adminBtn')
